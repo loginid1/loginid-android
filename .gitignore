@@ -10,6 +10,9 @@
 .DS_Store
 /build
 /captures
+./openapi-gen/node_modules
+./openapi-gen/openapi.yaml
+./openapi-gen/mod-openapi.yaml
 .externalNativeBuild
 .cxx
 local.properties
