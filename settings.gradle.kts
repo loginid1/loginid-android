@@ -26,3 +26,4 @@ rootProject.name = "loginid-android"
 include(":sample-app-auth")
 include(":core")
 include(":api")
+include(":auth")

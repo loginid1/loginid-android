@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace = "com.loginid.core"
+    namespace = "com.loginid.auth"
     compileSdk {
         version = release(36) {
             minorApiLevel = 1
@@ -19,11 +19,11 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
 }
 
 dependencies {
-    implementation(project(":api"))
-    implementation(libs.moshi)
+    implementation(project(":core"))
 
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.ktx)
