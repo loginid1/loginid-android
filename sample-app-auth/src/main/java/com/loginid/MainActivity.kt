@@ -2,14 +2,20 @@ package com.loginid
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.loginid.databinding.ActivityMainBinding
-// import com.loginid.auth.LoginIDAuth
-// import com.loginid.core.models.LoginIDConfig
+import com.loginid.auth.LoginIDAuth
+import com.loginid.core.errors.LoginIDError
+import com.loginid.core.models.LoginIDConfig
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    // private val lid = LoginIDAuth(config = LoginIDConfig(this, "YOUR_BASE_URL"))
+    private val lid = LoginIDAuth(config = LoginIDConfig(
+        this,
+        "https://AIIICE0385888F3SUK9TL3KO.api.dev.loginid.io"
+    ))
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,8 +27,15 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupClickListeners() {
         binding.createPasskey.setOnClickListener {
-            // TODO: Implement createPasskey
-            setResultText("createPasskey clicked")
+            lifecycleScope.launch {
+                try {
+                    val username = binding.usernameInput.text.toString()
+                    val result = lid.createPasskey(this@MainActivity, username)
+                    displayResult(result)
+                } catch (e: LoginIDError) {
+                    displayResult(e)
+                }
+            }
         }
         binding.authWithPasskey.setOnClickListener {
             // TODO: Implement authenticateWithPasskey
@@ -72,5 +85,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun setResultText(text: String) {
         binding.sdkResult.text = text
+    }
+
+    private fun displayResult(result: Any) {
+        setResultText(result.toString())
     }
 }

@@ -25,10 +25,6 @@ kotlin {
     }
 }
 
-tasks.named("compileKotlin") {
-    dependsOn("openApiGenerate")
-}
-
 openApiGenerate {
     generatorName.set("kotlin")
     inputSpec.set("$rootDir/openapi-gen/mod-openapi.yaml")

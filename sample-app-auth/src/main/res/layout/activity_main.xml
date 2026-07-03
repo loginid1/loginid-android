@@ -18,6 +18,16 @@
             android:layout_marginBottom="16dp"
             android:text="SDK Result will be shown here" />
 
+        <EditText
+            android:id="@+id/usernameInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:autofillHints="username"
+            android:hint="Username"
+            android:inputType="text"
+            android:text="user@loginid.io" />
+
         <Button
             android:id="@+id/createPasskey"
             android:layout_width="match_parent"
