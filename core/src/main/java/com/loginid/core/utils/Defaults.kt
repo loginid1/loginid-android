@@ -1,7 +1,11 @@
 package com.loginid.core.utils
 
+import android.app.Activity
+import com.loginid.client.model.DeviceInfo
 import com.loginid.client.model.User
 import com.loginid.client.model.UserLogin
+import com.loginid.core.enums.UsernameType
+import com.loginid.core.stores.DeviceStore
 import java.util.UUID
 
 /**
@@ -21,13 +25,23 @@ object Defaults {
     }
 
     /**
-     * Returns the raw value of the username type, or ".other" if it's null.
+     * Converts the core UsernameType to the client model User.UsernameType.
      *
      * @param value The username type.
-     * @return The usernametype.
+     * @return The corresponding client model username type.
      */
-    fun usernameType(value: User.UsernameType?): User.UsernameType {
-        return value?.value ?: User.UsernameType.OTHER
+    private fun toUserUsernameType(value: UsernameType?): User.UsernameType {
+        return User.UsernameType.valueOf(value?.name ?: "OTHER")
+    }
+
+    /**
+     * Converts the core UsernameType to the client model UserLogin.UsernameType.
+     *
+     * @param value The username type.
+     * @return The corresponding client model username type.
+     */
+    private fun toUserLoginUsernameType(value: UsernameType?): UserLogin.UsernameType {
+        return UserLogin.UsernameType.valueOf(value?.name ?: "OTHER")
     }
 
     /**
@@ -76,7 +90,7 @@ object Defaults {
         return User(
             displayName = displayName(displayName, username ?: ""),
             username = username ?: "",
-            usernameType = usernameType(usernameType)
+            usernameType = toUserUsernameType(usernameType)
         )
     }
 
@@ -93,7 +107,29 @@ object Defaults {
     ): UserLogin {
         return UserLogin(
             username = username ?: "",
-            usernameType = usernameType(usernameType)
+            usernameType = toUserLoginUsernameType(usernameType)
+        )
+    }
+
+    /**
+     * Retrieves device information, using a stored device ID if a new one is not provided.
+     *
+     * This function fetches device metadata using [DeviceUtils.getDeviceInfo]. If a `deviceId`
+     * is not passed, it attempts to retrieve one from the provided [DeviceStore].
+     *
+     * @param activity The current activity, required to access system services.
+     * @param store The [DeviceStore] used to retrieve a stored device ID.
+     * @param deviceId An optional device ID to use. If null, the stored ID is used.
+     * @return A [DeviceInfo] object containing the device's metadata.
+     */
+    suspend fun deviceInfo(
+        activity: Activity,
+        store: DeviceStore,
+        deviceId: String? = null
+    ): DeviceInfo {
+        return DeviceUtils.getDeviceInfo(
+            activity,
+            deviceId ?: store.getDeviceId()
         )
     }
 }
