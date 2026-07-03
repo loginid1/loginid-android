@@ -5,6 +5,7 @@ import com.loginid.client.model.DeviceInfo
 import com.loginid.client.model.User
 import com.loginid.client.model.UserLogin
 import com.loginid.core.enums.UsernameType
+import com.loginid.core.models.LoginIDConfig
 import com.loginid.core.stores.DeviceStore
 import java.util.UUID
 
@@ -131,5 +132,46 @@ object Defaults {
             activity,
             deviceId ?: store.getDeviceId()
         )
+    }
+
+    /**
+     * Generates a map of trust-related identifiers.
+     *
+     * This function generates a wallet ID, merchant ID, and authentication ID based on the provided parameters.
+     * The resulting map contains only the non-null identifiers.
+     *
+     * @param config The LoginID configuration.
+     * @param store The Trust ID manager.
+     * @param txPayload The transaction payload, if any. If provided, a wallet ID will be generated.
+     * @param merchantTrustId The merchant's Trust ID, if any.
+     * @param username The username. Used to generate an auth ID under specific conditions.
+     * @return A map of trust-related identifiers ("auth", "wallet", "merchant").
+     */
+    suspend fun trustItems(
+        config: LoginIDConfig,
+        store: TrustID,
+        txPayload: String? = null,
+        merchantTrustId: String? = null,
+        username: String
+    ): Map<String, String> {
+        val walletId: String? = if (txPayload != null) {
+            store.signWithTrustId()
+        } else {
+            null
+        }
+        val merchantId: String? = if (merchantTrustId?.isNotEmpty() == true) merchantTrustId else null
+        val authId: String? =
+            if (config.useTrustId() && walletId == null && merchantId == null && username.isNotEmpty()) {
+                store.signWithTrustId(username)
+            } else {
+                null
+            }
+
+        val items = mutableMapOf<String, String>()
+        authId?.let { items["auth"] = it }
+        walletId?.let { items["wallet"] = it }
+        merchantId?.let { items["merchant"] = it }
+
+        return items
     }
 }

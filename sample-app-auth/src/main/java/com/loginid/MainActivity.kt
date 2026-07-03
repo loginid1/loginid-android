@@ -14,7 +14,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val lid = LoginIDAuth(config = LoginIDConfig(
         this,
-        "https://AIIICE0385888F3SUK9TL3KO.api.dev.loginid.io"
+        "https://AIIICE0385888F3SUK9TL3KO.api.dev.loginid.io",
     ))
 
     override fun onCreate(savedInstanceState: Bundle?) {

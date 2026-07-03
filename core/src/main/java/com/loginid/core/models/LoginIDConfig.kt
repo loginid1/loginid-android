@@ -8,8 +8,9 @@ import android.content.Context
  * @param context The Android application context.
  * @param baseUrl The base URL of the LoginID service. This value is used to resolve the App ID and make API calls.
  * @param appId The application ID. If not provided, it will be extracted from the baseUrl.
+ * @param useTrustId A flag to enable or disable the use of Trust ID. Defaults to true.
  */
-class LoginIDConfig(context: Context, baseUrl: String, appId: String = "") {
+class LoginIDConfig(context: Context, baseUrl: String, appId: String = "", useTrustId: Boolean = false) {
     /**
      * The Android application context.
      */
@@ -22,6 +23,10 @@ class LoginIDConfig(context: Context, baseUrl: String, appId: String = "") {
      * The application ID.
      */
     private val appId: String = appId
+    /**
+     * A flag to enable or disable the use of Trust ID.
+     */
+    private val useTrustId: Boolean = useTrustId
 
     init {
         if (baseUrl.isEmpty()) {
@@ -64,5 +69,14 @@ class LoginIDConfig(context: Context, baseUrl: String, appId: String = "") {
         val matchResult = pattern.find(baseUrl)
         return matchResult?.groupValues?.get(1) ?:
         throw IllegalArgumentException("Invalid base URL. App ID not found.")
+    }
+
+    /**
+     * Returns whether Trust ID is enabled.
+     *
+     * @return A boolean indicating if Trust ID is enabled.
+     */
+    fun useTrustId(): Boolean {
+        return useTrustId
     }
 }
