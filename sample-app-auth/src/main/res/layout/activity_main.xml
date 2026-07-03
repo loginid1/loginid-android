@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/sdkResult"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="SDK Result will be shown here" />
+
+        <Button
+            android:id="@+id/createPasskey"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Create Passkey" />
+
+        <Button
+            android:id="@+id/authWithPasskey"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Authenticate with Passkey" />
+
+        <Button
+            android:id="@+id/authWithPasskeyAutofill"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Authenticate with Passkey (Autofill)" />
+
+        <Button
+            android:id="@+id/confirmTransaction"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Confirm Transaction" />
+
+        <Button
+            android:id="@+id/listPasskeys"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="List Passkeys" />
+
+        <Button
+            android:id="@+id/renamePasskey"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Rename Passkey" />
+
+        <Button
+            android:id="@+id/deletePasskey"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Delete Passkey" />
+
+        <Button
+            android:id="@+id/requestOtp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Request OTP" />
+
+        <Button
+            android:id="@+id/validateOtp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Validate OTP" />
+
+        <Button
+            android:id="@+id/requestAndSendOtp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Request and Send OTP" />
+
+        <Button
+            android:id="@+id/getSessionInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Get Session Info" />
+
+        <Button
+            android:id="@+id/logout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Logout" />
+    </LinearLayout>
+</ScrollView>
