@@ -6,6 +6,7 @@ import com.loginid.auth.models.AuthResult
 import com.loginid.auth.models.CreatePasskeyOptions
 import com.loginid.core.models.LoginIDConfig
 import com.loginid.core.stores.DeviceStore
+import com.loginid.core.stores.SessionManager
 import com.loginid.core.stores.SharedPreferencesStorage
 import com.loginid.core.utils.KeyStoreManager
 import com.loginid.core.utils.TaskHandler
@@ -13,6 +14,7 @@ import com.loginid.core.utils.TrustID
 
 class LoginIDAuth(config: LoginIDConfig) {
     private val masterStore = SharedPreferencesStorage(config.getContext())
+    private val session = SessionManager(masterStore, config)
     private val trustId = TrustID(
         config = config,
         storage = masterStore,
@@ -21,7 +23,7 @@ class LoginIDAuth(config: LoginIDConfig) {
         }
     )
     private val device = DeviceStore(masterStore, config)
-    private val passkeysController = Passkeys(config, device, trustId)
+    private val passkeysController = Passkeys(config, device, session, trustId)
 
     suspend fun createPasskey(
         activity: Activity,
