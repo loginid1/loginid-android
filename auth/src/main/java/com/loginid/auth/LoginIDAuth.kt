@@ -2,13 +2,19 @@ package com.loginid.auth
 
 import android.app.Activity
 import android.view.View
+import com.loginid.auth.controllers.PasskeyManager
 import com.loginid.auth.controllers.Passkeys
 import com.loginid.auth.models.AuthResult
 import com.loginid.auth.models.AuthenticateWithPasskeyOptions
 import com.loginid.auth.models.ConfirmTransactionOptions
 import com.loginid.auth.models.CreatePasskeyOptions
+import com.loginid.auth.models.DeletePasskeyOptions
+import com.loginid.auth.models.ListPasskeysOptions
+import com.loginid.auth.models.PasskeyDetails
+import com.loginid.auth.models.RenamePasskeyOptions
 import com.loginid.auth.models.TxConfirmResult
 import com.loginid.core.models.LoginIDConfig
+import com.loginid.core.services.PasskeyManagerService
 import com.loginid.core.services.PasskeyService
 import com.loginid.core.stores.DeviceStore
 import com.loginid.core.stores.SessionManager
@@ -31,6 +37,11 @@ class LoginIDAuth(config: LoginIDConfig) {
     private val device = DeviceStore(masterStore, config)
     private val publicKeyManager = PublicKeyManager()
     private val passkeyApi = PasskeyService(config)
+    private val passkeyManagerApi = PasskeyManagerService(config)
+    private val passkeyManager = PasskeyManager(
+        session = session,
+        passkeyManagerApi = passkeyManagerApi
+    )
     private val passkeysController = Passkeys(
         config = config,
         device = device,
@@ -166,6 +177,89 @@ class LoginIDAuth(config: LoginIDConfig) {
                 txPayload,
                 options
             )
+        }
+    }
+
+    /**
+     * This method returns list of passkeys associated with the current user. The user must be fully authorized for this call to succeed.
+     *
+     * @param options Options for the request, including an optional authorization token.
+     * @return An array of [PasskeyDetails] objects.
+     * @throws com.loginid.core.errors.LoginIDError if the user is not authenticated or the request fails.
+     */
+    suspend fun listPasskeys(options: ListPasskeysOptions? = null): List<PasskeyDetails> {
+        return TaskHandler.executeTask {
+            passkeyManager.listPasskeys(options)
+        }
+    }
+
+    /**
+     * This method returns list of passkeys associated with the current user. The user must be fully authorized for this call to succeed.
+     *
+     * @param authzToken Authorization token.
+     * @return An array of [PasskeyDetails] objects.
+     * @throws com.loginid.core.errors.LoginIDError if the user is not authenticated or the request fails.
+     */
+    suspend fun listPasskeys(authzToken: String): List<PasskeyDetails> {
+        val opts = ListPasskeysOptions(authzToken)
+        return TaskHandler.executeTask {
+            passkeyManager.listPasskeys(opts)
+        }
+    }
+
+    /**
+     * Renames a specified passkey by ID. The user must be fully authorized for this call to succeed.
+     *
+     * @param id The unique identifier of the passkey to rename.
+     * @param name The new name for the passkey.
+     * @param options Options for the request, including an optional authorization token.
+     * @throws com.loginid.core.errors.LoginIDError if the user is not authenticated or the request fails.
+     */
+    suspend fun renamePasskey(id: String, name: String, options: RenamePasskeyOptions? = null) {
+        return TaskHandler.executeTask {
+            passkeyManager.renamePasskey(id, name, options)
+        }
+    }
+
+    /**
+     * Renames a specified passkey by ID. The user must be fully authorized for this call to succeed.
+     *
+     * @param id The unique identifier of the passkey to rename.
+     * @param name The new name for the passkey.
+     * @param authzToken Authorization token.
+     * @throws com.loginid.core.errors.LoginIDError if the user is not authenticated or the request fails.
+     */
+    suspend fun renamePasskey(id: String, name: String, authzToken: String) {
+        val opts = RenamePasskeyOptions(authzToken)
+        return TaskHandler.executeTask {
+            passkeyManager.renamePasskey(id, name, opts)
+        }
+    }
+
+    /**
+     * Delete a specified passkey by ID from LoginID. The user must be fully authorized for this call to succeed.
+     *
+     * @param id The unique identifier of the passkey to delete.
+     * @param options Options for the request, including an optional authorization token.
+     * @throws com.loginid.core.errors.LoginIDError if the user is not authenticated or the request fails.
+     */
+    suspend fun deletePasskey(id: String, options: DeletePasskeyOptions? = null) {
+        return TaskHandler.executeTask {
+            passkeyManager.deletePasskey(id, options)
+        }
+    }
+
+    /**
+     * Delete a specified passkey by ID from LoginID. The user must be fully authorized for this call to succeed.
+     *
+     * @param id The unique identifier of the passkey to delete.
+     * @param authzToken Authorization token.
+     * @throws com.loginid.core.errors.LoginIDError if the user is not authenticated or the request fails.
+     */
+    suspend fun deletePasskey(id: String, authzToken: String) {
+        val opts = DeletePasskeyOptions(authzToken)
+        return TaskHandler.executeTask {
+            passkeyManager.deletePasskey(id, opts)
         }
     }
 }

@@ -50,16 +50,30 @@ class MainActivity : AppCompatActivity() {
             }
         }
         binding.listPasskeys.setOnClickListener {
-            // TODO: Implement listPasskeys
-            setResultText("listPasskeys clicked")
+            executeLoginID {
+                val passkeys = lid.listPasskeys()
+                if (passkeys.isNotEmpty()) {
+                    runOnUiThread {
+                        binding.passkeyIdInput.setText(passkeys.first().id)
+                    }
+                }
+                passkeys
+            }
         }
         binding.renamePasskey.setOnClickListener {
-            // TODO: Implement renamePasskey
-            setResultText("renamePasskey clicked")
+            executeLoginID {
+                val passkeyId = binding.passkeyIdInput.text.toString()
+                val newName = binding.passkeyNameInput.text.toString()
+                lid.renamePasskey(passkeyId, newName)
+                "Passkey renamed successfully"
+            }
         }
         binding.deletePasskey.setOnClickListener {
-            // TODO: Implement deletePasskey
-            setResultText("deletePasskey clicked")
+            executeLoginID {
+                val passkeyId = binding.passkeyIdInput.text.toString()
+                lid.deletePasskey(passkeyId)
+                "Passkey deleted successfully"
+            }
         }
         binding.requestOtp.setOnClickListener {
             // TODO: Implement requestOtp
