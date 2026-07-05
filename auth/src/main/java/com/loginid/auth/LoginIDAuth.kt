@@ -1,8 +1,10 @@
 package com.loginid.auth
 
 import android.app.Activity
+import android.view.View
 import com.loginid.auth.controllers.Passkeys
 import com.loginid.auth.models.AuthResult
+import com.loginid.auth.models.AuthenticateWithPasskeyOptions
 import com.loginid.auth.models.CreatePasskeyOptions
 import com.loginid.core.models.LoginIDConfig
 import com.loginid.core.services.PasskeyService
@@ -82,6 +84,53 @@ class LoginIDAuth(config: LoginIDConfig) {
         val opts = CreatePasskeyOptions(authzToken, options)
         return TaskHandler.executeTask {
             passkeysController.createPasskey(activity, username, opts)
+        }
+    }
+
+    /**
+     * This method authenticates a user with a passkey and may trigger additional browser dialogs to guide the user through the process.
+     *
+     * A short-lived authorization token is returned, allowing access to protected resources for the given user such as listing, renaming or deleting passkeys.
+     *
+     * @param activity The current activity.
+     * @param username The username of the user to authenticate.
+     * @param options Optional parameters for passkey authentication.
+     * @return An [AuthResult] containing an authorization token if authentication is successful.
+     * @throws com.loginid.core.errors.LoginIDError if authentication fails.
+     */
+    suspend fun authenticateWithPasskey(
+        activity: Activity,
+        username: String,
+        options: AuthenticateWithPasskeyOptions? = null
+    ): AuthResult {
+        return TaskHandler.executeTask {
+            passkeysController.authenticateWithPasskey(
+                activity, username, null, options
+            )
+        }
+    }
+
+    /**
+     * Authenticates a user by utilizing the browser's passkey autofill capabilities.
+     *
+     * A short-lived authorization token is returned, allowing access to protected resources for the given user such as listing, renaming or deleting passkeys.
+     *
+     * @param activity The current activity.
+     * @param usernameAnchorView The view to which the passkey selection UI should be anchored. This is typically a username input field.
+     * @param options Optional parameters for passkey authentication.
+     * @return An [AuthResult] containing an authorization token if authentication is successful.
+     * @throws com.loginid.core.errors.LoginIDError if authentication fails or is canceled.
+     */
+    suspend fun authenticateWithPasskeyAutofill(
+        activity: Activity,
+        usernameAnchorView: View,
+        options: AuthenticateWithPasskeyOptions? = null
+    ): AuthResult {
+        val opts = AuthenticateWithPasskeyOptions(options)
+        return TaskHandler.executeTask {
+            passkeysController.authenticateWithPasskey(
+                activity, "", usernameAnchorView, opts
+            )
         }
     }
 }

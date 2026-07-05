@@ -1,13 +1,22 @@
 package com.loginid.auth.controllers
 
 import android.app.Activity
+import android.view.View
+import com.loginid.auth.extensions.fromFallback
 import com.loginid.auth.extensions.fromJWT
+import com.loginid.auth.extensions.mergeFallbackMethods
 import com.loginid.auth.models.AuthResult
+import com.loginid.auth.models.AuthenticateWithPasskeyOptions
 import com.loginid.auth.models.CreatePasskeyOptions
 import com.loginid.client.model.Application
+import com.loginid.client.model.AuthCompleteRequestBody
+import com.loginid.client.model.AuthInit
+import com.loginid.client.model.AuthInitRequestBody
+import com.loginid.client.model.AuthenticatorAssertionResponse
 import com.loginid.client.model.CreationResult
 import com.loginid.client.model.RegCompleteRequestBody
 import com.loginid.client.model.RegInitRequestBody
+import com.loginid.core.errors.LoginIDError
 import com.loginid.core.extensions.toJSON
 import com.loginid.core.interfaces.PasskeyAPI
 import com.loginid.core.interfaces.PublicKeyManaging
@@ -86,6 +95,79 @@ internal class Passkeys(
             device.setDeviceId(response.deviceId)
 
             AuthResult().fromJWT(response)
+        }
+    }
+
+    suspend fun authenticateWithPasskey(
+        activity: Activity,
+        username: String,
+        usernameAnchorView: View? = null,
+        options: AuthenticateWithPasskeyOptions? = null
+    ): AuthResult {
+        val appId = config.getAppId()
+        val deviceInfo = Defaults.deviceInfo(activity, device)
+        val trustItems = Defaults.trustItems(
+            config = config,
+            store = trustId,
+            username = username
+        )
+        val user = Defaults.userLogin(
+            username = username,
+            usernameType = options?.usernameType
+        )
+
+        val authInitRequestBody = AuthInitRequestBody(
+            app = Application(appId),
+            deviceInfo = deviceInfo,
+            user = user,
+            trustItems = trustItems
+        )
+
+        val userAgent = DeviceUtils.getUserAgent()
+
+        val initRes = passkeyApi.authInit(
+            request = authInitRequestBody,
+            userAgent = userAgent
+        )
+
+        when (initRes.action) {
+            AuthInit.Action.PROCEED -> {
+                val publicKey = initRes.assertionOptions
+                    ?: throw LoginIDError(
+                        "passkey_authentication_failed",
+                        "Assertion options not found or invalid"
+                    )
+
+                return invokePasskeyApi(initRes.session) {
+                    val credential = publicKeyManager.get(
+                        activity = activity,
+                        publicKey = publicKey.toJSON(),
+                        usernameAnchorView = usernameAnchorView,
+                    )
+
+                    val authCompleteRequestBody = AuthCompleteRequestBody(
+                        assertionResult = AuthenticatorAssertionResponse(
+                            authenticatorData = credential.response.authenticatorData,
+                            clientDataJSON = credential.response.clientDataJSON,
+                            credentialId = credential.id,
+                            signature = credential.response.signature,
+                            userHandle = credential.response.userHandle
+                        ),
+                        session = initRes.session
+                    )
+
+                    val response = passkeyApi.authComplete(authCompleteRequestBody)
+
+                    session.setAccessToken(response.jwtAccess)
+                    device.setDeviceId(response.deviceId)
+
+                    AuthResult().fromJWT(response)
+                }
+            }
+            AuthInit.Action.CROSS_AUTH, AuthInit.Action.FALLBACK -> {
+                val fallbackOptions = initRes.mergeFallbackMethods()
+                return AuthResult().fromFallback(fallbackOptions)
+            }
         }
     }
 

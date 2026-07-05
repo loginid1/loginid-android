@@ -27,23 +27,21 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupClickListeners() {
         binding.createPasskey.setOnClickListener {
-            lifecycleScope.launch {
-                try {
-                    val username = binding.usernameInput.text.toString()
-                    val result = lid.createPasskey(this@MainActivity, username)
-                    displayResult(result)
-                } catch (e: LoginIDError) {
-                    displayResult(e)
-                }
+            executeLoginID {
+                val username = binding.usernameInput.text.toString()
+                lid.createPasskey(this@MainActivity, username)
             }
         }
         binding.authWithPasskey.setOnClickListener {
-            // TODO: Implement authenticateWithPasskey
-            setResultText("authWithPasskey clicked")
+            executeLoginID {
+                val username = binding.usernameInput.text.toString()
+                lid.authenticateWithPasskey(this@MainActivity, username)
+            }
         }
         binding.authWithPasskeyAutofill.setOnClickListener {
-            // TODO: Implement authenticateWithPasskeyAutofill
-            setResultText("authWithPasskeyAutofill clicked")
+            executeLoginID {
+                lid.authenticateWithPasskeyAutofill(this@MainActivity, binding.usernameInput)
+            }
         }
         binding.confirmTransaction.setOnClickListener {
             // TODO: Implement confirmTransaction
@@ -80,6 +78,17 @@ class MainActivity : AppCompatActivity() {
         binding.logout.setOnClickListener {
             // TODO: Implement logout
             setResultText("logout clicked")
+        }
+    }
+
+    private fun executeLoginID(block: suspend () -> Any) {
+        lifecycleScope.launch {
+            try {
+                val result = block()
+                displayResult(result)
+            } catch (e: LoginIDError) {
+                displayResult(e)
+            }
         }
     }
 
