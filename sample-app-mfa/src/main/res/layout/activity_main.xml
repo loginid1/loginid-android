@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.loginid.example.mfa.MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/sessionResult"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:minHeight="100dp"
+            android:gravity="top"
+            android:background="#f0f0f0"
+            android:padding="8dp"
+            android:text="No result yet" />
+
+        <EditText
+            android:id="@+id/usernameInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:autofillHints="username"
+            android:hint="Username"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/displayNameInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:hint="Display Name"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/txPayloadInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:hint="Update TX Payload"
+            android:inputType="text" />
+
+        <Button
+            android:id="@+id/beginFlow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Begin" />
+
+        <Button
+            android:id="@+id/external"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="External" />
+
+        <Button
+            android:id="@+id/passkeyCreate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Passkey Create" />
+
+        <Button
+            android:id="@+id/passkeyAuth"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Passkey Authenticate" />
+
+        <Button
+            android:id="@+id/passkeyAutofill"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Passkey Autofill" />
+
+        <Button
+            android:id="@+id/transactionConfirmation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Transaction Confirmation" />
+
+        <Button
+            android:id="@+id/deleteTrust"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Delete Trust" />
+    </LinearLayout>
+</ScrollView>

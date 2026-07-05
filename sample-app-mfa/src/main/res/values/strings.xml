@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">ExampleMFA</string>
+    <string name="asset_statements" translatable="false">
+    [{
+        \"include\": \"https://loginid-mobile-test.s3.us-east-1.amazonaws.com/.well-known/assetlinks.json\"
+    }]
+    </string>
+</resources>
