@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.loginid.databinding.ActivityMainBinding
 import com.loginid.auth.LoginIDAuth
+import com.loginid.auth.models.CreatePasskeyOptions
+import com.loginid.core.enums.UsernameType
 import com.loginid.core.errors.LoginIDError
 import com.loginid.core.models.LoginIDConfig
 import kotlinx.coroutines.launch
@@ -29,7 +31,11 @@ class MainActivity : AppCompatActivity() {
         binding.createPasskey.setOnClickListener {
             executeLoginID {
                 val username = binding.usernameInput.text.toString()
-                lid.createPasskey(this@MainActivity, username)
+                lid.createPasskey(
+                    this@MainActivity,
+                    username,
+                    CreatePasskeyOptions(usernameType = UsernameType.EMAIL)
+                )
             }
         }
         binding.authWithPasskey.setOnClickListener {
@@ -76,16 +82,23 @@ class MainActivity : AppCompatActivity() {
             }
         }
         binding.requestOtp.setOnClickListener {
-            // TODO: Implement requestOtp
-            setResultText("requestOtp clicked")
+            executeLoginID {
+                lid.requestOtp()
+            }
         }
         binding.validateOtp.setOnClickListener {
-            // TODO: Implement validateOtp
-            setResultText("validateOtp clicked")
+            executeLoginID {
+                val username = binding.usernameInput.text.toString()
+                val otp = binding.otpInput.text.toString()
+                lid.validateOtp(username, otp)
+            }
         }
         binding.requestAndSendOtp.setOnClickListener {
-            // TODO: Implement requestAndSendOtp
-            setResultText("requestAndSendOtp clicked")
+            executeLoginID {
+                val username = binding.usernameInput.text.toString()
+                lid.requestAndSendOtp(username)
+                "OTP request sent"
+            }
         }
         binding.getSessionInfo.setOnClickListener {
             // TODO: Implement getSessionInfo

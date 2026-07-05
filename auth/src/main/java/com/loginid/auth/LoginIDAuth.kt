@@ -2,6 +2,7 @@ package com.loginid.auth
 
 import android.app.Activity
 import android.view.View
+import com.loginid.auth.controllers.OTP
 import com.loginid.auth.controllers.PasskeyManager
 import com.loginid.auth.controllers.Passkeys
 import com.loginid.auth.models.AuthResult
@@ -10,10 +11,16 @@ import com.loginid.auth.models.ConfirmTransactionOptions
 import com.loginid.auth.models.CreatePasskeyOptions
 import com.loginid.auth.models.DeletePasskeyOptions
 import com.loginid.auth.models.ListPasskeysOptions
+import com.loginid.auth.models.OTPResult
 import com.loginid.auth.models.PasskeyDetails
 import com.loginid.auth.models.RenamePasskeyOptions
+import com.loginid.auth.models.RequestAndSendOtpOptions
+import com.loginid.auth.models.RequestOtpOptions
 import com.loginid.auth.models.TxConfirmResult
+import com.loginid.auth.models.ValidateOtpOptions
+import com.loginid.core.enums.MessageMethod
 import com.loginid.core.models.LoginIDConfig
+import com.loginid.core.services.OTPService
 import com.loginid.core.services.PasskeyManagerService
 import com.loginid.core.services.PasskeyService
 import com.loginid.core.stores.DeviceStore
@@ -38,9 +45,14 @@ class LoginIDAuth(config: LoginIDConfig) {
     private val publicKeyManager = PublicKeyManager()
     private val passkeyApi = PasskeyService(config)
     private val passkeyManagerApi = PasskeyManagerService(config)
+    private val otpApi = OTPService(config)
     private val passkeyManager = PasskeyManager(
         session = session,
         passkeyManagerApi = passkeyManagerApi
+    )
+    private val otpController = OTP(
+        session = session,
+        otpApi = otpApi
     )
     private val passkeysController = Passkeys(
         config = config,
@@ -262,4 +274,58 @@ class LoginIDAuth(config: LoginIDConfig) {
             passkeyManager.deletePasskey(id, opts)
         }
     }
+
+    /**
+     * This method returns a one-time OTP to be displayed on the current device. The user must be authenticated on this device. The OTP is meant for cross-authentication, where the user reads the OTP from the screen and enters it on the target device.
+     *
+     * @param options Options for the request, including an optional authorization token.
+     * @return An [OTPResult] containing the generated code and its expiration details.
+     * @throws com.loginid.core.errors.LoginIDError if the request fails.
+     */
+    suspend fun requestOtp(options: RequestOtpOptions? = null): OTPResult {
+        return TaskHandler.executeTask {
+            otpController.requestOtp(options)
+        }
+    }
+
+    /**
+     * This method verifies the OTP and returns an authorization token, which can be used with the `createPasskey()`
+     * method to create a new passkey. The authorization token has a short validity period and should be used immediately.
+     *
+     * @param username The username of the account being authenticated.
+     * @param otp The one-time password entered by the user.
+     * @param options Optional parameters to customize the request, such as `usernameType`.
+     * @return An [AuthResult] with tokens if the OTP is valid.
+     * @throws com.loginid.core.errors.LoginIDError if validation fails.
+     */
+    suspend fun validateOtp(
+        username: String,
+        otp: String,
+        options: ValidateOtpOptions? = null
+    ): AuthResult {
+        return TaskHandler.executeTask {
+            otpController.validateOtp(username, otp, options)
+        }
+    }
+
+    /**
+     * This method requests an OTP from the backend to be sent via the selected method. The method of delivery should be based on
+     * the user's choice from the list of available options. This can be found in the result of `authenticateWithPasskey`
+     * method as `fallbackOptions`.
+     *
+     * @param username The username to send the OTP to.
+     * @param method The delivery channel, either `EMAIL` or `SMS`. Defaults to `EMAIL`.
+     * @param options Optional parameters to customize the request, such as `usernameType`.
+     * @throws com.loginid.core.errors.LoginIDError if the OTP cannot be sent.
+     */
+    suspend fun requestAndSendOtp(
+        username: String,
+        method: MessageMethod = MessageMethod.EMAIL,
+        options: RequestAndSendOtpOptions? = null
+    ) {
+        return TaskHandler.executeTask {
+            otpController.requestAndSendOtp(username, method, options)
+        }
+    }
+
 }
