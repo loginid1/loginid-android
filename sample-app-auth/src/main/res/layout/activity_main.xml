@@ -26,7 +26,7 @@
             android:autofillHints="username"
             android:hint="Username"
             android:inputType="text"
-            android:text="user@loginid.io" />
+            android:text="michael+99@loginid.io" />
 
         <EditText
             android:id="@+id/passkeyIdInput"

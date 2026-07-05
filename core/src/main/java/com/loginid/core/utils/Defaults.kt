@@ -1,6 +1,6 @@
 package com.loginid.core.utils
 
-import android.app.Activity
+import android.content.Context
 import com.loginid.client.model.DeviceInfo
 import com.loginid.client.model.User
 import com.loginid.client.model.UserLogin
@@ -104,18 +104,18 @@ object Defaults {
      * This function fetches device metadata using [DeviceUtils.getDeviceInfo]. If a `deviceId`
      * is not passed, it attempts to retrieve one from the provided [DeviceStore].
      *
-     * @param activity The current activity, required to access system services.
+     * @param context The current context, required to access system services.
      * @param store The [DeviceStore] used to retrieve a stored device ID.
      * @param deviceId An optional device ID to use. If null, the stored ID is used.
      * @return A [DeviceInfo] object containing the device's metadata.
      */
     suspend fun deviceInfo(
-        activity: Activity,
+        context: Context,
         store: DeviceStore,
         deviceId: String? = null
     ): DeviceInfo {
         return DeviceUtils.getDeviceInfo(
-            activity,
+            context,
             deviceId ?: store.getDeviceId()
         )
     }

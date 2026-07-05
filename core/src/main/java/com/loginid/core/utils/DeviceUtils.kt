@@ -1,8 +1,8 @@
 package com.loginid.core.utils
 
 import com.loginid.client.model.DeviceInfo
-import android.app.Activity
 import android.bluetooth.BluetoothManager
+import android.content.Context
 import android.os.Build
 import androidx.core.content.getSystemService
 
@@ -14,7 +14,7 @@ class DeviceUtils {
         /**
          * Creates a [DeviceInfo] object populated with the current device's information.
          *
-         * @param activity The current activity, used to access system services and resources.
+         * @param context The current context, used to access system services and resources.
          * @param deviceId An optional unique identifier for the device, if available.
          * @return A [DeviceInfo] instance containing:
          * - `clientName`: Always `"Android"`.
@@ -27,17 +27,17 @@ class DeviceUtils {
          * - `screenHeight`: The device screen height in pixels.
          * - `screenWidth`: The device screen width in pixels.
          */
-        fun getDeviceInfo(activity: Activity, deviceId: String?): DeviceInfo {
+        fun getDeviceInfo(context: Context, deviceId: String?): DeviceInfo {
             return DeviceInfo(
                 clientName = "Android",
                 clientType = DeviceInfo.ClientType.OTHER,
                 osArch = System.getProperty("os.arch"),
                 osName = "Android",
                 deviceId = deviceId,
-                hasBluetooth = isBluetoothEnabled(activity),
+                hasBluetooth = isBluetoothEnabled(context),
                 osVersion = Build.VERSION.RELEASE, //might not be 100% accurate
-                screenHeight = activity.resources.displayMetrics.heightPixels.toLong(),
-                screenWidth = activity.resources.displayMetrics.widthPixels.toLong()
+                screenHeight = context.resources.displayMetrics.heightPixels.toLong(),
+                screenWidth = context.resources.displayMetrics.widthPixels.toLong()
             )
         }
 
@@ -48,8 +48,8 @@ class DeviceUtils {
          *
          * Note: Returns false if Bluetooth is not supported or currently turned off.
          */
-        fun isBluetoothEnabled(activity: Activity): Boolean? {
-            val bluetoothManager = activity.getSystemService<BluetoothManager>()
+        fun isBluetoothEnabled(context: Context): Boolean? {
+            val bluetoothManager = context.getSystemService<BluetoothManager>()
             val bluetoothAdapter = bluetoothManager?.adapter
             return bluetoothAdapter?.isEnabled
         }

@@ -101,12 +101,14 @@ class MainActivity : AppCompatActivity() {
             }
         }
         binding.getSessionInfo.setOnClickListener {
-            // TODO: Implement getSessionInfo
-            setResultText("getSessionInfo clicked")
+            executeLoginID {
+                lid.getSessionInfo() ?: "No session available"
+            }
         }
         binding.logout.setOnClickListener {
-            // TODO: Implement logout
-            setResultText("logout clicked")
+            executeLoginID {
+                lid.logout()
+            }
         }
     }
 

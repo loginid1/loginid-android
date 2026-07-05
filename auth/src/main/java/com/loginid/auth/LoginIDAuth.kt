@@ -5,17 +5,20 @@ import android.view.View
 import com.loginid.auth.controllers.OTP
 import com.loginid.auth.controllers.PasskeyManager
 import com.loginid.auth.controllers.Passkeys
+import com.loginid.auth.controllers.Utils
 import com.loginid.auth.models.AuthResult
 import com.loginid.auth.models.AuthenticateWithPasskeyOptions
 import com.loginid.auth.models.ConfirmTransactionOptions
 import com.loginid.auth.models.CreatePasskeyOptions
 import com.loginid.auth.models.DeletePasskeyOptions
 import com.loginid.auth.models.ListPasskeysOptions
+import com.loginid.auth.models.LoginIDConfigResult
 import com.loginid.auth.models.OTPResult
 import com.loginid.auth.models.PasskeyDetails
 import com.loginid.auth.models.RenamePasskeyOptions
 import com.loginid.auth.models.RequestAndSendOtpOptions
 import com.loginid.auth.models.RequestOtpOptions
+import com.loginid.auth.models.SessionInfo
 import com.loginid.auth.models.TxConfirmResult
 import com.loginid.auth.models.ValidateOtpOptions
 import com.loginid.core.enums.MessageMethod
@@ -61,6 +64,12 @@ class LoginIDAuth(config: LoginIDConfig) {
         trustId = trustId,
         passkeyApi = passkeyApi,
         publicKeyManager = publicKeyManager,
+    )
+    private val utilsController = Utils(
+        config = config,
+        passkeyApi = passkeyApi,
+        session = session,
+        device = device
     )
 
     /**
@@ -328,4 +337,35 @@ class LoginIDAuth(config: LoginIDConfig) {
         }
     }
 
+    /**
+     * Validates the application's configuration settings and provides a suggested correction if any issues are detected.
+     *
+     * @return A [LoginIDConfigResult] if there is a configuration issue, otherwise `null`.
+     */
+    suspend fun verifyConfigSettings(): LoginIDConfigResult? {
+        return TaskHandler.executeTask {
+            utilsController.verifyConfigSettings()
+        }
+    }
+
+    /**
+     * Check whether the user of the current session is authenticated and returns user info.
+     * This info is retrieved locally and no requests to backend are made.
+     *
+     * @return A [SessionInfo] object if a valid session exists, otherwise `null`.
+     */
+    suspend fun getSessionInfo(): SessionInfo? {
+        return TaskHandler.executeTask {
+            utilsController.getSessionInfo()
+        }
+    }
+
+    /**
+     * Clears current user session. This method deletes the authorization token locally.
+     */
+    suspend fun logout() {
+        TaskHandler.executeTask {
+            utilsController.logout()
+        }
+    }
 }
