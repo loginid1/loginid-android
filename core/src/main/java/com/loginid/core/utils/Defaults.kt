@@ -51,9 +51,7 @@ object Defaults {
      * @param value The nonce to check.
      * @return The nonce or a new UUID.
      */
-    fun nonce(value: String?): String {
-        return if (!value.isNullOrEmpty()) value else UUID.randomUUID().toString()
-    }
+    fun nonce(value: String?): String = if (value.isNullOrEmpty()) UUID.randomUUID().toString() else value
 
     /**
      * Returns the given transaction type if it's not null or empty, otherwise returns "raw".
@@ -61,19 +59,7 @@ object Defaults {
      * @param value The transaction type.
      * @return The transaction type or "raw".
      */
-    fun txType(value: String?): String {
-        return if (!value.isNullOrEmpty()) value else "raw"
-    }
-
-    /**
-     * Returns the given boolean value, or false if it's null.
-     *
-     * @param value The boolean value.
-     * @return The boolean value or false.
-     */
-    fun autoFill(value: Boolean?): Boolean {
-        return value ?: false
-    }
+    fun txType(value: String?): String = if (value.isNullOrEmpty()) "raw" else value
 
     /**
      * Constructs a `User` object from the given parameters, using default values where necessary.

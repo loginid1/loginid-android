@@ -7,7 +7,9 @@ import com.loginid.auth.extensions.fromJWT
 import com.loginid.auth.extensions.mergeFallbackMethods
 import com.loginid.auth.models.AuthResult
 import com.loginid.auth.models.AuthenticateWithPasskeyOptions
+import com.loginid.auth.models.ConfirmTransactionOptions
 import com.loginid.auth.models.CreatePasskeyOptions
+import com.loginid.auth.models.TxConfirmResult
 import com.loginid.client.model.Application
 import com.loginid.client.model.AuthCompleteRequestBody
 import com.loginid.client.model.AuthInit
@@ -16,6 +18,8 @@ import com.loginid.client.model.AuthenticatorAssertionResponse
 import com.loginid.client.model.CreationResult
 import com.loginid.client.model.RegCompleteRequestBody
 import com.loginid.client.model.RegInitRequestBody
+import com.loginid.client.model.TxCompleteRequestBody
+import com.loginid.client.model.TxInitRequestBody
 import com.loginid.core.errors.LoginIDError
 import com.loginid.core.extensions.toJSON
 import com.loginid.core.interfaces.PasskeyAPI
@@ -168,6 +172,46 @@ internal class Passkeys(
                 val fallbackOptions = initRes.mergeFallbackMethods()
                 return AuthResult().fromFallback(fallbackOptions)
             }
+        }
+    }
+
+    suspend fun confirmTransaction(
+        activity: Activity,
+        username: String,
+        txPayload: String,
+        options: ConfirmTransactionOptions?
+    ): TxConfirmResult {
+        val nonce = Defaults.nonce(options?.nonce)
+        val txType = Defaults.txType(options?.txType)
+
+        val txInitRequestBody = TxInitRequestBody(
+            nonce = nonce,
+            txPayload = txPayload,
+            txType = txType,
+            username = username
+        )
+
+        val initRes = passkeyApi.txInit(txInitRequestBody)
+        val publicKey = initRes.assertionOptions
+
+        return invokePasskeyApi(initRes.session) {
+            val credential = publicKeyManager.get(
+                activity = activity,
+                publicKey = publicKey.toJSON(),
+                usernameAnchorView = null
+            )
+
+            val txCompleteRequestBody = TxCompleteRequestBody(
+                authenticatorData = credential.response.authenticatorData,
+                clientData = credential.response.clientDataJSON,
+                signature = credential.response.signature,
+                keyHandle = credential.id,
+                session = initRes.session,
+            )
+
+            val result = passkeyApi.txComplete(txCompleteRequestBody)
+
+            TxConfirmResult(result)
         }
     }
 

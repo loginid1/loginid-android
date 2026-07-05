@@ -44,8 +44,10 @@ class MainActivity : AppCompatActivity() {
             }
         }
         binding.confirmTransaction.setOnClickListener {
-            // TODO: Implement confirmTransaction
-            setResultText("confirmTransaction clicked")
+            executeLoginID {
+                val username = binding.usernameInput.text.toString()
+                lid.confirmTransaction(this@MainActivity, username, "$100")
+            }
         }
         binding.listPasskeys.setOnClickListener {
             // TODO: Implement listPasskeys

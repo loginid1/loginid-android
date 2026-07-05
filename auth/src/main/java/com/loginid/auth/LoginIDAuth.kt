@@ -5,7 +5,9 @@ import android.view.View
 import com.loginid.auth.controllers.Passkeys
 import com.loginid.auth.models.AuthResult
 import com.loginid.auth.models.AuthenticateWithPasskeyOptions
+import com.loginid.auth.models.ConfirmTransactionOptions
 import com.loginid.auth.models.CreatePasskeyOptions
+import com.loginid.auth.models.TxConfirmResult
 import com.loginid.core.models.LoginIDConfig
 import com.loginid.core.services.PasskeyService
 import com.loginid.core.stores.DeviceStore
@@ -130,6 +132,39 @@ class LoginIDAuth(config: LoginIDConfig) {
         return TaskHandler.executeTask {
             passkeysController.authenticateWithPasskey(
                 activity, "", usernameAnchorView, opts
+            )
+        }
+    }
+
+    /**
+     * This method initiates a non-repudiation signature process by generating a transaction-specific challenge
+     * and then expects the client to provide an assertion response using a passkey.
+     *
+     * This method is useful for confirming actions such as payments
+     * or changes to sensitive account information, ensuring that the transaction is being authorized
+     * by the rightful owner of the passkey.
+     *
+     * For a more detailed guide click [here](https://docs.loginid.io/user-scenario/authentication/step-up/transaction-confirmation/).
+     *
+     * @param activity The current activity.
+     * @param username The username of the account holder confirming the transaction.
+     * @param txPayload A string representing the transaction details, such as an amount or action.
+     * @param options Optional parameters to customize the transaction, like providing a `nonce` or specifying the `txType`.
+     * @return A [TxConfirmResult] containing a confirmation token and passkey details.
+     * @throws com.loginid.core.errors.LoginIDError if the transaction confirmation fails or is canceled.
+     */
+    suspend fun confirmTransaction(
+        activity: Activity,
+        username: String,
+        txPayload: String,
+        options: ConfirmTransactionOptions? = null
+    ): TxConfirmResult {
+        return TaskHandler.executeTask {
+            passkeysController.confirmTransaction(
+                activity,
+                username,
+                txPayload,
+                options
             )
         }
     }
