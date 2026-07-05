@@ -27,6 +27,8 @@ dependencies {
     implementation(libs.moshi)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.credentials.play.services.auth)
+    implementation(libs.androidx.security.crypto)
 
     ksp(libs.moshi.kotlin.codegen)
 

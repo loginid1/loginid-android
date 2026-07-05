@@ -1,10 +1,16 @@
 package com.loginid.auth.controllers
 
 import android.app.Activity
+import com.loginid.auth.extensions.fromJWT
 import com.loginid.auth.models.AuthResult
 import com.loginid.auth.models.CreatePasskeyOptions
 import com.loginid.client.model.Application
+import com.loginid.client.model.CreationResult
+import com.loginid.client.model.RegCompleteRequestBody
 import com.loginid.client.model.RegInitRequestBody
+import com.loginid.core.extensions.toJSON
+import com.loginid.core.interfaces.PasskeyAPI
+import com.loginid.core.interfaces.PublicKeyManaging
 import com.loginid.core.models.LoginIDConfig
 import com.loginid.core.stores.DeviceStore
 import com.loginid.core.stores.SessionManager
@@ -17,6 +23,8 @@ internal class Passkeys(
     private val device: DeviceStore,
     private val session: SessionManager,
     private val trustId: TrustID,
+    private val passkeyApi: PasskeyAPI,
+    private val publicKeyManager: PublicKeyManaging
 ) {
     suspend fun createPasskey(
         activity: Activity,
@@ -46,7 +54,39 @@ internal class Passkeys(
         val userAgent = DeviceUtils.getUserAgent()
         val authzToken = session.getAuthzToken(options?.authzToken)
 
-        return AuthResult()
+        val initRes = passkeyApi.regInit(
+            request = regInitRequestBody,
+            userAgent = userAgent,
+            authorization = authzToken,
+        )
+
+        return invokePasskeyApi(initRes.session) {
+            val credential = publicKeyManager.create(
+                activity = activity,
+                publicKey = initRes.registrationRequestOptions.toJSON()
+            )
+
+            val regCompleteRequestBody = RegCompleteRequestBody(
+                creationResult = CreationResult(
+                    attestationObject = credential.response.attestationObject,
+                    clientDataJSON = credential.response.clientDataJSON,
+                    credentialId = credential.id,
+                    transports = credential.response.transports,
+                    authenticatorData = credential.response.authenticatorData,
+                    publicKeyAlgorithm = credential.response.publicKeyAlgorithm,
+                    publicKey = credential.response.publicKey,
+                ),
+                session = initRes.session,
+                passkeyName = options?.passkeyName,
+            )
+
+            val response = passkeyApi.regComplete(regCompleteRequestBody)
+
+            session.setAccessToken(response.jwtAccess)
+            device.setDeviceId(response.deviceId)
+
+            AuthResult().fromJWT(response)
+        }
     }
 
     private suspend fun <T> invokePasskeyApi(
