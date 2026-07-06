@@ -4,7 +4,14 @@ import * as yaml from "js-yaml";
 const file = fs.readFileSync("./openapi.yaml", "utf8");
 const data = yaml.load(file);
 
-const allowedTags = new Set(["passkeys", "auth", "reg", "tx"]);
+const allowedTags = new Set([
+  'reg',
+  'auth',
+  'tx',
+  'passkeys',
+  'mfa',
+  'client-events'
+]);
 const allowedSchemas = new Set();
 
 const extractSchemas = (schema) => {
@@ -99,6 +106,15 @@ if (data.components && data.components.schemas) {
     }
 
     switch (schemaKey) {
+      case 'MfaNext':
+      case 'Mfa' : {
+        schema.properties.flow.enum = schema.properties.flow.enum.map(value => value.toLowerCase())
+        schema.properties.flow.enum.push('checkout')
+        schema.properties.flow.enum.push('signUp')
+        schema.properties.flow.enum.push('signIn')
+        break;
+      }
+
       case "RegInit":
         schema.properties.action.enum = [...schema.properties.action.enum, ""];
         break;

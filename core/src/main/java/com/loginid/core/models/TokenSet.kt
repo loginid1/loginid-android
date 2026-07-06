@@ -1,6 +1,7 @@
 package com.loginid.core.models
 
 import com.squareup.moshi.JsonClass
+import com.loginid.client.model.Mfa
 
 /**
  * A collection of authentication tokens returned after a successful login.
@@ -16,4 +17,15 @@ data class TokenSet(
     val accessToken: String? = null,
     val refreshToken: String? = null,
     val payloadSignature: String? = null
-)
+) {
+    /**
+     * Initializes a `TokenSet` from an auto-generated `Mfa`.
+     * @param result The auto-generated result object.
+     */
+    constructor(result: Mfa) : this(
+        idToken = result.idToken,
+        accessToken = result.accessToken,
+        refreshToken = result.refreshToken,
+        payloadSignature = result.payloadSignature
+    )
+}

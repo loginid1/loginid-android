@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.library)
+    id("com.google.devtools.ksp") version "2.3.9"
 }
 
 android {
@@ -26,8 +27,12 @@ dependencies {
     implementation(project(":api"))
     implementation(project(":core"))
 
+    implementation(libs.moshi)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.ktx)
+
+    ksp(libs.moshi.kotlin.codegen)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)
