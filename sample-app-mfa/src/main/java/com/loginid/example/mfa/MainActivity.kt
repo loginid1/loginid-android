@@ -56,7 +56,11 @@ class MainActivity : AppCompatActivity() {
         }
         binding.passkeyCreate.setOnClickListener {
             executeBlock {
-                val options = PerformActionOptions(activity = this@MainActivity)
+                val displayName = binding.displayNameInput.text.toString()
+                val options = PerformActionOptions(
+                    activity = this@MainActivity,
+                    displayName = displayName,
+                )
                 lid.performAction(ActionName.PASSKEY_REG, options)
             }
         }

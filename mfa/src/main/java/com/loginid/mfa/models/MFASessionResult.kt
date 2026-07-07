@@ -22,6 +22,7 @@ import com.loginid.mfa.enums.ActionName
  * @property merchantTrustId A signed trust token representing a trusted relationship between the merchant and the user's wallet. This value is issued by LoginID after the merchant trust relationship has been successfully verified during a checkout authentication flow. The value may be verified by backend services using LoginID [token verification](https://docs.loginid.io/backend-integration/verify-token). Available only after the MFA session is complete.
  * @property walletTrustId A signed trust token representing a trusted wallet. This value is issued by LoginID after the wallet trust relationship has been successfully verified during a checkout authentication flow. The value may be verified by backend services using LoginID [token verification](https://docs.loginid.io/backend-integration/verify-token). Available only after the MFA session is complete.
  * @property passkeyInfo Information about the passkey involved in this MFA session, including passkey creation or authentication results when applicable. Available only after the MFA session is complete.
+ * @property deviceId An identifier for the device used in the authentication process. Available only after the MFA session is complete.
  * @property nextAction The next recommended MFA factor action to take. Indicates which MFA factor the user should complete next in order to proceed.
  */
 data class MFASessionResult(
@@ -37,6 +38,7 @@ data class MFASessionResult(
     val merchantTrustId: String?,
     val walletTrustId: String?,
     val passkeyInfo: PasskeyInfo?,
+    val deviceId: String?,
     val nextAction: ActionName?
 ) {
     companion object {
@@ -76,6 +78,7 @@ data class MFASessionResult(
                 merchantTrustId = trustSet?.merchantTrustId,
                 walletTrustId = trustSet?.walletTrustId,
                 passkeyInfo = if (isComplete) mfaData?.passkeyInfo else null,
+                deviceId = if (isComplete) mfaData?.deviceId else null,
                 nextAction = supportedNext?.mapNotNull { ActionName.fromClientEnum(it.action.name) }?.firstMatch(
                     ordered = listOf(
                         ActionName.PASSKEY_REG, ActionName.PASSKEY_AUTH, ActionName.PASSKEY_TX,
