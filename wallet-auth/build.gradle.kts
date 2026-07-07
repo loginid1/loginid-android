@@ -23,6 +23,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":core"))
     implementation(project(":mfa"))
 
     implementation(libs.androidx.appcompat)

@@ -8,10 +8,10 @@ import com.loginid.core.stores.SharedPreferencesStorage
 import com.loginid.core.utils.KeyStoreManager
 import com.loginid.core.utils.TrustID
 import com.loginid.example.mfa.databinding.ActivityMainBinding
-import com.loginid.mfa.LoginIDMFA
 import com.loginid.mfa.enums.ActionName
 import com.loginid.mfa.models.BeginFlowOptions
 import com.loginid.mfa.models.PerformActionOptions
+import com.loginid.wallet.auth.LoginIDWalletAuth
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
@@ -19,11 +19,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private val baseUrl = "https://AIIICE0385888F3SUK9TL3KO.api.dev.loginid.io"
-    private val config = LoginIDConfig(this, baseUrl)
-    private val lid = LoginIDMFA(config = LoginIDConfig(
-        this,
-        baseUrl,
-    ))
+    private val lid = LoginIDWalletAuth(this, baseUrl)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,9 +37,8 @@ class MainActivity : AppCompatActivity() {
                 val displayName = binding.displayNameInput.text.toString()
                 val options = BeginFlowOptions(
                     displayName = displayName,
-                    txPayload = txPayload
                 )
-                lid.beginFlow(username, options)
+                lid.beginFlow(txPayload = txPayload, username = username, options = options)
             }
         }
         binding.external.setOnClickListener {
@@ -87,6 +82,7 @@ class MainActivity : AppCompatActivity() {
         }
         binding.deleteTrust.setOnClickListener {
             executeBlock {
+                val config = LoginIDConfig(this, baseUrl)
                 val masterStore = SharedPreferencesStorage(config.getContext())
                 val trustId = TrustID(
                     config = config,
