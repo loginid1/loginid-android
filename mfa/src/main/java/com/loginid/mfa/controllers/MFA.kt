@@ -22,6 +22,7 @@ import com.loginid.core.stores.SessionManager
 import com.loginid.core.utils.Defaults
 import com.loginid.core.utils.DeviceUtils
 import com.loginid.core.utils.TrustID
+import com.loginid.mfa.enums.ActionName
 import com.loginid.mfa.models.BeginFlowOptions
 import com.loginid.mfa.models.MFAData
 import com.loginid.mfa.models.MFAInfo
@@ -116,19 +117,20 @@ internal class MFA(
      *   contains a contact, it is used; otherwise, the primary contact on record is used.
      * - **OTP Verify (email/SMS):** Verifies the OTP code provided in `options.payload`.
      *
-     * @param action The MFA factor to perform (e.g., `MfaActionAction.Name.PASSKEY_COLON_REG`).
+     * @param action The MFA factor to perform (e.g., `MFAActionName.PASSKEY_REG`).
      * @param options The session/payload options for the action. Pass `null` to resolve defaults when possible.
      * @return An updated `MFASessionResult` reflecting the new MFA state and next actions.
      * @throws LoginIDError if validation fails, the payload is missing/invalid, or the API call fails.
      */
     suspend fun performAction(
-        action: MfaActionAction.Name,
+        action: ActionName,
         options: PerformActionOptions?
     ): MFASessionResult {
+        val clientAction = action.clientEnum
         val info = store.getMFAInfo()
-        val values = MFAValidator.actionValidator(action = action, info = info, options = options)
+        val values = MFAValidator.actionValidator(action = clientAction, info = info, options = options)
 
-        if (action == MfaActionAction.Name.PASSKEY_COLON_TX && !options?.txPayload.isNullOrEmpty()) {
+        if (clientAction == MfaActionAction.Name.PASSKEY_COLON_TX && !options?.txPayload.isNullOrEmpty()) {
             val rest = options.withoutTxPayload()
             val mfaPayloadUpdateRequestBody = MfaPayloadUpdateRequestBody(payload = options.txPayload)
             val mfaNextResult = mfaApi.mfaPayloadUpdate(
@@ -143,7 +145,7 @@ internal class MFA(
             return performAction(action, rest)
         }
 
-        return when (action) {
+        return when (clientAction) {
             MfaActionAction.Name.PASSKEY_COLON_REG, MfaActionAction.Name.PASSKEY_COLON_AUTH, MfaActionAction.Name.PASSKEY_COLON_TX -> {
                 when (val passkeyOptions = MFAValidator.validatePasskeyPayload(values.payload)) {
                     is PasskeyOptions.Creation -> {
@@ -211,7 +213,7 @@ internal class MFA(
 
                             val requestBody = MfaPasskeyAuthRequestBody(assertionResult = assertionResult)
 
-                            when (action) {
+                            when (clientAction) {
                                 MfaActionAction.Name.PASSKEY_COLON_TX -> mfaApi.mfaPasskeyTx(
                                     request = requestBody,
                                     authorization = values.session
@@ -222,7 +224,7 @@ internal class MFA(
                                 )
                                 else -> throw LoginIDError(
                                     msgCode = "not_supported",
-                                    msg = "MFA factor $action is not supported in the current MFA flow."
+                                    msg = "MFA factor $clientAction is not supported in the current MFA flow."
                                 )
                             }
                         }
@@ -241,7 +243,7 @@ internal class MFA(
             else -> {
                 throw LoginIDError(
                     msgCode = "not_supported",
-                    msg = "MFA factor $action is not supported in the current MFA flow."
+                    msg = "MFA factor $clientAction is not supported in the current MFA flow."
                 )
             }
         }

@@ -1,8 +1,8 @@
 package com.loginid.mfa.models
 
-import com.loginid.client.model.MfaActionAction
 import com.loginid.client.model.MfaNext
 import com.loginid.core.extensions.firstMatch
+import com.loginid.mfa.enums.ActionName
 
 /**
  * Represents the result of a Multi-Factor Authentication (MFA) session.
@@ -37,7 +37,7 @@ data class MFASessionResult(
     val merchantTrustId: String?,
     val walletTrustId: String?,
     val passkeyInfo: PasskeyInfo?,
-    val nextAction: MfaActionAction.Name?
+    val nextAction: ActionName?
 ) {
     companion object {
         /**
@@ -60,9 +60,12 @@ data class MFASessionResult(
             trustSet: TrustSet?
         ): MFASessionResult {
             val isComplete = (mfaData?.tokenSet?.accessToken != null || mfaData?.tokenSet?.payloadSignature != null)
+            val supportedNext = info?.next?.filter {
+                ActionName.fromClientEnum(it.action.name) != null
+            }
             return MFASessionResult(
                 flow = info?.flow,
-                remainingFactors = info?.next?.map { RemainingAction(it) } ?: emptyList(),
+                remainingFactors = supportedNext?.map { RemainingAction(it) } ?: emptyList(),
                 username = info?.username,
                 isComplete = isComplete,
                 session = info?.session,
@@ -73,10 +76,10 @@ data class MFASessionResult(
                 merchantTrustId = trustSet?.merchantTrustId,
                 walletTrustId = trustSet?.walletTrustId,
                 passkeyInfo = if (isComplete) mfaData?.passkeyInfo else null,
-                nextAction = info?.next?.map { it.action.name }?.firstMatch(
+                nextAction = supportedNext?.mapNotNull { ActionName.fromClientEnum(it.action.name) }?.firstMatch(
                     ordered = listOf(
-                        MfaActionAction.Name.PASSKEY_COLON_REG, MfaActionAction.Name.PASSKEY_COLON_AUTH, MfaActionAction.Name.PASSKEY_COLON_TX,
-                        MfaActionAction.Name.OTP_COLON_SMS, MfaActionAction.Name.OTP_COLON_EMAIL, MfaActionAction.Name.EXTERNAL
+                        ActionName.PASSKEY_REG, ActionName.PASSKEY_AUTH, ActionName.PASSKEY_TX,
+                        ActionName.OTP_SMS, ActionName.OTP_EMAIL, ActionName.EXTERNAL
                     )
                 )
             )

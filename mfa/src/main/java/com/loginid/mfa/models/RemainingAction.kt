@@ -1,7 +1,8 @@
 package com.loginid.mfa.models
 
-import com.loginid.client.model.MfaActionAction
 import com.loginid.client.model.MfaAction
+import com.loginid.client.model.MfaActionAction
+import com.loginid.mfa.enums.ActionName
 
 /**
  * Represents an individual MFA (Multi-Factor Authentication) factor that the user must complete.
@@ -19,7 +20,7 @@ import com.loginid.client.model.MfaAction
  * Typically includes valid email addresses or phone numbers for OTP delivery.
  */
 data class RemainingAction(
-    val type: MfaActionAction.Name,
+    val type: ActionName,
     val label: String,
     val description: String?,
     val value: String?,
@@ -30,7 +31,7 @@ data class RemainingAction(
      * @param factor The auto-generated action object.
      */
     internal constructor(factor: MfaAction) : this(
-        type = factor.action.name,
+        type = ActionName.fromClientEnum(factor.action.name)!!,
         label = factor.action.label,
         description = factor.action.desc,
         value = factor.options?.let { opts ->

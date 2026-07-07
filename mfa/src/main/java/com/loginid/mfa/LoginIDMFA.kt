@@ -1,6 +1,5 @@
 package com.loginid.mfa
 
-import com.loginid.client.model.MfaActionAction
 import com.loginid.core.models.LoginIDConfig
 import com.loginid.core.services.MFAService
 import com.loginid.core.stores.DeviceStore
@@ -11,6 +10,7 @@ import com.loginid.core.utils.PublicKeyManager
 import com.loginid.core.utils.TaskHandler
 import com.loginid.core.utils.TrustID
 import com.loginid.mfa.controllers.MFA
+import com.loginid.mfa.enums.ActionName
 import com.loginid.mfa.models.BeginFlowOptions
 import com.loginid.mfa.models.MFASessionResult
 import com.loginid.mfa.models.PerformActionOptions
@@ -73,13 +73,13 @@ class LoginIDMFA(config: LoginIDConfig) {
      * - **External authentication:** Provide the authorization code in `options.payload`.
      * - **Passkeys:** Uses WebAuthn for authentication or registration.
      *
-     * @param action The MFA factor to perform (e.g., `MfaActionAction.Name.PASSKEY_COLON_AUTH`).
+     * @param action The MFA factor to perform (e.g., `MFAActionName.PASSKEY_AUTH`).
      * @param options The session/payload options for the action. Pass `null` to resolve defaults when possible.
      * @return An updated `MFASessionResult` reflecting the new MFA state and next actions.
      * @throws com.loginid.core.errors.LoginIDError if validation fails, the payload is missing/invalid, or the API call fails.
      */
     suspend fun performAction(
-        action: MfaActionAction.Name,
+        action: ActionName,
         options: PerformActionOptions? = null
     ): MFASessionResult {
         return TaskHandler.executeTask {
