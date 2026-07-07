@@ -50,3 +50,19 @@ lint:
     - when: always
   script:
     - ./gradlew lint
+
+build:
+  stage: test
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "pipeline" 
+      when: never
+    - when: always
+  script:
+    - ./gradlew buildLibrariesRelease
+  artifacts:
+    paths:
+      - api/build/libs/*.jar
+      - core/build/outputs/aar/*-release.aar
+      - auth/build/outputs/aar/*-release.aar
+      - mfa/build/outputs/aar/*-release.aar
+    expire_in: 1 hour

@@ -52,3 +52,12 @@ subprojects {
         }
     }
 }
+
+tasks.register("buildLibrariesRelease") {
+    dependsOn(
+        ":api:jar",
+        ":core:assembleRelease",
+        ":auth:assembleRelease",
+        ":mfa:assembleRelease"
+    )
+}
