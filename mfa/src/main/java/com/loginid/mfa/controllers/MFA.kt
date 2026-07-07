@@ -200,7 +200,7 @@ internal class MFA(
                             val credential = publicKeyManager.get(
                                 activity,
                                 requestOptionsJson,
-                                if (options.autoFill == true) options.usernameAnchorView else null
+                                options.usernameAnchorView
                             )
 
                             val assertionResult = AuthenticatorAssertionResponse(
