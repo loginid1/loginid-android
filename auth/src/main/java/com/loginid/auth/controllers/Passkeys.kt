@@ -14,13 +14,13 @@ import com.loginid.client.model.Application
 import com.loginid.client.model.AuthCompleteRequestBody
 import com.loginid.client.model.AuthInit
 import com.loginid.client.model.AuthInitRequestBody
-import com.loginid.client.model.AuthenticatorAssertionResponse
-import com.loginid.client.model.CreationResult
 import com.loginid.client.model.RegCompleteRequestBody
 import com.loginid.client.model.RegInitRequestBody
 import com.loginid.client.model.TxCompleteRequestBody
 import com.loginid.client.model.TxInitRequestBody
 import com.loginid.core.errors.LoginIDError
+import com.loginid.core.extensions.toAuthenticatorAssertionResponse
+import com.loginid.core.extensions.toCreationResult
 import com.loginid.core.extensions.toJSON
 import com.loginid.core.interfaces.PasskeyAPI
 import com.loginid.core.interfaces.PublicKeyManaging
@@ -80,15 +80,7 @@ internal class Passkeys(
             )
 
             val regCompleteRequestBody = RegCompleteRequestBody(
-                creationResult = CreationResult(
-                    attestationObject = credential.response.attestationObject,
-                    clientDataJSON = credential.response.clientDataJSON,
-                    credentialId = credential.id,
-                    transports = credential.response.transports,
-                    authenticatorData = credential.response.authenticatorData,
-                    publicKeyAlgorithm = credential.response.publicKeyAlgorithm,
-                    publicKey = credential.response.publicKey,
-                ),
+                creationResult = credential.toCreationResult(),
                 session = initRes.session,
                 passkeyName = options?.passkeyName,
             )
@@ -150,13 +142,7 @@ internal class Passkeys(
                     )
 
                     val authCompleteRequestBody = AuthCompleteRequestBody(
-                        assertionResult = AuthenticatorAssertionResponse(
-                            authenticatorData = credential.response.authenticatorData,
-                            clientDataJSON = credential.response.clientDataJSON,
-                            credentialId = credential.id,
-                            signature = credential.response.signature,
-                            userHandle = credential.response.userHandle
-                        ),
+                        assertionResult = credential.toAuthenticatorAssertionResponse(),
                         session = initRes.session
                     )
 

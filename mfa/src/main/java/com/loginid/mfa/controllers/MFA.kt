@@ -1,7 +1,5 @@
 package com.loginid.mfa.controllers
 
-import com.loginid.client.model.AuthenticatorAssertionResponse
-import com.loginid.client.model.CreationResult
 import com.loginid.client.model.Mfa
 import com.loginid.client.model.MfaActionAction
 import com.loginid.client.model.MfaBeginRequestBody
@@ -13,6 +11,8 @@ import com.loginid.client.model.MfaThirdPartyAuthVerifyRequestBody
 import com.loginid.client.model.PublicKeyCredentialCreationOptions
 import com.loginid.client.model.PublicKeyCredentialRequestOptions
 import com.loginid.core.errors.LoginIDError
+import com.loginid.core.extensions.toAuthenticatorAssertionResponse
+import com.loginid.core.extensions.toCreationResult
 import com.loginid.core.errors.LoginIDException
 import com.loginid.core.interfaces.MFAAPI
 import com.loginid.core.interfaces.PublicKeyManaging
@@ -170,17 +170,7 @@ internal class MFA(
 
                             val credential = publicKeyManager.create(activity, creationOptionsJson)
 
-                            val creationResult = CreationResult(
-                                attestationObject = credential.response.attestationObject,
-                                clientDataJSON = credential.response.clientDataJSON,
-                                credentialId = credential.id,
-                                transports = credential.response.transports,
-                                authenticatorData = credential.response.authenticatorData,
-                                publicKeyAlgorithm = credential.response.publicKeyAlgorithm,
-                                publicKey = credential.response.publicKey,
-                            )
-
-                            val requestBody = MfaPasskeyRegRequestBody(creationResult = creationResult)
+                            val requestBody = MfaPasskeyRegRequestBody(creationResult = credential.toCreationResult())
 
                             mfaApi.mfaPasskeyReg(
                                 request = requestBody,
@@ -203,15 +193,7 @@ internal class MFA(
                                 options.usernameAnchorView
                             )
 
-                            val assertionResult = AuthenticatorAssertionResponse(
-                                authenticatorData = credential.response.authenticatorData,
-                                clientDataJSON = credential.response.clientDataJSON,
-                                credentialId = credential.id,
-                                signature = credential.response.signature,
-                                userHandle = credential.response.userHandle
-                            )
-
-                            val requestBody = MfaPasskeyAuthRequestBody(assertionResult = assertionResult)
+                            val requestBody = MfaPasskeyAuthRequestBody(assertionResult = credential.toAuthenticatorAssertionResponse())
 
                             when (clientAction) {
                                 MfaActionAction.Name.PASSKEY_COLON_TX -> mfaApi.mfaPasskeyTx(
