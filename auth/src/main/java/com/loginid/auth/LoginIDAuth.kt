@@ -1,6 +1,7 @@
 package com.loginid.auth
 
 import android.app.Activity
+import android.content.Context
 import android.view.View
 import com.loginid.auth.controllers.OTP
 import com.loginid.auth.controllers.PasskeyManager
@@ -35,6 +36,18 @@ import com.loginid.core.utils.TaskHandler
 import com.loginid.core.utils.TrustID
 
 class LoginIDAuth(config: LoginIDConfig) {
+
+    /**
+     * Creates a new authentication helper using a base URL.
+     *
+     * Use this initializer when you only have the environment base URL and want sensible defaults
+     * for the underlying SDK configuration.
+     *
+     * @param context The Android application context.
+     * @param baseUrl The LoginID environment base URL (e.g., from your environment configuration).
+     */
+    constructor(context: Context, baseUrl: String) : this(LoginIDConfig(context = context, baseUrl = baseUrl))
+
     private val masterStore = SharedPreferencesStorage(config.getContext())
     private val session = SessionManager(masterStore, config)
     private val trustId = TrustID(
