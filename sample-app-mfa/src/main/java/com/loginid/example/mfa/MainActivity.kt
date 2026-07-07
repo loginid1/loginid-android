@@ -3,13 +3,20 @@ package com.loginid.example.mfa
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.loginid.core.models.LoginIDConfig
 import com.loginid.example.mfa.databinding.ActivityMainBinding
+import com.loginid.mfa.LoginIDMFA
+import com.loginid.mfa.models.BeginFlowOptions
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private val lid = LoginIDMFA(config = LoginIDConfig(
+        this,
+        "https://AIIICE0385888F3SUK9TL3KO.api.dev.loginid.io",
+    ))
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,8 +29,9 @@ class MainActivity : AppCompatActivity() {
     private fun setupClickListeners() {
         binding.beginFlow.setOnClickListener {
             executeBlock {
-                // TODO: Implement MFA SDK call
-                "Begin Flow clicked"
+                val username = binding.usernameInput.text.toString()
+                val options = BeginFlowOptions(txPayload = "$100")
+                lid.beginFlow(username, options)
             }
         }
         binding.external.setOnClickListener {

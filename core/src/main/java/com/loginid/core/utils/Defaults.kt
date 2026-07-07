@@ -2,6 +2,7 @@ package com.loginid.core.utils
 
 import android.content.Context
 import com.loginid.client.model.DeviceInfo
+import com.loginid.client.model.MfaUser
 import com.loginid.client.model.User
 import com.loginid.client.model.UserLogin
 import com.loginid.core.enums.UsernameType
@@ -95,6 +96,28 @@ object Defaults {
         return UserLogin(
             username = username ?: "",
             usernameType = toUserLoginUsernameType(usernameType)
+        )
+    }
+
+    /**
+     * Constructs a `MfaUser` object from the given parameters, using default values where necessary.
+     *
+     * @param displayName The user's display name.
+     * @param username The user's username.
+     * @param usernameType The type of username.
+     * @return A `MfaUser` object.
+     */
+    fun userMfa(
+        displayName: String?,
+        username: String?,
+        usernameType: UsernameType?
+    ): MfaUser {
+        return MfaUser(
+            username = username ?: "",
+            usernameType = (usernameType ?: UsernameType.OTHER).value,
+            displayName = displayName(displayName, username ?: ""),
+            name = null,
+            phone = null
         )
     }
 

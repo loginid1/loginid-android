@@ -14,6 +14,11 @@ const allowedTags = new Set([
 ]);
 const allowedSchemas = new Set();
 
+const allowedSecurityHeaders = new Set([
+  "jwt_header_Authorization",
+  "sessionAuth_header_Authorization",
+]);
+
 const extractSchemas = (schema) => {
   if (!schema) return;
 
@@ -54,7 +59,7 @@ for (const pathKey in data.paths) {
     const hasAllowedTag = method.tags?.some((tag) => allowedTags.has(tag));
 
     if (hasAllowedTag) {
-      if (method.security?.some((sec) => sec.jwt_header_Authorization)) {
+      if (method.security?.some((sec) => Object.keys(sec).some((key) => allowedSecurityHeaders.has(key)))) {
         if (!method.parameters) {
           method.parameters = [];
         }
