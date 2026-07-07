@@ -38,7 +38,6 @@ android {
 }
 
 dependencies {
-    implementation(project(":wallet-auth"))
     implementation(project(":mfa"))
     implementation(project(":core"))
 

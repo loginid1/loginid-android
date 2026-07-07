@@ -15,7 +15,6 @@
             <option value="$PROJECT_DIR$/mfa" />
             <option value="$PROJECT_DIR$/sample-app-auth" />
             <option value="$PROJECT_DIR$/sample-app-mfa" />
-            <option value="$PROJECT_DIR$/wallet-auth" />
           </set>
         </option>
       </GradleProjectSettings>

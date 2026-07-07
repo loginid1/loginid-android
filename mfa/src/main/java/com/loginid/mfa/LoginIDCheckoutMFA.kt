@@ -1,9 +1,8 @@
-package com.loginid.wallet.auth
+package com.loginid.mfa
 
 import android.content.Context
 import com.loginid.core.errors.LoginIDError
 import com.loginid.core.models.LoginIDConfig
-import com.loginid.mfa.LoginIDMFA
 import com.loginid.mfa.enums.ActionName
 import com.loginid.mfa.models.BeginFlowOptions
 import com.loginid.mfa.models.MFASessionResult
@@ -15,7 +14,7 @@ import com.loginid.mfa.models.PerformActionOptions
  *
  * This helps orchestrate the MFA flow tied to a transaction (e.g., confirming a purchase) using passkeys.
  */
-class LoginIDWalletAuth {
+class LoginIDCheckoutMFA {
     private val mfa: LoginIDMFA
 
     /**

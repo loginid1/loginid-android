@@ -8,10 +8,10 @@ import com.loginid.core.stores.SharedPreferencesStorage
 import com.loginid.core.utils.KeyStoreManager
 import com.loginid.core.utils.TrustID
 import com.loginid.example.mfa.databinding.ActivityMainBinding
+import com.loginid.mfa.LoginIDCheckoutMFA
 import com.loginid.mfa.enums.ActionName
 import com.loginid.mfa.models.BeginFlowOptions
 import com.loginid.mfa.models.PerformActionOptions
-import com.loginid.wallet.auth.LoginIDWalletAuth
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private val baseUrl = "https://AIIICE0385888F3SUK9TL3KO.api.dev.loginid.io"
-    private val lid = LoginIDWalletAuth(this, baseUrl)
+    private val lid = LoginIDCheckoutMFA(this, baseUrl)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
