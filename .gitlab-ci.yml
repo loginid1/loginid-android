@@ -1,3 +1,17 @@
+default:
+  image: $CI_REGISTRY_IMAGE:latest
+
+cache:
+  key:
+    files:
+      - gradle/wrapper/gradle-wrapper.properties
+  paths:
+    - $PWD/cache/.gradle/
+
+before_script:
+  - export GRADLE_USER_HOME=cache/.gradle
+  - chmod +x ./gradlew
+
 include:
 - template: Security/SAST.gitlab-ci.yml
 
@@ -27,3 +41,12 @@ build_base_image:
       --dockerfile "${CI_PROJECT_DIR}/docker/Dockerfile"
       --destination $CI_REGISTRY_IMAGE:latest
       --force
+
+lint:
+  stage: test
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "pipeline" 
+      when: never
+    - when: always
+  script:
+    - ./gradlew lint
