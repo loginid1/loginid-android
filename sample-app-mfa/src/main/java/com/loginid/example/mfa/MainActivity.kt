@@ -61,8 +61,7 @@ class MainActivity : AppCompatActivity() {
         }
         binding.passkeyAuth.setOnClickListener {
             executeBlock {
-                val options = PerformActionOptions(activity = this@MainActivity)
-                lid.performAction(ActionName.PASSKEY_AUTH, options)
+                lid.performAction(ActionName.PASSKEY_AUTH, this@MainActivity)
             }
         }
         binding.passkeyAutofill.setOnClickListener {
@@ -76,8 +75,7 @@ class MainActivity : AppCompatActivity() {
         }
         binding.transactionConfirmation.setOnClickListener {
             executeBlock {
-                val options = PerformActionOptions(activity = this@MainActivity)
-                lid.performAction(ActionName.PASSKEY_TX, options)
+                lid.performAction(ActionName.PASSKEY_TX, this@MainActivity)
             }
         }
         binding.deleteTrust.setOnClickListener {

@@ -1,5 +1,7 @@
 package com.loginid.mfa
 
+import android.app.Activity
+import com.loginid.core.errors.LoginIDError
 import com.loginid.core.models.LoginIDConfig
 import com.loginid.core.services.MFAService
 import com.loginid.core.stores.DeviceStore
@@ -85,5 +87,36 @@ class LoginIDMFA(config: LoginIDConfig) {
         return TaskHandler.executeTask {
             mfaController.performAction(action, options)
         }
+    }
+
+    /**
+     * Performs a passkey-based Multi-Factor Authentication (MFA) action.
+     *
+     * This is a convenience method for passkey operations that require an `Activity`.
+     *
+     * @param action The MFA factor to perform. Must be one of `PASSKEY_REG`, `PASSKEY_AUTH`, or `PASSKEY_TX`.
+     * @param activity The `Activity` required for passkey operations.
+     * @param options Optional parameters for the action.
+     * @return An updated `MFASessionResult` reflecting the new MFA state and next actions.
+     * @throws com.loginid.core.errors.LoginIDError if an unsupported action is provided.
+     */
+    suspend fun performAction(
+        action: ActionName,
+        activity: Activity,
+        options: PerformActionOptions? = null
+    ): MFASessionResult {
+        val supportedActions = setOf(
+            ActionName.PASSKEY_REG,
+            ActionName.PASSKEY_AUTH,
+            ActionName.PASSKEY_TX
+        )
+        if (action !in supportedActions) {
+            throw LoginIDError(
+                msgCode = "not_supported",
+                msg = "MFA factor $action is not supported for this operation. Only passkey operations are supported."
+            )
+        }
+        val finalOptions = options?.copy(activity = activity) ?: PerformActionOptions(activity = activity)
+        return performAction(action, finalOptions)
     }
 }
