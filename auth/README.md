@@ -12,20 +12,7 @@ The **LoginIDAuth** Android library is the main entry point for the LoginID SDK,
 
 ## Requirements
 
-- Android 5.0+ (API level 21+)
-- Android Studio Iguana | 2023.2.1+
-- Kotlin 1.8+
-
-## Installation
-
-You can integrate **LoginIDAuth** into your Android project by adding it as a dependency in your module-level `build.gradle.kts` file:
-
-```kotlin
-// In your app's build.gradle.kts
-dependencies {
-    implementation("com.loginid:auth:2.0.0")
-}
-```
+- Android 9.0+ (API level 28+)
 
 ## How to Use
 
