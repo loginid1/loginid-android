@@ -8,16 +8,33 @@ cache:
   paths:
     - $PWD/cache/.gradle/
 
+stages:
+  - build
+  - test
+
 before_script:
   - export GRADLE_USER_HOME=cache/.gradle
   - chmod +x ./gradlew
 
 include:
-- template: Security/SAST.gitlab-ci.yml
+  - template: Security/Dependency-Scanning.gitlab-ci.yml
+  - template: Security/Secret-Detection.gitlab-ci.yml
+  - template: Security/SAST.gitlab-ci.yml
 
-stages:
-  - build
-  - test
+variables:
+  GITLAB_ADVANCED_SAST_ENABLED: 'true'
+
+gemnasium-dependency_scanning:
+  before_script: []
+
+secret_detection:
+  before_script: []
+
+semgrep-sast:
+  before_script: []
+
+gitlab-advanced-sast:
+  before_script: []
 
 build_base_image:
   stage: build
