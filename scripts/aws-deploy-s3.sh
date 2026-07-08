@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e
 
+MODULE="${CI_COMMIT_TAG%%-*}"
+VERSION="${CI_COMMIT_TAG#*-}"
+
 echo "Obtaining version from tag..."
 echo "Module: $MODULE"
 echo "Version: $VERSION"
