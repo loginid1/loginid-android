@@ -1,0 +1,4084 @@
+openapi: 3.0.3
+info:
+  title: FIDO2 API
+  description: >-
+    RESTful API for handling WebAuthn logic with support for FIDO2 flows with
+    passkeys.
+  version: '2.0'
+servers:
+  - url: https://api.loginid.io/fido2/v2
+paths:
+  /fido2/v2/auth/complete:
+    post:
+      tags:
+        - auth
+      summary: Complete WebAuthn authentication
+      operationId: auth#authComplete
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthCompleteRequestBody'
+            example:
+              assertionResult:
+                authenticatorData: Id mollitia.
+                clientDataJSON: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+                credentialId: 2aChi2dALRLdVP5i/zKr7yvMrP8FIy7MK4lbyUsjO...
+                signature: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+                userHandle: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+              session: w5zY9tpNgePsqkTsQlNPVCR2rwUlCdhCLhVwXsN2r...
+      responses:
+        '200':
+          description: OK response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JWT'
+              example:
+                deviceId: 8222fe14-4973-469f-843d-73b0f9e0a3a9
+                jwtAccess: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                passkeyId: 482b7723-eb3e-4814-809f-05af16284fcc
+                userId: 2a363a42-a397-4af0-b089-0935fc223017
+        '400':
+          description: 'bad_request: Bad Request response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '404':
+          description: 'forbidden: Not Found response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '500':
+          description: 'internal_error: Internal Server Error response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+  /fido2/v2/auth/init:
+    post:
+      tags:
+        - auth
+      summary: Start WebAuthn authentication flow
+      operationId: auth#authInit
+      parameters:
+        - name: User-Agent
+          in: header
+          description: Raw user-agent header as set by a browser
+          allowEmptyValue: true
+          schema:
+            type: string
+            description: Raw user-agent header as set by a browser
+            example: >-
+              Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like
+              Gecko) Chrome/51.0.2704.103 Safari/537.36
+          example: >-
+            Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like
+            Gecko) Chrome/51.0.2704.103 Safari/537.36
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthInitRequestBody'
+            example:
+              app:
+                id: 2a363a42-a397-4af0-b089-0935fc223017
+              deviceInfo:
+                clientName: Chrome
+                clientType: browser
+                clientVersion: 120.0.0.0
+                deviceId: 2a363a42-a397-4af0-b089-0935fc223017
+                hasBluetooth: true
+                lastUsedAt: '2025-01-02T16:40:44Z'
+                osArch: aarch64
+                osName: iOS
+                osVersion: 14.2.1
+                screenHeight: 1080
+                screenWidth: 1920
+                webauthnCapabilities: |-
+                  {
+                    "conditionalCreate": true,
+                    "conditionalGet": true,
+                    "hybridTransport": true,
+                    "passkeyPlatformAuthenticator": true,
+                    "userVerifyingPlatformAuthenticator": true,
+                    "relatedOrigins": true,
+                    "signalAllAcceptedCredentials": true,
+                    "signalCurrentUserDetails": true,
+                    "signalUnknownCredential": true
+                  }
+              trustItems:
+                auth: DqjUIcwnq7edyyeMGCxWNqs1cNBrEjBXlB2mVxfja8s=
+                merchant: gpOLtpZWhxkKgwEJyYzB2ckXn9IXDID7jjiaYFYTfS4=
+                wallet: NlPsJDfILKo0nCxuu2lrv6q9SBqgKLvpIuqSI4izk9k=
+              user:
+                username: admin@example.com
+                usernameType: email
+      responses:
+        '200':
+          description: OK response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthInit'
+              example:
+                action: proceed
+                assertionOptions:
+                  allowCredentials:
+                    - id: oAjxAhjnoQXLmRRAczwPg2E/S2zVS+DKlO6WNvgH9ys=
+                      transports:
+                        - usb
+                        - internal
+                      type: public-key
+                    - id: dqJvLVzdodYfQfKPB8zgF+rtoxNx5WUgH7kFHp8SegY=
+                      type: public-key
+                  challenge: gUEHYYYEpkj+eNo9DOPb/17K36VT0rTUAPyM03JeoeM=
+                  extensions:
+                    appid: https://loalhost:8443
+                  rpId: https://localhost:8443/
+                  timeout: 5000
+                  userVerification: required
+                crossAuthMethods:
+                  - otp
+                  - otp:sms
+                  - otp:email
+                fallbackMethods:
+                  - ciam
+                passkeyType: device
+                session: w5zY9tpNgePsqkTsQlNPVCR2rwUlCdhCLhVwXsN2r...
+        '400':
+          description: 'bad_request: Bad Request response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '403':
+          description: 'forbidden: Forbidden response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '404':
+          description: 'not_found: Not Found response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '500':
+          description: 'internal_error: Internal Server Error response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+  /fido2/v2/auth/otp:
+    post:
+      tags:
+        - auth
+      summary: Request OTP code by an authenticated user
+      description: >-
+        An authenticated user can request an authentication code directly using
+        this
+
+        method. The code can be used for authentication from another device.
+      operationId: auth#authCodeRequest
+      responses:
+        '200':
+          description: OK response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthCode'
+              example:
+                code: '123456'
+                expiresAt: '2021-01-01T00:00:00Z'
+        '401':
+          description: 'unauthorized: Unauthorized response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '403':
+          description: 'forbidden: Forbidden response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '404':
+          description: 'not_found: Not Found response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '500':
+          description: 'internal_error: Internal Server Error response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+      security:
+        - jwt_header_Authorization:
+            - auth:write
+      parameters:
+        - name: Authorization
+          in: header
+          description: JWT Authorization header
+          required: false
+          schema:
+            type: string
+  /fido2/v2/auth/otp/email:
+    post:
+      tags:
+        - auth
+      summary: Request OTP code to be sent via email.
+      description: >-
+        Send authentication code to the provided email. The SMS will only be
+        sent
+
+        if the email address is known to the application, however, this method
+        will
+
+        return success regardless.
+      operationId: auth#authCodeRequestEmail
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthCodeRequestSMSRequestBody'
+            example:
+              user:
+                username: admin@example.com
+                usernameType: email
+      responses:
+        '204':
+          description: No Content response.
+        '400':
+          description: 'bad_request: Bad Request response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '404':
+          description: 'not_found: Not Found response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '500':
+          description: 'internal_error: Internal Server Error response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+  /fido2/v2/auth/otp/sms:
+    post:
+      tags:
+        - auth
+      summary: Request OTP code to be sent via SMS.
+      description: >-
+        Send authentication code to the provided phone number. The SMS will only
+        be
+
+        sent if the phone is registered with the application, however, it will
+        return
+
+        success regardless.
+      operationId: auth#authCodeRequestSMS
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthCodeRequestSMSRequestBody'
+            example:
+              user:
+                username: admin@example.com
+                usernameType: email
+      responses:
+        '204':
+          description: No Content response.
+        '400':
+          description: 'bad_request: Bad Request response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '404':
+          description: 'not_found: Not Found response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '500':
+          description: 'internal_error: Internal Server Error response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+  /fido2/v2/auth/otp/verify:
+    post:
+      tags:
+        - auth
+      summary: >-
+        Verify authentication code and return JWT access token with appropriate
+        scopes
+      operationId: auth#authCodeVerify
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthCodeVerifyRequestBody'
+            example:
+              authCode: '123456'
+              user:
+                username: admin@example.com
+                usernameType: email
+      responses:
+        '200':
+          description: OK response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JWT'
+              example:
+                deviceId: 8222fe14-4973-469f-843d-73b0f9e0a3a9
+                jwtAccess: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                passkeyId: 482b7723-eb3e-4814-809f-05af16284fcc
+                userId: 2a363a42-a397-4af0-b089-0935fc223017
+        '400':
+          description: 'bad_request: Bad Request response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '404':
+          description: 'not_found: Not Found response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '500':
+          description: 'internal_error: Internal Server Error response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+  /fido2/v2/client-events/submit:
+    post:
+      tags:
+        - client-events
+      summary: Report a client side event.
+      description: Report a client event. It does not change state of the flow.
+      operationId: client-events#submit
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubmitRequestBody'
+            example:
+              event: ERROR_DISCOVERABLE_CREDENTIALS_UNSUPPORTED
+              isError: true
+      responses:
+        '200':
+          description: OK response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+              example:
+                session: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+        '400':
+          description: 'bad_request: Bad Request response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '401':
+          description: 'unauthorized: Unauthorized response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '404':
+          description: 'not_found: Not Found response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '500':
+          description: 'internal_error: Internal Server Error response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+      security:
+        - sessionAuth_header_Authorization: []
+      parameters:
+        - name: Authorization
+          in: header
+          description: JWT Authorization header
+          required: false
+          schema:
+            type: string
+  /fido2/v2/mfa/begin:
+    post:
+      tags:
+        - mfa
+      summary: Begin and appropriate flow for the provided username.
+      description: Perform pre-authentication.
+      operationId: mfa#mfaBegin
+      parameters:
+        - name: User-Agent
+          in: header
+          description: Raw user-agent header as set by a browser
+          allowEmptyValue: true
+          required: true
+          schema:
+            type: string
+            description: Raw user-agent header as set by a browser
+            example: >-
+              Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like
+              Gecko) Chrome/51.0.2704.103 Safari/537.36
+          example: >-
+            Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like
+            Gecko) Chrome/51.0.2704.103 Safari/537.36
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MfaBeginRequestBody'
+            example:
+              deviceInfo:
+                clientName: Chrome
+                clientType: browser
+                clientVersion: 120.0.0.0
+                deviceId: 2a363a42-a397-4af0-b089-0935fc223017
+                hasBluetooth: true
+                lastUsedAt: '2025-01-02T16:40:44Z'
+                osArch: aarch64
+                osName: iOS
+                osVersion: 14.2.1
+                screenHeight: 1080
+                screenWidth: 1920
+                webauthnCapabilities: |-
+                  {
+                    "conditionalCreate": true,
+                    "conditionalGet": true,
+                    "hybridTransport": true,
+                    "passkeyPlatformAuthenticator": true,
+                    "userVerifyingPlatformAuthenticator": true,
+                    "relatedOrigins": true,
+                    "signalAllAcceptedCredentials": true,
+                    "signalCurrentUserDetails": true,
+                    "signalUnknownCredential": true
+                  }
+              payload: ak4BXFgauyDtsRvnXWfaTW1DyetX7fTViGY9DRQGQ+g=
+              traceId: 6957cf6e-a86c-44fb-b25a-bd97cb9ff830
+              trustItems:
+                auth: DqjUIcwnq7edyyeMGCxWNqs1cNBrEjBXlB2mVxfja8s=
+                merchant: gpOLtpZWhxkKgwEJyYzB2ckXn9IXDID7jjiaYFYTfS4=
+                wallet: NlPsJDfILKo0nCxuu2lrv6q9SBqgKLvpIuqSI4izk9k=
+              user:
+                displayName: System Administrator
+                name: John Doe
+                phone: '+15551234567'
+                username: admin@example.com
+                usernameType: email
+      responses:
+        '200':
+          description: OK response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MfaNext'
+              example:
+                flow: signIn
+                msg: Additional authentication is required.
+                msgCode: additional_auth_required
+                next:
+                  - action:
+                      label: Passkey
+                      name: passkey
+                    options:
+                      - name: assertionOptions
+                        value: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+                  - action:
+                      label: External Auth
+                      name: external
+                  - action:
+                      desc: >-
+                        OTP will be sent to one of the email addresses provided
+                        by the user.
+                      label: OTP via Email
+                      name: otp:email
+                    options:
+                      - label: primary@example.com
+                        name: email:primary
+                        value: 3df8feb9-5dc0-451e-8799-ec5d7e1fe1f7
+                      - label: secondary@example.com
+                        name: email:secondary
+                        value: 9c568230-243a-43ee-8b19-7b544ba8fd9f
+                  - action:
+                      desc: >-
+                        OTP will be sent via SMS to one of the phone numbers
+                        provided by the user.
+                      label: OTP via SMS
+                      name: otp:sms
+                    options:
+                      - label: +1(631)842-0398
+                        value: ee9ce8f0-1471-47c4-b1e5-c40923aee83a
+                      - label: +1(661)942-5456
+                        value: 3e3092dc-eb0c-4064-9276-7687fe5cef57
+                session: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+        '400':
+          description: 'bad_request: Bad Request response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '403':
+          description: 'forbidden: Forbidden response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '404':
+          description: 'not_found: Not Found response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '500':
+          description: 'internal_error: Internal Server Error response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+  /fido2/v2/mfa/discover:
+    post:
+      tags:
+        - mfa
+      summary: Begin and appropriate flow for the provided username.
+      description: Perform discovery if trustID and/or checkoutID are known to the system.
+      operationId: mfa#mfaDiscover
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MfaDiscoverRequestBody'
+            example:
+              trustItems:
+                auth: DqjUIcwnq7edyyeMGCxWNqs1cNBrEjBXlB2mVxfja8s=
+                merchant: gpOLtpZWhxkKgwEJyYzB2ckXn9IXDID7jjiaYFYTfS4=
+                wallet: NlPsJDfILKo0nCxuu2lrv6q9SBqgKLvpIuqSI4izk9k=
+      responses:
+        '204':
+          description: No Content response.
+        '400':
+          description: 'bad_request: Bad Request response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '403':
+          description: 'forbidden: Forbidden response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '404':
+          description: 'not_found: Not Found response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '500':
+          description: 'internal_error: Internal Server Error response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+  /fido2/v2/mfa/otp/request:
+    post:
+      tags:
+        - mfa
+      summary: Request OTP authentication using one of the available methods.
+      description: Request OTP.
+      operationId: mfa#mfaOtpRequest
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MfaOtpRequestRequestBody'
+            example:
+              method: email
+              option: user@example.com
+      responses:
+        '200':
+          description: OK response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MfaOtpRequestResponseBody'
+              example:
+                session: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+        '400':
+          description: 'bad_request: Bad Request response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '401':
+          description: 'unauthorized: Unauthorized response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '500':
+          description: 'internal_error: Internal Server Error response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+      security:
+        - sessionAuth_header_Authorization: []
+      parameters:
+        - name: Authorization
+          in: header
+          description: JWT Authorization header
+          required: false
+          schema:
+            type: string
+  /fido2/v2/mfa/otp/verify:
+    post:
+      tags:
+        - mfa
+      summary: Confirm OTP received in a previous step.
+      description: Verify OTP received by one of the methods.
+      operationId: mfa#mfaOtpVerify
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MfaOtpVerifyRequestBody'
+            example:
+              otp: '123456'
+      responses:
+        '200':
+          description: OK response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mfa'
+              example:
+                accessToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NT...
+                deviceId: 8222fe14-4973-469f-843d-73b0f9e0a3a9
+                flow: signIn
+                idToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NT...
+                passkeyInfo:
+                  aaguid: fbfc3007-154e-4ecc-8c0b-6e020557d7bd
+                  assertionResult:
+                    authenticatorData: ix523n3XniH01jM4CIuOn1z0Jw6QbRATXYOsCUyQN...
+                    clientDataJSON: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+                    credentialId: 2aChi2dALRLdVP5i/zKr7yvMrP8FIy7MK4lbyUsjO...
+                    signature: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+                  passkeyId: 861ee00b-b40d-493a-a10b-457a0d527b48
+                  publicKey: wDUH6JkyU7SMswFPjyqEvhMB5GlhtqzS1VtfM/91Y...
+                payload: JfeMhXGH1GABxRAXRopd7vtsLEJe16f9ok3oiA8DoEADZ8TOqvgYy...
+                payloadSignature: eyJhbGciOiJIUzI1NiJ9.ew0KICAic3ViIjogIjEyMzQ1Njc4OTAiLA...
+                refreshToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NT...
+        '400':
+          description: 'bad_request: Bad Request response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '401':
+          description: 'additional_auth_required: Unauthorized response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                flow: signIn
+                msg: Additional authentication is required.
+                msgCode: additional_auth_required
+                next:
+                  - action:
+                      label: Passkey
+                      name: passkey
+                    options:
+                      - name: assertionOptions
+                        value: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+                  - action:
+                      label: External Auth
+                      name: external
+                  - action:
+                      desc: >-
+                        OTP will be sent to one of the email addresses provided
+                        by the user.
+                      label: OTP via Email
+                      name: otp:email
+                    options:
+                      - label: primary@example.com
+                        name: email:primary
+                        value: 3df8feb9-5dc0-451e-8799-ec5d7e1fe1f7
+                      - label: secondary@example.com
+                        name: email:secondary
+                        value: 9c568230-243a-43ee-8b19-7b544ba8fd9f
+                  - action:
+                      desc: >-
+                        OTP will be sent via SMS to one of the phone numbers
+                        provided by the user.
+                      label: OTP via SMS
+                      name: otp:sms
+                    options:
+                      - label: +1(631)842-0398
+                        value: ee9ce8f0-1471-47c4-b1e5-c40923aee83a
+                      - label: +1(661)942-5456
+                        value: 3e3092dc-eb0c-4064-9276-7687fe5cef57
+                session: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+        '500':
+          description: 'internal_error: Internal Server Error response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+      security:
+        - sessionAuth_header_Authorization: []
+      parameters:
+        - name: Authorization
+          in: header
+          description: JWT Authorization header
+          required: false
+          schema:
+            type: string
+  /fido2/v2/mfa/passkey/auth:
+    post:
+      tags:
+        - mfa
+      summary: Authenticate using passkey.
+      description: Authenticate with a passkeys.
+      operationId: mfa#mfaPasskeyAuth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MfaPasskeyAuthRequestBody'
+            example:
+              assertionResult:
+                authenticatorData: Id mollitia.
+                clientDataJSON: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+                credentialId: 2aChi2dALRLdVP5i/zKr7yvMrP8FIy7MK4lbyUsjO...
+                signature: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+                userHandle: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+              providerParams:
+                document: base64-encoded-image
+                verification_type: document
+      responses:
+        '200':
+          description: OK response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mfa'
+              example:
+                accessToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NT...
+                deviceId: 8222fe14-4973-469f-843d-73b0f9e0a3a9
+                flow: signIn
+                idToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NT...
+                passkeyInfo:
+                  aaguid: fbfc3007-154e-4ecc-8c0b-6e020557d7bd
+                  assertionResult:
+                    authenticatorData: ix523n3XniH01jM4CIuOn1z0Jw6QbRATXYOsCUyQN...
+                    clientDataJSON: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+                    credentialId: 2aChi2dALRLdVP5i/zKr7yvMrP8FIy7MK4lbyUsjO...
+                    signature: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+                  passkeyId: 861ee00b-b40d-493a-a10b-457a0d527b48
+                  publicKey: wDUH6JkyU7SMswFPjyqEvhMB5GlhtqzS1VtfM/91Y...
+                payload: JfeMhXGH1GABxRAXRopd7vtsLEJe16f9ok3oiA8DoEADZ8TOqvgYy...
+                payloadSignature: eyJhbGciOiJIUzI1NiJ9.ew0KICAic3ViIjogIjEyMzQ1Njc4OTAiLA...
+                refreshToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NT...
+        '400':
+          description: 'bad_request: Bad Request response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '401':
+          description: 'additional_auth_required: Unauthorized response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                flow: signIn
+                msg: Additional authentication is required.
+                msgCode: additional_auth_required
+                next:
+                  - action:
+                      label: Passkey
+                      name: passkey
+                    options:
+                      - name: assertionOptions
+                        value: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+                  - action:
+                      label: External Auth
+                      name: external
+                  - action:
+                      desc: >-
+                        OTP will be sent to one of the email addresses provided
+                        by the user.
+                      label: OTP via Email
+                      name: otp:email
+                    options:
+                      - label: primary@example.com
+                        name: email:primary
+                        value: 3df8feb9-5dc0-451e-8799-ec5d7e1fe1f7
+                      - label: secondary@example.com
+                        name: email:secondary
+                        value: 9c568230-243a-43ee-8b19-7b544ba8fd9f
+                  - action:
+                      desc: >-
+                        OTP will be sent via SMS to one of the phone numbers
+                        provided by the user.
+                      label: OTP via SMS
+                      name: otp:sms
+                    options:
+                      - label: +1(631)842-0398
+                        value: ee9ce8f0-1471-47c4-b1e5-c40923aee83a
+                      - label: +1(661)942-5456
+                        value: 3e3092dc-eb0c-4064-9276-7687fe5cef57
+                session: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+        '500':
+          description: 'internal_error: Internal Server Error response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+      security:
+        - sessionAuth_header_Authorization: []
+      parameters:
+        - name: Authorization
+          in: header
+          description: JWT Authorization header
+          required: false
+          schema:
+            type: string
+  /fido2/v2/mfa/passkey/reg:
+    post:
+      tags:
+        - mfa
+      summary: Register a new passkey.
+      description: Register a new passkey.
+      operationId: mfa#mfaPasskeyReg
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MfaPasskeyRegRequestBody'
+            example:
+              creationResult:
+                attestationObject: 5lvuZBkX1w7/0+XKcldttzA7vTwilEq3qnnXSq/a0...
+                authenticatorData: Ratione rem maxime.
+                clientDataJSON: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+                credentialId: 2aChi2dALRLdVP5i/zKr7yvMrP8FIy7MK4lbyUsjO...
+                publicKey: wDUH6JkyU7SMswFPjyqEvhMB5GlhtqzS1VtfM/91Y...
+                publicKeyAlgorithm: -8
+                transports:
+                  - internal
+                  - internal
+                  - internal
+                  - internal
+              providerParams:
+                document: base64-encoded-image
+                verification_type: document
+      responses:
+        '200':
+          description: OK response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mfa'
+              example:
+                accessToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NT...
+                deviceId: 8222fe14-4973-469f-843d-73b0f9e0a3a9
+                flow: signIn
+                idToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NT...
+                passkeyInfo:
+                  aaguid: fbfc3007-154e-4ecc-8c0b-6e020557d7bd
+                  assertionResult:
+                    authenticatorData: ix523n3XniH01jM4CIuOn1z0Jw6QbRATXYOsCUyQN...
+                    clientDataJSON: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+                    credentialId: 2aChi2dALRLdVP5i/zKr7yvMrP8FIy7MK4lbyUsjO...
+                    signature: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+                  passkeyId: 861ee00b-b40d-493a-a10b-457a0d527b48
+                  publicKey: wDUH6JkyU7SMswFPjyqEvhMB5GlhtqzS1VtfM/91Y...
+                payload: JfeMhXGH1GABxRAXRopd7vtsLEJe16f9ok3oiA8DoEADZ8TOqvgYy...
+                payloadSignature: eyJhbGciOiJIUzI1NiJ9.ew0KICAic3ViIjogIjEyMzQ1Njc4OTAiLA...
+                refreshToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NT...
+        '400':
+          description: 'bad_request: Bad Request response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '401':
+          description: 'unauthorized: Unauthorized response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '500':
+          description: 'internal_error: Internal Server Error response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+      security:
+        - sessionAuth_header_Authorization: []
+      parameters:
+        - name: Authorization
+          in: header
+          description: JWT Authorization header
+          required: false
+          schema:
+            type: string
+  /fido2/v2/mfa/passkey/tx:
+    post:
+      tags:
+        - mfa
+      summary: Transaction confirmation using passkey.
+      description: Confirm a transaction with a passkey.
+      operationId: mfa#mfaPasskeyTx
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MfaPasskeyAuthRequestBody'
+            example:
+              assertionResult:
+                authenticatorData: Id mollitia.
+                clientDataJSON: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+                credentialId: 2aChi2dALRLdVP5i/zKr7yvMrP8FIy7MK4lbyUsjO...
+                signature: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+                userHandle: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+              providerParams:
+                document: base64-encoded-image
+                verification_type: document
+      responses:
+        '200':
+          description: OK response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mfa'
+              example:
+                accessToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NT...
+                deviceId: 8222fe14-4973-469f-843d-73b0f9e0a3a9
+                flow: signIn
+                idToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NT...
+                passkeyInfo:
+                  aaguid: fbfc3007-154e-4ecc-8c0b-6e020557d7bd
+                  assertionResult:
+                    authenticatorData: ix523n3XniH01jM4CIuOn1z0Jw6QbRATXYOsCUyQN...
+                    clientDataJSON: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+                    credentialId: 2aChi2dALRLdVP5i/zKr7yvMrP8FIy7MK4lbyUsjO...
+                    signature: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+                  passkeyId: 861ee00b-b40d-493a-a10b-457a0d527b48
+                  publicKey: wDUH6JkyU7SMswFPjyqEvhMB5GlhtqzS1VtfM/91Y...
+                payload: JfeMhXGH1GABxRAXRopd7vtsLEJe16f9ok3oiA8DoEADZ8TOqvgYy...
+                payloadSignature: eyJhbGciOiJIUzI1NiJ9.ew0KICAic3ViIjogIjEyMzQ1Njc4OTAiLA...
+                refreshToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NT...
+        '400':
+          description: 'bad_request: Bad Request response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '401':
+          description: 'unauthorized: Unauthorized response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '500':
+          description: 'internal_error: Internal Server Error response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+      security:
+        - sessionAuth_header_Authorization: []
+      parameters:
+        - name: Authorization
+          in: header
+          description: JWT Authorization header
+          required: false
+          schema:
+            type: string
+  /fido2/v2/mfa/payload:
+    post:
+      tags:
+        - mfa
+      summary: Update the payload to be signed using transaction confirmation.
+      description: Update the payload to be signed.
+      operationId: mfa#mfaPayloadUpdate
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MfaPayloadUpdateRequestBody'
+            example:
+              payload: ak4BXFgauyDtsRvnXWfaTW1DyetX7fTViGY9DRQGQ+g=
+      responses:
+        '200':
+          description: OK response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MfaNext'
+              example:
+                flow: signIn
+                msg: Additional authentication is required.
+                msgCode: additional_auth_required
+                next:
+                  - action:
+                      label: Passkey
+                      name: passkey
+                    options:
+                      - name: assertionOptions
+                        value: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+                  - action:
+                      label: External Auth
+                      name: external
+                  - action:
+                      desc: >-
+                        OTP will be sent to one of the email addresses provided
+                        by the user.
+                      label: OTP via Email
+                      name: otp:email
+                    options:
+                      - label: primary@example.com
+                        name: email:primary
+                        value: 3df8feb9-5dc0-451e-8799-ec5d7e1fe1f7
+                      - label: secondary@example.com
+                        name: email:secondary
+                        value: 9c568230-243a-43ee-8b19-7b544ba8fd9f
+                  - action:
+                      desc: >-
+                        OTP will be sent via SMS to one of the phone numbers
+                        provided by the user.
+                      label: OTP via SMS
+                      name: otp:sms
+                    options:
+                      - label: +1(631)842-0398
+                        value: ee9ce8f0-1471-47c4-b1e5-c40923aee83a
+                      - label: +1(661)942-5456
+                        value: 3e3092dc-eb0c-4064-9276-7687fe5cef57
+                session: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+        '400':
+          description: 'bad_request: Bad Request response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '401':
+          description: 'unauthorized: Unauthorized response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '403':
+          description: 'forbidden: Forbidden response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '404':
+          description: 'not_found: Not Found response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '500':
+          description: 'internal_error: Internal Server Error response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+      security:
+        - sessionAuth_header_Authorization: []
+      parameters:
+        - name: Authorization
+          in: header
+          description: JWT Authorization header
+          required: false
+          schema:
+            type: string
+  /fido2/v2/mfa/third-party/verify:
+    post:
+      tags:
+        - mfa
+      summary: Verify auth token created by a third party via management API.
+      description: Verify authentication token received from a third party.
+      operationId: mfa#mfaThirdPartyAuthVerify
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MfaThirdPartyAuthVerifyRequestBody'
+            example:
+              token: >-
+                eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+      responses:
+        '200':
+          description: OK response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mfa'
+              example:
+                accessToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NT...
+                deviceId: 8222fe14-4973-469f-843d-73b0f9e0a3a9
+                flow: signIn
+                idToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NT...
+                passkeyInfo:
+                  aaguid: fbfc3007-154e-4ecc-8c0b-6e020557d7bd
+                  assertionResult:
+                    authenticatorData: ix523n3XniH01jM4CIuOn1z0Jw6QbRATXYOsCUyQN...
+                    clientDataJSON: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+                    credentialId: 2aChi2dALRLdVP5i/zKr7yvMrP8FIy7MK4lbyUsjO...
+                    signature: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+                  passkeyId: 861ee00b-b40d-493a-a10b-457a0d527b48
+                  publicKey: wDUH6JkyU7SMswFPjyqEvhMB5GlhtqzS1VtfM/91Y...
+                payload: JfeMhXGH1GABxRAXRopd7vtsLEJe16f9ok3oiA8DoEADZ8TOqvgYy...
+                payloadSignature: eyJhbGciOiJIUzI1NiJ9.ew0KICAic3ViIjogIjEyMzQ1Njc4OTAiLA...
+                refreshToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NT...
+        '400':
+          description: 'bad_request: Bad Request response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '401':
+          description: 'additional_auth_required: Unauthorized response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                flow: signIn
+                msg: Additional authentication is required.
+                msgCode: additional_auth_required
+                next:
+                  - action:
+                      label: Passkey
+                      name: passkey
+                    options:
+                      - name: assertionOptions
+                        value: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+                  - action:
+                      label: External Auth
+                      name: external
+                  - action:
+                      desc: >-
+                        OTP will be sent to one of the email addresses provided
+                        by the user.
+                      label: OTP via Email
+                      name: otp:email
+                    options:
+                      - label: primary@example.com
+                        name: email:primary
+                        value: 3df8feb9-5dc0-451e-8799-ec5d7e1fe1f7
+                      - label: secondary@example.com
+                        name: email:secondary
+                        value: 9c568230-243a-43ee-8b19-7b544ba8fd9f
+                  - action:
+                      desc: >-
+                        OTP will be sent via SMS to one of the phone numbers
+                        provided by the user.
+                      label: OTP via SMS
+                      name: otp:sms
+                    options:
+                      - label: +1(631)842-0398
+                        value: ee9ce8f0-1471-47c4-b1e5-c40923aee83a
+                      - label: +1(661)942-5456
+                        value: 3e3092dc-eb0c-4064-9276-7687fe5cef57
+                session: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+        '500':
+          description: 'internal_error: Internal Server Error response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+      security:
+        - sessionAuth_header_Authorization: []
+      parameters:
+        - name: Authorization
+          in: header
+          description: JWT Authorization header
+          required: false
+          schema:
+            type: string
+  /fido2/v2/passkeys:
+    get:
+      tags:
+        - passkeys
+      summary: List passkeys of the user
+      operationId: passkeys#passkeysList
+      responses:
+        '200':
+          description: OK response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PasskeyCollection'
+              example:
+                - createdAt: 2023-06-15 13:29:41 EDT
+                  credentialId: YzI4MjllZmEtNGYyMC00YTYwLThlMDEtYmM4ZTJjYmRiYjA0
+                  credentialSynced: false
+                  id: eb385800-d35e-4108-9b49-48010731cd37
+                  lastUsedAt: 2023-06-15 13:29:41 EDT
+                  lastUsedFrom:
+                    clientName: Chrome
+                    clientType: browser
+                    clientVersion: 120.0.0.0
+                    deviceId: ab715482-4089-4818-9f79-80523d8eb3c6
+                    lastUsedAt: '2025-01-02T16:40:44Z'
+                    osArch: arm64
+                    osName: iOS
+                    osVersion: 18.1.1
+                  name: My Phone
+                - createdAt: 2023-06-15 13:29:41 EDT
+                  credentialId: KzI4MjllZmEtNGYyMC00YTYwLThlMDEtYmM4ZTJjYmRiYjA9
+                  credentialSynced: true
+                  id: 1b385800-d35e-4108-9b49-48010731cd37
+                  lastUsedAt: 2023-06-15 13:29:41 EDT
+                  lastUsedFrom:
+                    clientName: Chrome
+                    clientType: browser
+                    clientVersion: 120.0.0.0
+                    deviceId: ab715482-4089-4818-9f79-80523d8eb3c6
+                    lastUsedAt: '2025-01-02T16:40:44Z'
+                    osArch: x86_64
+                    osName: Darwin
+                    osVersion: 15.4.1
+                  name: My Laptop
+                - createdAt: 2023-06-15 13:29:41 EDT
+                  credentialSynced: false
+                  id: ab385800-d35e-4108-9b49-48010731cd37
+                  name: My Tablet
+        '401':
+          description: 'unauthorized: Unauthorized response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '403':
+          description: 'forbidden: Forbidden response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '404':
+          description: 'not_found: Not Found response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '500':
+          description: 'internal_error: Internal Server Error response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+      security:
+        - jwt_header_Authorization:
+            - passkey:read
+      parameters:
+        - name: Authorization
+          in: header
+          description: JWT Authorization header
+          required: false
+          schema:
+            type: string
+  /fido2/v2/passkeys/{id}:
+    delete:
+      tags:
+        - passkeys
+      summary: Delete passkey
+      operationId: passkeys#passkeyDelete
+      parameters:
+        - name: id
+          in: path
+          description: Internal passkey identifier
+          required: true
+          schema:
+            type: string
+            description: Internal passkey identifier
+            example: 2a363a42-a397-4af0-b089-0935fc223017
+          example: 2a363a42-a397-4af0-b089-0935fc223017
+        - name: Authorization
+          in: header
+          description: JWT Authorization header
+          required: false
+          schema:
+            type: string
+      responses:
+        '204':
+          description: No Content response.
+        '400':
+          description: 'bad_request: Bad Request response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '401':
+          description: 'unauthorized: Unauthorized response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '403':
+          description: 'forbidden: Forbidden response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '404':
+          description: 'not_found: Not Found response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '500':
+          description: 'internal_error: Internal Server Error response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+      security:
+        - jwt_header_Authorization:
+            - passkey:write
+    put:
+      tags:
+        - passkeys
+      summary: Rename passkey
+      operationId: passkeys#passkeyRename
+      parameters:
+        - name: id
+          in: path
+          description: Internal passkey identifier
+          required: true
+          schema:
+            type: string
+            description: Internal passkey identifier
+            example: 2a363a42-a397-4af0-b089-0935fc223017
+          example: 2a363a42-a397-4af0-b089-0935fc223017
+        - name: Authorization
+          in: header
+          description: JWT Authorization header
+          required: false
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasskeyRenameRequestBody'
+            example:
+              name: My iPhone SE
+      responses:
+        '204':
+          description: No Content response.
+        '400':
+          description: 'bad_request: Bad Request response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '401':
+          description: 'unauthorized: Unauthorized response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '403':
+          description: 'forbidden: Forbidden response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '404':
+          description: 'not_found: Not Found response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '500':
+          description: 'internal_error: Internal Server Error response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+      security:
+        - jwt_header_Authorization:
+            - passkey:write
+  /fido2/v2/passkeys/aaguid/{aaguid}:
+    get:
+      tags:
+        - passkeys
+      summary: Get AAGUID Metadata
+      operationId: passkeys#aaguidMetadata
+      parameters:
+        - name: aaguid
+          in: path
+          description: AAGUID identifier
+          required: true
+          schema:
+            type: string
+            description: AAGUID identifier
+            example: 2a363a42-a397-4af0-b089-0935fc223017
+          example: 2a363a42-a397-4af0-b089-0935fc223017
+        - name: Authorization
+          in: header
+          description: JWT Authorization header
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Aaguid'
+              example:
+                iconDark: >-
+                  data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2aWV3Qm94PSIwIDAgNDggNDgiPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJhIiB4MT0iMy4yMTczIiB5MT0iMTUiIHgyPSI0NC43ODEyIiB5Mj0iMTUiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjZDkzMDI1Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2VhNDMzNSIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iYiIgeDE9IjIwLjcyMTkiIHkxPSI0Ny42NzkxIiB4Mj0iNDEuNTAzOSIgeTI9IjExLjY4MzciIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjZmNjOTM0Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2ZiYmMwNCIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iYyIgeDE9IjI2LjU5ODEiIHkxPSI0Ni41MDE1IiB4Mj0iNS44MTYxIiB5Mj0iMTAuNTA2IiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iIzFlOGUzZSIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiMzNGE4NTMiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICAKICAgIDxwYXRoIGlkPSJwIiBkPSJNMTMuNjA4NiAzMC4wMDMxIDMuMjE4IDEyLjAwNkEyMy45OTQgMjMuOTk0IDAgMCAwIDI0LjAwMjUgNDhsMTAuMzkwNi0xNy45OTcxLS4wMDY3LS4wMDY4YTExLjk4NTIgMTEuOTg1MiAwIDAgMS0yMC43Nzc4LjAwN1oiLz4KICA8L2RlZnM+CiAgCiAgPHVzZSB4bGluazpocmVmPSIjcCIgZmlsbD0idXJsKCNhKSIgdHJhbnNmb3JtPSJyb3RhdGUoMTIwIDI0IDI0KSIvPgogIDx1c2UgeGxpbms6aHJlZj0iI3AiIGZpbGw9InVybCgjYikiIHRyYW5zZm9ybT0icm90YXRlKC0xMjAgMjQgMjQpIi8+CiAgPHVzZSB4bGluazpocmVmPSIjcCIgZmlsbD0idXJsKCNjKSIvPgogIAogIDxjaXJjbGUgY3g9IjI0IiBjeT0iMjQiIHI9IjEyIiBzdHlsZT0iZmlsbDojZmZmIi8+CiAgPGNpcmNsZSBjeD0iMjQiIGN5PSIyNCIgcj0iOS41IiBzdHlsZT0iZmlsbDojMWE3M2U4Ii8+Cjwvc3ZnPg==
+                iconLight: >-
+                  data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2aWV3Qm94PSIwIDAgNDggNDgiPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJhIiB4MT0iMy4yMTczIiB5MT0iMTUiIHgyPSI0NC43ODEyIiB5Mj0iMTUiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjZDkzMDI1Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2VhNDMzNSIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iYiIgeDE9IjIwLjcyMTkiIHkxPSI0Ny42NzkxIiB4Mj0iNDEuNTAzOSIgeTI9IjExLjY4MzciIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjZmNjOTM0Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2ZiYmMwNCIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iYyIgeDE9IjI2LjU5ODEiIHkxPSI0Ni41MDE1IiB4Mj0iNS44MTYxIiB5Mj0iMTAuNTA2IiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iIzFlOGUzZSIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiMzNGE4NTMiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICAKICAgIDxwYXRoIGlkPSJwIiBkPSJNMTMuNjA4NiAzMC4wMDMxIDMuMjE4IDEyLjAwNkEyMy45OTQgMjMuOTk0IDAgMCAwIDI0LjAwMjUgNDhsMTAuMzkwNi0xNy45OTcxLS4wMDY3LS4wMDY4YTExLjk4NTIgMTEuOTg1MiAwIDAgMS0yMC43Nzc4LjAwN1oiLz4KICA8L2RlZnM+CiAgCiAgPHVzZSB4bGluazpocmVmPSIjcCIgZmlsbD0idXJsKCNhKSIgdHJhbnNmb3JtPSJyb3RhdGUoMTIwIDI0IDI0KSIvPgogIDx1c2UgeGxpbms6aHJlZj0iI3AiIGZpbGw9InVybCgjYikiIHRyYW5zZm9ybT0icm90YXRlKC0xMjAgMjQgMjQpIi8+CiAgPHVzZSB4bGluazpocmVmPSIjcCIgZmlsbD0idXJsKCNjKSIvPgogIAogIDxjaXJjbGUgY3g9IjI0IiBjeT0iMjQiIHI9IjEyIiBzdHlsZT0iZmlsbDojZmZmIi8+CiAgPGNpcmNsZSBjeD0iMjQiIGN5PSIyNCIgcj0iOS41IiBzdHlsZT0iZmlsbDojMWE3M2U4Ii8+Cjwvc3ZnPg==
+                id: eb385800-d35e-4108-9b49-48010731cd37
+                name: Thales
+        '400':
+          description: 'bad_request: Bad Request response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '401':
+          description: 'unauthorized: Unauthorized response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '403':
+          description: 'forbidden: Forbidden response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '404':
+          description: 'not_found: Not Found response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '500':
+          description: 'internal_error: Internal Server Error response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+      security:
+        - jwt_header_Authorization:
+            - passkey:read
+  /fido2/v2/reg/complete:
+    post:
+      tags:
+        - reg
+      summary: Complete WebAuthn registration flow
+      operationId: reg#regComplete
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegCompleteRequestBody'
+            example:
+              creationResult:
+                attestationObject: 5lvuZBkX1w7/0+XKcldttzA7vTwilEq3qnnXSq/a0...
+                authenticatorData: Ratione rem maxime.
+                clientDataJSON: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+                credentialId: 2aChi2dALRLdVP5i/zKr7yvMrP8FIy7MK4lbyUsjO...
+                publicKey: wDUH6JkyU7SMswFPjyqEvhMB5GlhtqzS1VtfM/91Y...
+                publicKeyAlgorithm: -8
+                transports:
+                  - internal
+                  - internal
+                  - internal
+                  - internal
+              passkeyName: Windows Hello (Win11,Chrome) - 2025-04-07 20:46
+              session: w5zY9tpNgePsqkTsQlNPVCR2rwUlCdhCLhVwXsN2r...
+      responses:
+        '200':
+          description: OK response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JWT'
+              example:
+                deviceId: 8222fe14-4973-469f-843d-73b0f9e0a3a9
+                jwtAccess: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                passkeyId: 482b7723-eb3e-4814-809f-05af16284fcc
+                userId: 2a363a42-a397-4af0-b089-0935fc223017
+        '400':
+          description: 'bad_request: Bad Request response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '403':
+          description: 'forbidden: Forbidden response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '500':
+          description: 'internal_error: Internal Server Error response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+  /fido2/v2/reg/init:
+    post:
+      tags:
+        - reg
+      summary: Start WebAuthn registration flow
+      operationId: reg#regInit
+      parameters:
+        - name: User-Agent
+          in: header
+          description: Raw user-agent header as set by a browser
+          allowEmptyValue: true
+          schema:
+            type: string
+            description: Raw user-agent header as set by a browser
+            example: >-
+              Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like
+              Gecko) Chrome/51.0.2704.103 Safari/537.36
+          example: >-
+            Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like
+            Gecko) Chrome/51.0.2704.103 Safari/537.36
+        - name: Authorization
+          in: header
+          description: JWT Authorization header
+          required: false
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegInitRequestBody'
+            example:
+              app:
+                id: 2a363a42-a397-4af0-b089-0935fc223017
+              deviceInfo:
+                clientName: Chrome
+                clientType: browser
+                clientVersion: 120.0.0.0
+                deviceId: 2a363a42-a397-4af0-b089-0935fc223017
+                hasBluetooth: true
+                lastUsedAt: '2025-01-02T16:40:44Z'
+                osArch: aarch64
+                osName: iOS
+                osVersion: 14.2.1
+                screenHeight: 1080
+                screenWidth: 1920
+                webauthnCapabilities: |-
+                  {
+                    "conditionalCreate": true,
+                    "conditionalGet": true,
+                    "hybridTransport": true,
+                    "passkeyPlatformAuthenticator": true,
+                    "userVerifyingPlatformAuthenticator": true,
+                    "relatedOrigins": true,
+                    "signalAllAcceptedCredentials": true,
+                    "signalCurrentUserDetails": true,
+                    "signalUnknownCredential": true
+                  }
+              passkeyOptions:
+                conditionalCreate: false
+                securityKey: false
+              trustItems:
+                auth: DqjUIcwnq7edyyeMGCxWNqs1cNBrEjBXlB2mVxfja8s=
+                merchant: gpOLtpZWhxkKgwEJyYzB2ckXn9IXDID7jjiaYFYTfS4=
+                wallet: NlPsJDfILKo0nCxuu2lrv6q9SBqgKLvpIuqSI4izk9k=
+              user:
+                displayName: System Administrator
+                username: admin@example.com
+                usernameType: email
+      responses:
+        '200':
+          description: OK response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegInit'
+              example:
+                action: proceed
+                registrationRequestOptions:
+                  attestation: enterprise
+                  authenticatorSelection:
+                    authenticatorAttachment: platform
+                    requireResidentKey: true
+                    residentKey: required
+                    userVerification: preferred
+                  challenge: gUEHYYYEpkj+eNo9DOPb/17K36VT0rTUAPyM03JeoeM=
+                  excludeCredentials:
+                    - id: oAjxAhjnoQXLmRRAczwPg2E/S2zVS+DKlO6WNvgH9ys=
+                      transports:
+                        - usb
+                        - internal
+                      type: public-key
+                    - id: dqJvLVzdodYfQfKPB8zgF+rtoxNx5WUgH7kFHp8SegY=
+                      type: public-key
+                  extensions:
+                    appid: https://loalhost:8443
+                  pubKeyCredParams:
+                    - alg: -7
+                      type: public-key
+                    - alg: -257
+                      type: public-key
+                  rp:
+                    id: api.loginid.io
+                    name: Login ID Inc.
+                  timeout: 10000
+                  user:
+                    displayName: System Administrator
+                    id: 5e084987-3b3d-4cd7-8b19-385f8f5e253b
+                    name: admin
+                session: w5zY9tpNgePsqkTsQlNPVCR2rwUlCdhCLhVwXsN2r...
+        '400':
+          description: 'bad_request: Bad Request response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '401':
+          description: 'unauthorized: Unauthorized response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '403':
+          description: 'forbidden: Forbidden response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '500':
+          description: 'internal_error: Internal Server Error response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+      security:
+        - jwt_header_Authorization:
+            - reg:write
+  /fido2/v2/tx/complete:
+    post:
+      tags:
+        - tx
+      summary: Complete transaction confirmation
+      operationId: tx#txComplete
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TxCompleteRequestBody'
+            example:
+              authenticatorData: Qui dolorem quia nesciunt quos enim.
+              clientData: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+              keyHandle: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+              session: w5zY9tpNgePsqkTsQlNPVCR2rwUlCdhCLhVwXsN2r...
+              signature: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+      responses:
+        '200':
+          description: OK response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TxComplete'
+              example:
+                authCred:
+                  aaguid: fbfc3007-154e-4ecc-8c0b-6e020557d7bd
+                  createdAt: 2023-06-15 13:29:41 EDT
+                  credentialId: Dolores iste.
+                  credentialSynced: false
+                  id: 861ee00b-b40d-493a-a10b-457a0d527b48
+                  lastUsedAt: '2025-01-02T16:40:44Z'
+                  lastUsedFromDevice:
+                    clientName: Chrome
+                    clientType: browser
+                    clientVersion: 120.0.0.0
+                    deviceId: ab715482-4089-4818-9f79-80523d8eb3c6
+                    lastUsedAt: '2025-01-02T16:40:44Z'
+                    osArch: arm64
+                    osName: iOS
+                    osVersion: 18.1.1
+                  name: My Phone
+                  providerName: Apple Passwords
+                credentialId: 2a363a42-a397-4af0-b089-0935fc223017
+                token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        '400':
+          description: 'bad_request: Bad Request response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '403':
+          description: 'forbidden: Forbidden response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '500':
+          description: 'internal_error: Internal Server Error response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+  /fido2/v2/tx/init:
+    post:
+      tags:
+        - tx
+      summary: Start transaction confirmation flow
+      operationId: tx#txInit
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TxInitRequestBody'
+            example:
+              nonce: w5zY9tpNgePsqkTsQlNPVCR2rwUlCdhCLhVwXsN2r...
+              txPayload: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+              txType: raw
+              username: testUser
+      responses:
+        '200':
+          description: OK response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TxInit'
+              example:
+                assertionOptions:
+                  allowCredentials:
+                    - id: oAjxAhjnoQXLmRRAczwPg2E/S2zVS+DKlO6WNvgH9ys=
+                      transports:
+                        - usb
+                        - internal
+                      type: public-key
+                    - id: dqJvLVzdodYfQfKPB8zgF+rtoxNx5WUgH7kFHp8SegY=
+                      type: public-key
+                  challenge: gUEHYYYEpkj+eNo9DOPb/17K36VT0rTUAPyM03JeoeM=
+                  extensions:
+                    appid: https://loalhost:8443
+                  rpId: https://localhost:8443/
+                  timeout: 5000
+                  userVerification: required
+                session: w5zY9tpNgePsqkTsQlNPVCR2rwUlCdhCLhVwXsN2r...
+                txId: 2a363a42-a397-4af0-b089-0935fc223017
+        '400':
+          description: 'bad_request: Bad Request response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '404':
+          description: 'not_found: Not Found response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '500':
+          description: 'internal_error: Internal Server Error response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+components:
+  schemas:
+    Aaguid:
+      type: object
+      properties:
+        iconDark:
+          type: string
+          description: Dark Icon of the AAGUID Vendor
+          example: >-
+            data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2aWV3Qm94PSIwIDAgNDggNDgiPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJhIiB4MT0iMy4yMTczIiB5MT0iMTUiIHgyPSI0NC43ODEyIiB5Mj0iMTUiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjZDkzMDI1Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2VhNDMzNSIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iYiIgeDE9IjIwLjcyMTkiIHkxPSI0Ny42NzkxIiB4Mj0iNDEuNTAzOSIgeTI9IjExLjY4MzciIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjZmNjOTM0Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2ZiYmMwNCIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iYyIgeDE9IjI2LjU5ODEiIHkxPSI0Ni41MDE1IiB4Mj0iNS44MTYxIiB5Mj0iMTAuNTA2IiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iIzFlOGUzZSIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiMzNGE4NTMiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICAKICAgIDxwYXRoIGlkPSJwIiBkPSJNMTMuNjA4NiAzMC4wMDMxIDMuMjE4IDEyLjAwNkEyMy45OTQgMjMuOTk0IDAgMCAwIDI0LjAwMjUgNDhsMTAuMzkwNi0xNy45OTcxLS4wMDY3LS4wMDY4YTExLjk4NTIgMTEuOTg1MiAwIDAgMS0yMC43Nzc4LjAwN1oiLz4KICA8L2RlZnM+CiAgCiAgPHVzZSB4bGluazpocmVmPSIjcCIgZmlsbD0idXJsKCNhKSIgdHJhbnNmb3JtPSJyb3RhdGUoMTIwIDI0IDI0KSIvPgogIDx1c2UgeGxpbms6aHJlZj0iI3AiIGZpbGw9InVybCgjYikiIHRyYW5zZm9ybT0icm90YXRlKC0xMjAgMjQgMjQpIi8+CiAgPHVzZSB4bGluazpocmVmPSIjcCIgZmlsbD0idXJsKCNjKSIvPgogIAogIDxjaXJjbGUgY3g9IjI0IiBjeT0iMjQiIHI9IjEyIiBzdHlsZT0iZmlsbDojZmZmIi8+CiAgPGNpcmNsZSBjeD0iMjQiIGN5PSIyNCIgcj0iOS41IiBzdHlsZT0iZmlsbDojMWE3M2U4Ii8+Cjwvc3ZnPg==
+        iconLight:
+          type: string
+          description: Light Icon of the AAGUID Vendor
+          example: >-
+            data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2aWV3Qm94PSIwIDAgNDggNDgiPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJhIiB4MT0iMy4yMTczIiB5MT0iMTUiIHgyPSI0NC43ODEyIiB5Mj0iMTUiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjZDkzMDI1Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2VhNDMzNSIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iYiIgeDE9IjIwLjcyMTkiIHkxPSI0Ny42NzkxIiB4Mj0iNDEuNTAzOSIgeTI9IjExLjY4MzciIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjZmNjOTM0Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2ZiYmMwNCIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iYyIgeDE9IjI2LjU5ODEiIHkxPSI0Ni41MDE1IiB4Mj0iNS44MTYxIiB5Mj0iMTAuNTA2IiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iIzFlOGUzZSIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiMzNGE4NTMiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICAKICAgIDxwYXRoIGlkPSJwIiBkPSJNMTMuNjA4NiAzMC4wMDMxIDMuMjE4IDEyLjAwNkEyMy45OTQgMjMuOTk0IDAgMCAwIDI0LjAwMjUgNDhsMTAuMzkwNi0xNy45OTcxLS4wMDY3LS4wMDY4YTExLjk4NTIgMTEuOTg1MiAwIDAgMS0yMC43Nzc4LjAwN1oiLz4KICA8L2RlZnM+CiAgCiAgPHVzZSB4bGluazpocmVmPSIjcCIgZmlsbD0idXJsKCNhKSIgdHJhbnNmb3JtPSJyb3RhdGUoMTIwIDI0IDI0KSIvPgogIDx1c2UgeGxpbms6aHJlZj0iI3AiIGZpbGw9InVybCgjYikiIHRyYW5zZm9ybT0icm90YXRlKC0xMjAgMjQgMjQpIi8+CiAgPHVzZSB4bGluazpocmVmPSIjcCIgZmlsbD0idXJsKCNjKSIvPgogIAogIDxjaXJjbGUgY3g9IjI0IiBjeT0iMjQiIHI9IjEyIiBzdHlsZT0iZmlsbDojZmZmIi8+CiAgPGNpcmNsZSBjeD0iMjQiIGN5PSIyNCIgcj0iOS41IiBzdHlsZT0iZmlsbDojMWE3M2U4Ii8+Cjwvc3ZnPg==
+        id:
+          type: string
+          description: AAGUID
+          example: eb385800-d35e-4108-9b49-48010731cd37
+        name:
+          type: string
+          description: Name of the AAGUID Vendor
+          example: Thales
+      example:
+        iconDark: >-
+          data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2aWV3Qm94PSIwIDAgNDggNDgiPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJhIiB4MT0iMy4yMTczIiB5MT0iMTUiIHgyPSI0NC43ODEyIiB5Mj0iMTUiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjZDkzMDI1Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2VhNDMzNSIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iYiIgeDE9IjIwLjcyMTkiIHkxPSI0Ny42NzkxIiB4Mj0iNDEuNTAzOSIgeTI9IjExLjY4MzciIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjZmNjOTM0Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2ZiYmMwNCIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iYyIgeDE9IjI2LjU5ODEiIHkxPSI0Ni41MDE1IiB4Mj0iNS44MTYxIiB5Mj0iMTAuNTA2IiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iIzFlOGUzZSIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiMzNGE4NTMiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICAKICAgIDxwYXRoIGlkPSJwIiBkPSJNMTMuNjA4NiAzMC4wMDMxIDMuMjE4IDEyLjAwNkEyMy45OTQgMjMuOTk0IDAgMCAwIDI0LjAwMjUgNDhsMTAuMzkwNi0xNy45OTcxLS4wMDY3LS4wMDY4YTExLjk4NTIgMTEuOTg1MiAwIDAgMS0yMC43Nzc4LjAwN1oiLz4KICA8L2RlZnM+CiAgCiAgPHVzZSB4bGluazpocmVmPSIjcCIgZmlsbD0idXJsKCNhKSIgdHJhbnNmb3JtPSJyb3RhdGUoMTIwIDI0IDI0KSIvPgogIDx1c2UgeGxpbms6aHJlZj0iI3AiIGZpbGw9InVybCgjYikiIHRyYW5zZm9ybT0icm90YXRlKC0xMjAgMjQgMjQpIi8+CiAgPHVzZSB4bGluazpocmVmPSIjcCIgZmlsbD0idXJsKCNjKSIvPgogIAogIDxjaXJjbGUgY3g9IjI0IiBjeT0iMjQiIHI9IjEyIiBzdHlsZT0iZmlsbDojZmZmIi8+CiAgPGNpcmNsZSBjeD0iMjQiIGN5PSIyNCIgcj0iOS41IiBzdHlsZT0iZmlsbDojMWE3M2U4Ii8+Cjwvc3ZnPg==
+        iconLight: >-
+          data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2aWV3Qm94PSIwIDAgNDggNDgiPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJhIiB4MT0iMy4yMTczIiB5MT0iMTUiIHgyPSI0NC43ODEyIiB5Mj0iMTUiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjZDkzMDI1Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2VhNDMzNSIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iYiIgeDE9IjIwLjcyMTkiIHkxPSI0Ny42NzkxIiB4Mj0iNDEuNTAzOSIgeTI9IjExLjY4MzciIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjZmNjOTM0Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2ZiYmMwNCIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iYyIgeDE9IjI2LjU5ODEiIHkxPSI0Ni41MDE1IiB4Mj0iNS44MTYxIiB5Mj0iMTAuNTA2IiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iIzFlOGUzZSIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiMzNGE4NTMiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICAKICAgIDxwYXRoIGlkPSJwIiBkPSJNMTMuNjA4NiAzMC4wMDMxIDMuMjE4IDEyLjAwNkEyMy45OTQgMjMuOTk0IDAgMCAwIDI0LjAwMjUgNDhsMTAuMzkwNi0xNy45OTcxLS4wMDY3LS4wMDY4YTExLjk4NTIgMTEuOTg1MiAwIDAgMS0yMC43Nzc4LjAwN1oiLz4KICA8L2RlZnM+CiAgCiAgPHVzZSB4bGluazpocmVmPSIjcCIgZmlsbD0idXJsKCNhKSIgdHJhbnNmb3JtPSJyb3RhdGUoMTIwIDI0IDI0KSIvPgogIDx1c2UgeGxpbms6aHJlZj0iI3AiIGZpbGw9InVybCgjYikiIHRyYW5zZm9ybT0icm90YXRlKC0xMjAgMjQgMjQpIi8+CiAgPHVzZSB4bGluazpocmVmPSIjcCIgZmlsbD0idXJsKCNjKSIvPgogIAogIDxjaXJjbGUgY3g9IjI0IiBjeT0iMjQiIHI9IjEyIiBzdHlsZT0iZmlsbDojZmZmIi8+CiAgPGNpcmNsZSBjeD0iMjQiIGN5PSIyNCIgcj0iOS41IiBzdHlsZT0iZmlsbDojMWE3M2U4Ii8+Cjwvc3ZnPg==
+        id: eb385800-d35e-4108-9b49-48010731cd37
+        name: Thales
+      required:
+        - id
+        - name
+        - iconLight
+        - iconDark
+    AdditionalPasskeyInfo:
+      type: object
+      properties:
+        aaguid:
+          type: string
+          description: AAGUID identifying the passkey provider/authenticator model.
+          example: fbfc3007-154e-4ecc-8c0b-6e020557d7bd
+        assertionResult:
+          $ref: '#/components/schemas/AuthenticatorAssertionResponse'
+        creationResult:
+          $ref: '#/components/schemas/CreationResult'
+        passkeyId:
+          type: string
+          description: Internal passkey ID that uniquely identifies the passkey used.
+          example: 861ee00b-b40d-493a-a10b-457a0d527b48
+        publicKey:
+          type: string
+          description: Base64url encoded COSE public key of the passkey's credential.
+          example: wDUH6JkyU7SMswFPjyqEvhMB5GlhtqzS1VtfM/91Y...
+      description: Passkey information associated with the completed MFA step.
+      example:
+        aaguid: fbfc3007-154e-4ecc-8c0b-6e020557d7bd
+        assertionResult:
+          authenticatorData: ix523n3XniH01jM4CIuOn1z0Jw6QbRATXYOsCUyQN...
+          clientDataJSON: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+          credentialId: 2aChi2dALRLdVP5i/zKr7yvMrP8FIy7MK4lbyUsjO...
+          signature: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+        passkeyId: 861ee00b-b40d-493a-a10b-457a0d527b48
+        publicKey: wDUH6JkyU7SMswFPjyqEvhMB5GlhtqzS1VtfM/91Y...
+      required:
+        - passkeyId
+        - aaguid
+        - publicKey
+    AppError:
+      type: object
+      properties:
+        msg:
+          type: string
+          example: Internal error
+        msgCode:
+          type: string
+          description: Message code
+          example: internal_error
+          enum:
+            - bad_request
+            - unauthorized
+            - forbidden
+            - not_found
+            - internal_error
+      example:
+        msg: Internal error
+        msgCode: internal_error
+      required:
+        - msg
+        - msgCode
+    Application:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique application id
+          example: 7e8fbee6-7d23-4d2c-a66b-e92fe21212a7
+        token:
+          type: string
+          description: App authorization token signed with application key.
+          example: hEonOXevUMgNDYQWCYQQog==
+      description: >-
+        Application making the request. It contains additional info about the
+        caller
+
+        to distinguish between tenants.
+      example:
+        id: 2a363a42-a397-4af0-b089-0935fc223017
+      required:
+        - id
+    AuthCode:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Generated code
+          example: '123456'
+        expiresAt:
+          type: string
+          description: Expiration time of the code
+          example: '2021-01-01T00:00:00Z'
+      description: Code generation result
+      example:
+        code: '123456'
+        expiresAt: '2021-01-01T00:00:00Z'
+      required:
+        - code
+        - expiresAt
+    AuthCodeRequestSMSRequestBody:
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/UserLogin'
+      example:
+        user:
+          username: admin@example.com
+          usernameType: email
+      required:
+        - user
+    AuthCodeVerifyRequestBody:
+      type: object
+      properties:
+        authCode:
+          type: string
+          description: Authentication code
+          example: '123456'
+        user:
+          $ref: '#/components/schemas/UserLogin'
+      example:
+        authCode: '123456'
+        user:
+          username: admin@example.com
+          usernameType: email
+      required:
+        - authCode
+        - user
+    AuthCompleteRequestBody:
+      type: object
+      properties:
+        assertionResult:
+          $ref: '#/components/schemas/AuthenticatorAssertionResponse'
+        session:
+          type: string
+          description: An opaque object containing session data.
+          example: w5zY9tpNgePsqkTsQlNPVCR2rwUlCdhCLhVwXsN2r...
+          minLength: 16
+      example:
+        assertionResult:
+          authenticatorData: Id mollitia.
+          clientDataJSON: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+          credentialId: 2aChi2dALRLdVP5i/zKr7yvMrP8FIy7MK4lbyUsjO...
+          signature: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+          userHandle: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+        session: w5zY9tpNgePsqkTsQlNPVCR2rwUlCdhCLhVwXsN2r...
+      required:
+        - session
+        - assertionResult
+    AuthInit:
+      type: object
+      properties:
+        action:
+          type: string
+          description: >-
+            An action to be performed by the front-end to complete the
+            authentication flow.
+          default: proceed
+          example: proceed
+          enum:
+            - proceed
+            - crossAuth
+            - fallback
+        assertionOptions:
+          $ref: '#/components/schemas/PublicKeyCredentialRequestOptions'
+        crossAuthMethods:
+          type: array
+          items:
+            type: string
+            example: otp:sms
+            enum:
+              - otp
+              - otp:sms
+              - otp:email
+          description: List of cross authentication methods in the order of preference
+          example:
+            - otp
+            - otp:sms
+            - otp:email
+        fallbackMethods:
+          type: array
+          items:
+            type: string
+            example: ciam
+            enum:
+              - ciam
+          description: >-
+            The list contains available fallback methods in the order of
+            preference. The
+
+            list is dynamic and shall not be cached. The default fallback
+            mechanism is
+
+            the one provided by CIAM but our system may provide additional ones
+            as well.
+
+            These methods may be enabled by customer via application
+            configuration but
+
+            they are disabled by default. The list may be empty which means no
+            fallback
+
+            is available and authentication flow shall terminate at this point.
+          default: []
+          example:
+            - ciam
+        passkeyType:
+          type: string
+          description: Type of passkey supported by the client.
+          example: device
+        session:
+          type: string
+          description: An opaque object containing session data.
+          example: w5zY9tpNgePsqkTsQlNPVCR2rwUlCdhCLhVwXsN2r...
+      description: FIDO2 authentication response
+      example:
+        action: proceed
+        assertionOptions:
+          allowCredentials:
+            - id: oAjxAhjnoQXLmRRAczwPg2E/S2zVS+DKlO6WNvgH9ys=
+              transports:
+                - usb
+                - internal
+              type: public-key
+            - id: dqJvLVzdodYfQfKPB8zgF+rtoxNx5WUgH7kFHp8SegY=
+              type: public-key
+          challenge: gUEHYYYEpkj+eNo9DOPb/17K36VT0rTUAPyM03JeoeM=
+          extensions:
+            appid: https://loalhost:8443
+          rpId: https://localhost:8443/
+          timeout: 5000
+          userVerification: Et ab provident.
+        crossAuthMethods:
+          - otp
+          - otp:sms
+          - otp:email
+        fallbackMethods:
+          - ciam
+        passkeyType: device
+        session: w5zY9tpNgePsqkTsQlNPVCR2rwUlCdhCLhVwXsN2r...
+      required:
+        - session
+        - action
+        - crossAuthMethods
+        - fallbackMethods
+    AuthInitRequestBody:
+      type: object
+      properties:
+        app:
+          $ref: '#/components/schemas/Application'
+        deviceInfo:
+          $ref: '#/components/schemas/DeviceInfo'
+        trustItems:
+          type: object
+          description: TrustIDs provided with the request
+          example:
+            auth: DqjUIcwnq7edyyeMGCxWNqs1cNBrEjBXlB2mVxfja8s=
+            merchant: gpOLtpZWhxkKgwEJyYzB2ckXn9IXDID7jjiaYFYTfS4=
+            wallet: NlPsJDfILKo0nCxuu2lrv6q9SBqgKLvpIuqSI4izk9k=
+          additionalProperties:
+            type: string
+            example: >-
+              eyJ0eXAiOiJKV1QiLA0KICJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJqb2UiLA0KICJleHAiOjEzMDA4MTkzODAsDQogImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ.dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk
+        user:
+          $ref: '#/components/schemas/UserLogin'
+      example:
+        app:
+          id: 2a363a42-a397-4af0-b089-0935fc223017
+        deviceInfo:
+          clientName: Chrome
+          clientType: browser
+          clientVersion: 120.0.0.0
+          deviceId: 2a363a42-a397-4af0-b089-0935fc223017
+          hasBluetooth: true
+          lastUsedAt: '2025-01-02T16:40:44Z'
+          osArch: aarch64
+          osName: iOS
+          osVersion: 14.2.1
+          screenHeight: 1080
+          screenWidth: 1920
+          webauthnCapabilities: |-
+            {
+              "conditionalCreate": true,
+              "conditionalGet": true,
+              "hybridTransport": true,
+              "passkeyPlatformAuthenticator": true,
+              "userVerifyingPlatformAuthenticator": true,
+              "relatedOrigins": true,
+              "signalAllAcceptedCredentials": true,
+              "signalCurrentUserDetails": true,
+              "signalUnknownCredential": true
+            }
+        trustItems:
+          auth: DqjUIcwnq7edyyeMGCxWNqs1cNBrEjBXlB2mVxfja8s=
+          merchant: gpOLtpZWhxkKgwEJyYzB2ckXn9IXDID7jjiaYFYTfS4=
+          wallet: NlPsJDfILKo0nCxuu2lrv6q9SBqgKLvpIuqSI4izk9k=
+        user:
+          username: admin@example.com
+          usernameType: email
+      required:
+        - app
+        - deviceInfo
+    AuthenticatorAssertionResponse:
+      type: object
+      properties:
+        authenticatorData:
+          type: string
+          description: >-
+            A base64 encoded authenticator data structure encodes contextual
+            bindings
+
+            made by the authenticator.
+          example: Iusto aut odit alias labore non dolorem.
+        clientDataJSON:
+          type: string
+          description: >-
+            Base64 encoded byte array which is a JSON-compatible serialization
+            of client data
+
+            passed to the authenticator by the client in order to generate this
+            assertion.
+
+            The exact JSON serialization MUST be preserved, as the hash of the
+            serialized
+
+            client data has been computed over it.
+          example: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+        credentialId:
+          type: string
+          description: |-
+            A base64 encoded byte sequence identifying a public key credential
+            source and its authentication assertions.
+          example: 2aChi2dALRLdVP5i/zKr7yvMrP8FIy7MK4lbyUsjO...
+        signature:
+          type: string
+          description: Base64 encoded the raw signature returned from the authenticator.
+          example: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+        userHandle:
+          type: string
+          description: >-
+            User handle returned from the authenticator, or null if the
+            authenticator did not return a user handle.
+          example: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+      example:
+        authenticatorData: ix523n3XniH01jM4CIuOn1z0Jw6QbRATXYOsCUyQN...
+        clientDataJSON: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+        credentialId: 2aChi2dALRLdVP5i/zKr7yvMrP8FIy7MK4lbyUsjO...
+        signature: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+        userHandle: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+      required:
+        - clientDataJSON
+        - authenticatorData
+        - credentialId
+        - signature
+    AuthenticatorSelectionCriteria:
+      type: object
+      properties:
+        authenticatorAttachment:
+          type: string
+          description: Authenticator attachment modality
+          example: cross-platform
+          enum:
+            - platform
+            - cross-platform
+        requireResidentKey:
+          type: boolean
+          description: Resident key requirement
+          default: false
+          example: false
+        residentKey:
+          type: string
+          description: Resident key requirement
+          example: preferred
+          enum:
+            - discouraged
+            - preferred
+            - required
+        userVerification:
+          type: string
+          description: User verification requirement
+          example: preferred
+          enum:
+            - required
+            - preferred
+            - discouraged
+      example:
+        authenticatorAttachment: cross-platform
+        requireResidentKey: true
+        residentKey: discouraged
+        userVerification: Et ab provident.
+    CreationResult:
+      type: object
+      properties:
+        attestationObject:
+          type: string
+          description: >-
+            Base64 encoded byte array containing an attestation object, which is
+            opaque to,
+
+            and cryptographically protected against tampering by, the client.
+          example: 5lvuZBkX1w7/0+XKcldttzA7vTwilEq3qnnXSq/a0...
+        authenticatorData:
+          type: string
+          description: >-
+            A base64 encoded authenticator data structure encodes contextual
+            bindings
+
+            made by the authenticator.
+          example: Assumenda voluptates.
+        clientDataJSON:
+          type: string
+          description: >-
+            Base64 encoded byte array which is a JSON-compatible serialization
+            of client data
+
+            passed to the authenticator by the client in order to generate this
+            credential.
+
+            The exact JSON serialization MUST be preserved, as the hash of the
+            serialized
+
+            client data has been computed over it.
+          example: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+        credentialId:
+          type: string
+          description: |-
+            A base64 encoded byte sequence identifying a public key credential
+            source and its authentication assertions.
+          example: 2aChi2dALRLdVP5i/zKr7yvMrP8FIy7MK4lbyUsjO...
+        publicKey:
+          type: string
+          description: >-
+            Base64 encoded DER SubjectPublicKeyInfo of the new credential, or
+            null if this is
+
+            not available.
+          example: wDUH6JkyU7SMswFPjyqEvhMB5GlhtqzS1VtfM/91Y...
+        publicKeyAlgorithm:
+          type: integer
+          example: -8
+          format: int64
+        transports:
+          type: array
+          items:
+            type: string
+            description: >-
+              This enumeration defines hints as to how clients might communicate
+              with a
+
+              particular authenticator in order to obtain an assertion for a
+              specific
+
+              credential.
+            example: internal
+            enum:
+              - usb
+              - nfc
+              - ble
+              - internal
+              - hybrid
+              - cable
+              - smart-card
+          description: >-
+            These values are the transports that the authenticator is believed
+            to support,
+
+            or an empty sequence if the information is unavailable.
+          example:
+            - internal
+            - internal
+            - internal
+            - internal
+      example:
+        attestationObject: 5lvuZBkX1w7/0+XKcldttzA7vTwilEq3qnnXSq/a0...
+        authenticatorData: ix523n3XniH01jM4CIuOn1z0Jw6QbRATXYOsCUyQN...
+        clientDataJSON: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+        credentialId: 2aChi2dALRLdVP5i/zKr7yvMrP8FIy7MK4lbyUsjO...
+        publicKey: wDUH6JkyU7SMswFPjyqEvhMB5GlhtqzS1VtfM/91Y...
+        publicKeyAlgorithm: -8
+        transports:
+          - internal
+          - internal
+          - internal
+      required:
+        - clientDataJSON
+        - attestationObject
+        - credentialId
+    DeviceInfo:
+      type: object
+      properties:
+        clientName:
+          type: string
+          description: Client name
+          default: ''
+          example: Chrome
+        clientType:
+          type: string
+          description: Client type.
+          default: other
+          example: browser
+          enum:
+            - browser
+            - webview
+            - other
+        clientVersion:
+          type: string
+          description: Client version
+          default: ''
+          example: 120.0.0.0
+        deviceId:
+          type: string
+          description: An unique device identifier
+          example: 2a363a42-a397-4af0-b089-0935fc223017
+        hasBluetooth:
+          type: boolean
+          description: Whether the client browser has access to bluetooth.
+          default: false
+          example: true
+        lastUsedAt:
+          type: string
+          description: Last use timestamp in rfc3339 format
+          example: '2025-01-02T16:40:44Z'
+        osArch:
+          type: string
+          description: OS architecture
+          default: ''
+          example: aarch64
+        osName:
+          type: string
+          description: OS name
+          default: ''
+          example: iOS
+        osVersion:
+          type: string
+          description: OS version
+          default: ''
+          example: 14.2.1
+        screenHeight:
+          type: integer
+          description: Screen height in pixels
+          default: 0
+          example: 1080
+          format: int64
+        screenWidth:
+          type: integer
+          description: Screen width in pixels
+          default: 0
+          example: 1920
+          format: int64
+        webauthnCapabilities:
+          type: string
+          description: JSON string containing client webauthn capabilities.
+          example: |-
+            {
+              "conditionalCreate": true,
+              "conditionalGet": true,
+              "hybridTransport": true,
+              "passkeyPlatformAuthenticator": true,
+              "userVerifyingPlatformAuthenticator": true,
+              "relatedOrigins": true,
+              "signalAllAcceptedCredentials": true,
+              "signalCurrentUserDetails": true,
+              "signalUnknownCredential": true
+            }
+      description: >-
+        Information about the device. All of these attributes are optional and
+        should
+
+        be provided on best effort basis. If provide, they will be taken into
+
+        consideration in order to improve user experience.
+      example:
+        clientName: Chrome
+        clientType: browser
+        clientVersion: 120.0.0.0
+        deviceId: 2a363a42-a397-4af0-b089-0935fc223017
+        hasBluetooth: true
+        lastUsedAt: '2025-01-02T16:40:44Z'
+        osArch: aarch64
+        osName: iOS
+        osVersion: 14.2.1
+        screenHeight: 1080
+        screenWidth: 1920
+        webauthnCapabilities: |-
+          {
+            "conditionalCreate": true,
+            "conditionalGet": true,
+            "hybridTransport": true,
+            "passkeyPlatformAuthenticator": true,
+            "userVerifyingPlatformAuthenticator": true,
+            "relatedOrigins": true,
+            "signalAllAcceptedCredentials": true,
+            "signalCurrentUserDetails": true,
+            "signalUnknownCredential": true
+          }
+    JWT:
+      type: object
+      properties:
+        deviceId:
+          type: string
+          description: Device ID
+          example: 8222fe14-4973-469f-843d-73b0f9e0a3a9
+        jwtAccess:
+          type: string
+          description: JWT access token
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        passkeyId:
+          type: string
+          description: Passkey ID
+          example: 482b7723-eb3e-4814-809f-05af16284fcc
+        userId:
+          type: string
+          description: User ID
+          example: 2a363a42-a397-4af0-b089-0935fc223017
+      example:
+        deviceId: 8222fe14-4973-469f-843d-73b0f9e0a3a9
+        jwtAccess: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        passkeyId: 482b7723-eb3e-4814-809f-05af16284fcc
+        userId: 2a363a42-a397-4af0-b089-0935fc223017
+      required:
+        - jwtAccess
+        - userId
+    Mfa:
+      type: object
+      properties:
+        accessToken:
+          type: string
+          description: An authorization token (JWT) confirming successful authentication.
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NT...
+        deviceId:
+          type: string
+          description: Device ID
+          example: 8222fe14-4973-469f-843d-73b0f9e0a3a9
+        flow:
+          type: string
+          description: The current flow type.
+          example: signIn
+          enum:
+            - signin
+            - signup
+            - checkout
+            - signUp
+            - signIn
+        idToken:
+          type: string
+          description: An authorization token (JWT) confirming successful authentication.
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NT...
+        passkeyInfo:
+          $ref: '#/components/schemas/AdditionalPasskeyInfo'
+        payload:
+          type: string
+          description: Base64 encoded payload object
+          example: JfeMhXGH1GABxRAXRopd7vtsLEJe16f9ok3oiA8DoEADZ8TOqvgYy...
+        payloadSignature:
+          type: string
+          description: A digital signature (JWS) of the payload.
+          example: eyJhbGciOiJIUzI1NiJ9.ew0KICAic3ViIjogIjEyMzQ1Njc4OTAiLA...
+        refreshToken:
+          type: string
+          description: An authorization token (JWT) confirming successful authentication.
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NT...
+      description: >-
+        Authentication response will contain authzToken on success of list of
+        available options for the next step.
+      example:
+        accessToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NT...
+        deviceId: 8222fe14-4973-469f-843d-73b0f9e0a3a9
+        flow: signIn
+        idToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NT...
+        passkeyInfo:
+          aaguid: fbfc3007-154e-4ecc-8c0b-6e020557d7bd
+          assertionResult:
+            authenticatorData: ix523n3XniH01jM4CIuOn1z0Jw6QbRATXYOsCUyQN...
+            clientDataJSON: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+            credentialId: 2aChi2dALRLdVP5i/zKr7yvMrP8FIy7MK4lbyUsjO...
+            signature: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+          passkeyId: 861ee00b-b40d-493a-a10b-457a0d527b48
+          publicKey: wDUH6JkyU7SMswFPjyqEvhMB5GlhtqzS1VtfM/91Y...
+        payload: JfeMhXGH1GABxRAXRopd7vtsLEJe16f9ok3oiA8DoEADZ8TOqvgYy...
+        payloadSignature: eyJhbGciOiJIUzI1NiJ9.ew0KICAic3ViIjogIjEyMzQ1Njc4OTAiLA...
+        refreshToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NT...
+      required:
+        - flow
+        - payload
+        - payloadSignature
+        - idToken
+        - accessToken
+        - refreshToken
+    MfaAction:
+      type: object
+      properties:
+        action:
+          type: object
+          properties:
+            desc:
+              type: string
+              description: Action description
+              example: Quis non assumenda vel.
+            label:
+              type: string
+              description: Human readable action label
+              example: Natus minus enim at maxime suscipit.
+            name:
+              type: string
+              description: Next Action to be performed.
+              example: passkey
+              enum:
+                - passkey:reg
+                - passkey:auth
+                - passkey:tx
+                - otp:email
+                - otp:sms
+                - otp:verify
+                - external
+          example:
+            desc: Itaque libero.
+            label: Et impedit dolores vitae cumque qui omnis.
+            name: passkey
+          required:
+            - name
+            - label
+        options:
+          type: array
+          items:
+            $ref: '#/components/schemas/MfaOption'
+          description: Additional options associated with the action.
+          example:
+            - label: primary@example.com
+              value: 3df8feb9-5dc0-451e-8799-ec5d7e1fe1f7
+            - label: secondary@example.com
+              value: 9c568230-243a-43ee-8b19-7b544ba8fd9f
+      description: Next Action to be performed.
+      example:
+        action:
+          desc: Perferendis dolor saepe.
+          label: Voluptas reprehenderit consequuntur est.
+          name: passkey
+        options:
+          - label: primary@example.com
+            value: 3df8feb9-5dc0-451e-8799-ec5d7e1fe1f7
+          - label: secondary@example.com
+            value: 9c568230-243a-43ee-8b19-7b544ba8fd9f
+      required:
+        - action
+    MfaBeginRequestBody:
+      type: object
+      properties:
+        deviceInfo:
+          $ref: '#/components/schemas/DeviceInfo'
+        payload:
+          type: string
+          description: Payload to be signed
+          example: ak4BXFgauyDtsRvnXWfaTW1DyetX7fTViGY9DRQGQ+g=
+        traceId:
+          type: string
+          description: >-
+            A unique id for tracing all events associated with an interaction. A
+            random ID will be generated by the system if not provided.
+          example: 6957cf6e-a86c-44fb-b25a-bd97cb9ff830
+        trustItems:
+          type: object
+          description: TrustIDs provided with the request
+          example:
+            auth: DqjUIcwnq7edyyeMGCxWNqs1cNBrEjBXlB2mVxfja8s=
+            merchant: gpOLtpZWhxkKgwEJyYzB2ckXn9IXDID7jjiaYFYTfS4=
+            wallet: NlPsJDfILKo0nCxuu2lrv6q9SBqgKLvpIuqSI4izk9k=
+          additionalProperties:
+            type: string
+            example: >-
+              eyJ0eXAiOiJKV1QiLA0KICJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJqb2UiLA0KICJleHAiOjEzMDA4MTkzODAsDQogImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ.dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk
+        user:
+          $ref: '#/components/schemas/MfaUser'
+      example:
+        deviceInfo:
+          clientName: Chrome
+          clientType: browser
+          clientVersion: 120.0.0.0
+          deviceId: 2a363a42-a397-4af0-b089-0935fc223017
+          hasBluetooth: true
+          lastUsedAt: '2025-01-02T16:40:44Z'
+          osArch: aarch64
+          osName: iOS
+          osVersion: 14.2.1
+          screenHeight: 1080
+          screenWidth: 1920
+          webauthnCapabilities: |-
+            {
+              "conditionalCreate": true,
+              "conditionalGet": true,
+              "hybridTransport": true,
+              "passkeyPlatformAuthenticator": true,
+              "userVerifyingPlatformAuthenticator": true,
+              "relatedOrigins": true,
+              "signalAllAcceptedCredentials": true,
+              "signalCurrentUserDetails": true,
+              "signalUnknownCredential": true
+            }
+        payload: ak4BXFgauyDtsRvnXWfaTW1DyetX7fTViGY9DRQGQ+g=
+        traceId: 6957cf6e-a86c-44fb-b25a-bd97cb9ff830
+        trustItems:
+          auth: DqjUIcwnq7edyyeMGCxWNqs1cNBrEjBXlB2mVxfja8s=
+          merchant: gpOLtpZWhxkKgwEJyYzB2ckXn9IXDID7jjiaYFYTfS4=
+          wallet: NlPsJDfILKo0nCxuu2lrv6q9SBqgKLvpIuqSI4izk9k=
+        user:
+          displayName: System Administrator
+          name: John Doe
+          phone: '+15551234567'
+          username: admin@example.com
+          usernameType: email
+    MfaDiscoverRequestBody:
+      type: object
+      properties:
+        trustItems:
+          type: object
+          description: TrustIDs provided with the request
+          example:
+            auth: DqjUIcwnq7edyyeMGCxWNqs1cNBrEjBXlB2mVxfja8s=
+            merchant: gpOLtpZWhxkKgwEJyYzB2ckXn9IXDID7jjiaYFYTfS4=
+            wallet: NlPsJDfILKo0nCxuu2lrv6q9SBqgKLvpIuqSI4izk9k=
+          additionalProperties:
+            type: string
+            example: >-
+              eyJ0eXAiOiJKV1QiLA0KICJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJqb2UiLA0KICJleHAiOjEzMDA4MTkzODAsDQogImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ.dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk
+      example:
+        trustItems:
+          auth: DqjUIcwnq7edyyeMGCxWNqs1cNBrEjBXlB2mVxfja8s=
+          merchant: gpOLtpZWhxkKgwEJyYzB2ckXn9IXDID7jjiaYFYTfS4=
+          wallet: NlPsJDfILKo0nCxuu2lrv6q9SBqgKLvpIuqSI4izk9k=
+      required:
+        - trustItems
+    MfaNext:
+      type: object
+      properties:
+        flow:
+          type: string
+          description: The current flow type.
+          example: signIn
+          enum:
+            - signin
+            - signup
+            - checkout
+            - signUp
+            - signIn
+        msg:
+          type: string
+          description: Additional info displayed to the user
+          example: Additional authentication is required.
+        msgCode:
+          type: string
+          description: Message code
+          example: additional_auth_required
+        next:
+          type: array
+          items:
+            $ref: '#/components/schemas/MfaAction'
+          example:
+            - action:
+                label: Passkey
+                name: passkey
+              options:
+                - name: assertionOptions
+                  value: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+            - action:
+                label: External Auth
+                name: external
+            - action:
+                desc: >-
+                  OTP will be sent to one of the email addresses provided by the
+                  user.
+                label: OTP via Email
+                name: otp:email
+              options:
+                - label: primary@example.com
+                  name: email:primary
+                  value: 3df8feb9-5dc0-451e-8799-ec5d7e1fe1f7
+                - label: secondary@example.com
+                  name: email:secondary
+                  value: 9c568230-243a-43ee-8b19-7b544ba8fd9f
+            - action:
+                desc: >-
+                  OTP will be sent via SMS to one of the phone numbers provided
+                  by the user.
+                label: OTP via SMS
+                name: otp:sms
+              options:
+                - label: +1(631)842-0398
+                  value: ee9ce8f0-1471-47c4-b1e5-c40923aee83a
+                - label: +1(661)942-5456
+                  value: 3e3092dc-eb0c-4064-9276-7687fe5cef57
+        session:
+          type: string
+          description: >-
+            An opaque "session" object to be used with the subsequent API call
+            for maintaining flow state.
+          example: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+      description: >-
+        Authentication response will contain authzToken on success of list of
+        available options for the next step.
+      example:
+        flow: signIn
+        msg: Additional authentication is required.
+        msgCode: additional_auth_required
+        next:
+          - action:
+              label: Passkey
+              name: passkey
+            options:
+              - name: assertionOptions
+                value: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+          - action:
+              label: External Auth
+              name: external
+          - action:
+              desc: >-
+                OTP will be sent to one of the email addresses provided by the
+                user.
+              label: OTP via Email
+              name: otp:email
+            options:
+              - label: primary@example.com
+                name: email:primary
+                value: 3df8feb9-5dc0-451e-8799-ec5d7e1fe1f7
+              - label: secondary@example.com
+                name: email:secondary
+                value: 9c568230-243a-43ee-8b19-7b544ba8fd9f
+          - action:
+              desc: >-
+                OTP will be sent via SMS to one of the phone numbers provided by
+                the user.
+              label: OTP via SMS
+              name: otp:sms
+            options:
+              - label: +1(631)842-0398
+                value: ee9ce8f0-1471-47c4-b1e5-c40923aee83a
+              - label: +1(661)942-5456
+                value: 3e3092dc-eb0c-4064-9276-7687fe5cef57
+        session: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+      required:
+        - msgCode
+        - msg
+    MfaOption:
+      type: object
+      properties:
+        label:
+          type: string
+          description: Human readable label
+          example: Dolorem quis totam quaerat.
+        name:
+          type: string
+          description: Option name
+          example: Harum repellat.
+        value:
+          type: string
+          description: Option value to be used in the next request
+          example: Blanditiis autem voluptatum temporibus dignissimos aut.
+      example:
+        label: Corporis necessitatibus sunt assumenda qui impedit.
+        name: Fugit voluptatibus repudiandae quibusdam fuga sed.
+        value: Occaecati earum dolorem sit voluptatem incidunt.
+      required:
+        - value
+    MfaOtpRequestRequestBody:
+      type: object
+      properties:
+        method:
+          type: string
+          description: OTP method
+          example: email
+          enum:
+            - email
+            - sms
+        option:
+          type: string
+          description: >-
+            An OTP option selected by the user (i.e. address to send the OTP
+            request to - phone, email, etc.)
+          example: user@example.com
+      example:
+        method: email
+        option: user@example.com
+      required:
+        - method
+    MfaOtpRequestResponseBody:
+      type: object
+      properties:
+        session:
+          type: string
+          description: >-
+            An opaque session object to be included with the subsequent API
+            call.
+          example: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+      example:
+        session: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+      required:
+        - session
+    MfaOtpVerifyRequestBody:
+      type: object
+      properties:
+        otp:
+          type: string
+          example: '123456'
+      example:
+        otp: '123456'
+      required:
+        - otp
+    MfaPasskeyAuthRequestBody:
+      type: object
+      properties:
+        assertionResult:
+          $ref: '#/components/schemas/AuthenticatorAssertionResponse'
+        providerParams:
+          type: object
+          description: Identity provider parameters (e.g., Mitek verification data).
+          example:
+            document: base64-encoded-image
+            verification_type: document
+          additionalProperties:
+            type: string
+            example: Cupiditate exercitationem.
+      example:
+        assertionResult:
+          authenticatorData: Id mollitia.
+          clientDataJSON: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+          credentialId: 2aChi2dALRLdVP5i/zKr7yvMrP8FIy7MK4lbyUsjO...
+          signature: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+          userHandle: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+        providerParams:
+          document: base64-encoded-image
+          verification_type: document
+      required:
+        - assertionResult
+    MfaPasskeyRegRequestBody:
+      type: object
+      properties:
+        creationResult:
+          $ref: '#/components/schemas/CreationResult'
+        providerParams:
+          type: object
+          description: Identity provider parameters (e.g., Mitek verification data).
+          example:
+            document: base64-encoded-image
+            verification_type: document
+          additionalProperties:
+            type: string
+            example: Impedit quo et enim qui ad.
+      example:
+        creationResult:
+          attestationObject: 5lvuZBkX1w7/0+XKcldttzA7vTwilEq3qnnXSq/a0...
+          authenticatorData: Ratione rem maxime.
+          clientDataJSON: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+          credentialId: 2aChi2dALRLdVP5i/zKr7yvMrP8FIy7MK4lbyUsjO...
+          publicKey: wDUH6JkyU7SMswFPjyqEvhMB5GlhtqzS1VtfM/91Y...
+          publicKeyAlgorithm: -8
+          transports:
+            - internal
+            - internal
+            - internal
+            - internal
+        providerParams:
+          document: base64-encoded-image
+          verification_type: document
+      required:
+        - creationResult
+    MfaPayloadUpdateRequestBody:
+      type: object
+      properties:
+        payload:
+          type: string
+          description: Payload to be signed
+          example: ak4BXFgauyDtsRvnXWfaTW1DyetX7fTViGY9DRQGQ+g=
+      example:
+        payload: ak4BXFgauyDtsRvnXWfaTW1DyetX7fTViGY9DRQGQ+g=
+      required:
+        - payload
+    MfaThirdPartyAuthVerifyRequestBody:
+      type: object
+      properties:
+        token:
+          type: string
+          description: Authorization token produced by mgmt API.
+          example: >-
+            eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+      example:
+        token: >-
+          eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+      required:
+        - token
+    MfaUser:
+      type: object
+      properties:
+        displayName:
+          type: string
+          description: Display Name
+          example: System Administrator
+        name:
+          type: string
+          description: Full name for SNA evaluation
+          example: John Doe
+        phone:
+          type: string
+          description: Phone number for SNA evaluation
+          example: '+15551234567'
+        username:
+          type: string
+          example: Aperiam pariatur quia ut occaecati.
+        usernameType:
+          type: string
+          example: Praesentium praesentium qui et ullam aut.
+      example:
+        displayName: System Administrator
+        name: John Doe
+        phone: '+15551234567'
+        username: admin@example.com
+        usernameType: email
+      required:
+        - username
+        - usernameType
+    Passkey:
+      type: object
+      properties:
+        aaguid:
+          type: string
+          description: AAGUID of passkey provider
+          example: fbfc3007-154e-4ecc-8c0b-6e020557d7bd
+        createdAt:
+          type: string
+          description: Timestamp in RFC3339 format.
+          example: 2023-06-15 13:29:41 EDT
+          format: date-time
+        credentialId:
+          type: string
+          example: Mollitia ipsum praesentium labore eaque voluptatem.
+        credentialSynced:
+          type: boolean
+          description: Credential available on multiple devices
+          default: false
+          example: false
+        id:
+          type: string
+          description: Internal passkey ID that uniquely identifies a passkey
+          example: 861ee00b-b40d-493a-a10b-457a0d527b48
+        lastUsedAt:
+          type: string
+          description: Last use timestamp in rfc3339 format
+          example: '2025-01-02T16:40:44Z'
+        lastUsedFromDevice:
+          $ref: '#/components/schemas/DeviceInfo'
+        name:
+          type: string
+          description: Name of the passkey
+          example: My Phone
+        providerName:
+          type: string
+          description: Name of the passkey provider
+          example: Apple Passwords
+      example:
+        aaguid: fbfc3007-154e-4ecc-8c0b-6e020557d7bd
+        createdAt: 2023-06-15 13:29:41 EDT
+        credentialId: Quibusdam corporis qui sit enim qui ea.
+        credentialSynced: true
+        id: 861ee00b-b40d-493a-a10b-457a0d527b48
+        lastUsedAt: '2025-01-02T16:40:44Z'
+        lastUsedFromDevice:
+          clientName: Chrome
+          clientType: browser
+          clientVersion: 120.0.0.0
+          deviceId: ab715482-4089-4818-9f79-80523d8eb3c6
+          lastUsedAt: '2025-01-02T16:40:44Z'
+          osArch: arm64
+          osName: iOS
+          osVersion: 18.1.1
+        name: My Phone
+        providerName: Apple Passwords
+      required:
+        - id
+        - name
+        - createdAt
+        - aaguid
+    PasskeyCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/Passkey'
+      example:
+        - createdAt: 2023-06-15 13:29:41 EDT
+          credentialId: YzI4MjllZmEtNGYyMC00YTYwLThlMDEtYmM4ZTJjYmRiYjA0
+          credentialSynced: false
+          id: eb385800-d35e-4108-9b49-48010731cd37
+          lastUsedAt: 2023-06-15 13:29:41 EDT
+          lastUsedFrom:
+            clientName: Chrome
+            clientType: browser
+            clientVersion: 120.0.0.0
+            deviceId: ab715482-4089-4818-9f79-80523d8eb3c6
+            lastUsedAt: '2025-01-02T16:40:44Z'
+            osArch: arm64
+            osName: iOS
+            osVersion: 18.1.1
+          name: My Phone
+        - createdAt: 2023-06-15 13:29:41 EDT
+          credentialId: KzI4MjllZmEtNGYyMC00YTYwLThlMDEtYmM4ZTJjYmRiYjA9
+          credentialSynced: true
+          id: 1b385800-d35e-4108-9b49-48010731cd37
+          lastUsedAt: 2023-06-15 13:29:41 EDT
+          lastUsedFrom:
+            clientName: Chrome
+            clientType: browser
+            clientVersion: 120.0.0.0
+            deviceId: ab715482-4089-4818-9f79-80523d8eb3c6
+            lastUsedAt: '2025-01-02T16:40:44Z'
+            osArch: x86_64
+            osName: Darwin
+            osVersion: 15.4.1
+          name: My Laptop
+        - createdAt: 2023-06-15 13:29:41 EDT
+          credentialSynced: false
+          id: ab385800-d35e-4108-9b49-48010731cd37
+          name: My Tablet
+    PasskeyOptions:
+      type: object
+      properties:
+        conditionalCreate:
+          type: boolean
+          description: Flag to allow conditional creation
+          default: false
+          example: false
+        securityKey:
+          type: boolean
+          description: Whether the authenticator is a security key
+          default: false
+          example: false
+      example:
+        conditionalCreate: false
+        securityKey: false
+    PasskeyRenameRequestBody:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Internal passkey identifier
+          example: My iPhone SE
+      example:
+        name: My iPhone SE
+      required:
+        - name
+    PubKeyCredentialDescriptor:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Base64 encoded byte array of the public key identifier.
+          example: AyQBkTLAPWaLl6HtE3Oh6ovqkspSidX8DA9fYQB6DX4=
+        transports:
+          type: array
+          items:
+            type: string
+            description: >-
+              This enumeration defines hints as to how clients might communicate
+              with a
+
+              particular authenticator in order to obtain an assertion for a
+              specific
+
+              credential.
+            example: internal
+            enum:
+              - usb
+              - nfc
+              - ble
+              - internal
+              - hybrid
+              - cable
+              - smart-card
+          example:
+            - internal
+            - internal
+        type:
+          type: string
+          description: The valid credential types.
+          example: public-key
+          enum:
+            - public-key
+      example:
+        id: AyQBkTLAPWaLl6HtE3Oh6ovqkspSidX8DA9fYQB6DX4=
+        transports:
+          - internal
+          - internal
+        type: Sunt doloremque cum quasi corrupti velit.
+      required:
+        - type
+        - id
+    PublicKeyCredentialCreationOptions:
+      type: object
+      properties:
+        attestation:
+          type: string
+          example: direct
+          enum:
+            - none
+            - indirect
+            - direct
+            - enterprise
+        authenticatorSelection:
+          $ref: '#/components/schemas/AuthenticatorSelectionCriteria'
+        challenge:
+          type: string
+          description: |-
+            This base64 encoded byte array represents a challenge that
+            the selected authenticator signs, along with other data, when
+            producing an authentication assertion.
+          example: gUEHYYYEpkj+eNo9DOPb/17K36VT0rTUAPyM03JeoeM=
+        excludeCredentials:
+          type: array
+          items:
+            $ref: '#/components/schemas/PubKeyCredentialDescriptor'
+          description: >-
+            List of credentials to limit the creation of multiple credentials
+            for the same
+
+            account on a single authenticator. The client is requested to return
+            an error
+
+            if the new credential would be created on an authenticator that also
+            contains
+
+            one of the credentials enumerated in this parameter.
+          example:
+            - id: oAjxAhjnoQXLmRRAczwPg2E/S2zVS+DKlO6WNvgH9ys=
+              transports:
+                - usb
+                - internal
+              type: public-key
+            - id: dqJvLVzdodYfQfKPB8zgF+rtoxNx5WUgH7kFHp8SegY=
+              type: public-key
+        extensions:
+          type: object
+          description: >-
+            Additional parameters requesting processing by the client and
+            authenticator.
+          example:
+            appid: https://loalhost:8443
+          additionalProperties: true
+        pubKeyCredParams:
+          type: array
+          items:
+            $ref: '#/components/schemas/PublicKeyCredentialParameters'
+          description: >-
+            This member contains information about the desired properties of the
+            credential
+
+            to be created. The sequence is ordered from most preferred to least
+            preferred.
+
+            The client makes a best-effort to create the most preferred
+            credential that it
+
+            can.
+          example:
+            - alg: -7
+              type: public-key
+            - alg: -257
+              type: public-key
+        rp:
+          $ref: '#/components/schemas/PublicKeyCredentialRpEntity'
+        timeout:
+          type: integer
+          description: |-
+            This OPTIONAL member specifies a time, in milliseconds,
+            that the caller is willing to wait for the call to complete. The
+            value is treated as a hint, and MAY be overridden by the client.
+          example: 10000
+          format: int64
+        user:
+          $ref: '#/components/schemas/PublicKeyCredentialUserEntity'
+      example:
+        attestation: Ea aut nulla est enim.
+        authenticatorSelection:
+          authenticatorAttachment: platform
+          requireResidentKey: true
+          residentKey: required
+          userVerification: preferred
+        challenge: gUEHYYYEpkj+eNo9DOPb/17K36VT0rTUAPyM03JeoeM=
+        excludeCredentials:
+          - id: oAjxAhjnoQXLmRRAczwPg2E/S2zVS+DKlO6WNvgH9ys=
+            transports:
+              - usb
+              - internal
+            type: public-key
+          - id: dqJvLVzdodYfQfKPB8zgF+rtoxNx5WUgH7kFHp8SegY=
+            type: public-key
+        extensions:
+          appid: https://loalhost:8443
+        pubKeyCredParams:
+          - alg: -7
+            type: public-key
+          - alg: -257
+            type: public-key
+        rp:
+          id: api.loginid.io
+          name: Login ID Inc.
+        timeout: 10000
+        user:
+          displayName: System Administrator
+          id: 5e084987-3b3d-4cd7-8b19-385f8f5e253b
+          name: admin
+      required:
+        - rp
+        - user
+        - challenge
+        - pubKeyCredParams
+    PublicKeyCredentialParameters:
+      type: object
+      properties:
+        alg:
+          type: integer
+          description: >-
+            A cryptographic signature algorithm with which the newly generated
+            credential
+
+            will be used, and thus also the type of asymmetric key pair to be
+            generated,
+
+            e.g., RSA or Elliptic Curve.
+          example: -257
+          format: int64
+        type:
+          type: string
+          description: The valid credential types.
+          example: public-key
+          enum:
+            - public-key
+      description: Additional parameters when creating a new credential.
+      example:
+        alg: -35
+        type: Sunt doloremque cum quasi corrupti velit.
+    PublicKeyCredentialRequestOptions:
+      type: object
+      properties:
+        allowCredentials:
+          type: array
+          items:
+            $ref: '#/components/schemas/PubKeyCredentialDescriptor'
+          description: >-
+            A list of PublicKeyCredentialDescriptor objects representing public
+            key
+
+            credentials acceptable to the caller, in descending order of the
+            caller’s
+
+            preference (the first item in the list is the most preferred
+            credential,
+
+            and so on down the list).
+          example:
+            - id: oAjxAhjnoQXLmRRAczwPg2E/S2zVS+DKlO6WNvgH9ys=
+              transports:
+                - usb
+                - internal
+              type: public-key
+            - id: dqJvLVzdodYfQfKPB8zgF+rtoxNx5WUgH7kFHp8SegY=
+              type: public-key
+        challenge:
+          type: string
+          description: >-
+            This base64 encoded byte array represents a challenge that the
+            selected
+
+            authenticator signs, along with other data, when producing an
+            authentication
+
+            assertion.
+          example: gUEHYYYEpkj+eNo9DOPb/17K36VT0rTUAPyM03JeoeM=
+        extensions:
+          type: object
+          description: >-
+            Additional parameters requesting additional processing by the client
+            and
+
+            authenticator. For example, if transaction confirmation is sought
+            from the
+
+            user, then the prompt string might be included as an extension.
+          example:
+            appid: https://loalhost:8443
+          additionalProperties: true
+        rpId:
+          type: string
+          description: >-
+            The relying party identifier claimed by the caller. If omitted, its
+            value will
+
+            be the CredentialsContainer object’s relevant settings object's
+            origin's
+
+            effective domain.
+          example: https://localhost:8443/
+        timeout:
+          type: integer
+          description: |-
+            Specifies a time, in milliseconds, that the caller is willing
+            to wait for the call to complete. The value is treated as a
+            hint, and MAY be overridden by the client.
+          example: 5000
+          format: int64
+        userVerification:
+          type: string
+          description: User verification requirement
+          example: preferred
+          enum:
+            - required
+            - preferred
+            - discouraged
+      example:
+        allowCredentials:
+          - id: oAjxAhjnoQXLmRRAczwPg2E/S2zVS+DKlO6WNvgH9ys=
+            transports:
+              - usb
+              - internal
+            type: public-key
+          - id: dqJvLVzdodYfQfKPB8zgF+rtoxNx5WUgH7kFHp8SegY=
+            type: public-key
+        challenge: gUEHYYYEpkj+eNo9DOPb/17K36VT0rTUAPyM03JeoeM=
+        extensions:
+          appid: https://loalhost:8443
+        rpId: https://localhost:8443/
+        timeout: 5000
+        userVerification: Et ab provident.
+      required:
+        - challenge
+    PublicKeyCredentialRpEntity:
+      type: object
+      properties:
+        id:
+          type: string
+          description: >-
+            A unique identifier for the Relying Party entity, which sets the RP
+            ID.
+          example: api.loginid.io
+        name:
+          type: string
+          description: Relaying party name
+          example: Login ID Inc.
+      description: Data about the Relying Party responsible for the request.
+      example:
+        id: api.loginid.io
+        name: Login ID Inc.
+      required:
+        - name
+    PublicKeyCredentialUserEntity:
+      type: object
+      properties:
+        displayName:
+          type: string
+          example: System Administrator
+        id:
+          type: string
+          example: 5e084987-3b3d-4cd7-8b19-385f8f5e253b
+        name:
+          type: string
+          example: admin
+      description: >-
+        Data about the user account for which the Relying Party is requesting
+        attestation
+      example:
+        displayName: System Administrator
+        id: 5e084987-3b3d-4cd7-8b19-385f8f5e253b
+        name: admin
+      required:
+        - name
+        - displayName
+        - id
+    RegCompleteRequestBody:
+      type: object
+      properties:
+        creationResult:
+          $ref: '#/components/schemas/CreationResult'
+        passkeyName:
+          type: string
+          description: Passkey name that will be shown to the user in passkey list.
+          example: Windows Hello (Win11,Chrome) - 2025-04-07 20:46
+        session:
+          type: string
+          description: An opaque object containing session data.
+          example: w5zY9tpNgePsqkTsQlNPVCR2rwUlCdhCLhVwXsN2r...
+          minLength: 16
+      example:
+        creationResult:
+          attestationObject: 5lvuZBkX1w7/0+XKcldttzA7vTwilEq3qnnXSq/a0...
+          authenticatorData: Ratione rem maxime.
+          clientDataJSON: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+          credentialId: 2aChi2dALRLdVP5i/zKr7yvMrP8FIy7MK4lbyUsjO...
+          publicKey: wDUH6JkyU7SMswFPjyqEvhMB5GlhtqzS1VtfM/91Y...
+          publicKeyAlgorithm: -8
+          transports:
+            - internal
+            - internal
+            - internal
+            - internal
+        passkeyName: Windows Hello (Win11,Chrome) - 2025-04-07 20:46
+        session: w5zY9tpNgePsqkTsQlNPVCR2rwUlCdhCLhVwXsN2r...
+      required:
+        - session
+        - creationResult
+    RegInit:
+      type: object
+      properties:
+        action:
+          type: string
+          description: >-
+            An action to be performed by the front-end to complete the
+            registration flow.
+          default: proceed
+          example: proceed
+          enum:
+            - proceed
+            - signIn
+            - fail
+            - ''
+        registrationRequestOptions:
+          $ref: '#/components/schemas/PublicKeyCredentialCreationOptions'
+        session:
+          type: string
+          description: An opaque object containing session data.
+          example: w5zY9tpNgePsqkTsQlNPVCR2rwUlCdhCLhVwXsN2r...
+      description: FIDO2 registration response
+      example:
+        action: proceed
+        registrationRequestOptions:
+          attestation: Ea aut nulla est enim.
+          authenticatorSelection:
+            authenticatorAttachment: platform
+            requireResidentKey: true
+            residentKey: required
+            userVerification: preferred
+          challenge: gUEHYYYEpkj+eNo9DOPb/17K36VT0rTUAPyM03JeoeM=
+          excludeCredentials:
+            - id: oAjxAhjnoQXLmRRAczwPg2E/S2zVS+DKlO6WNvgH9ys=
+              transports:
+                - usb
+                - internal
+              type: public-key
+            - id: dqJvLVzdodYfQfKPB8zgF+rtoxNx5WUgH7kFHp8SegY=
+              type: public-key
+          extensions:
+            appid: https://loalhost:8443
+          pubKeyCredParams:
+            - alg: -7
+              type: public-key
+            - alg: -257
+              type: public-key
+          rp:
+            id: api.loginid.io
+            name: Login ID Inc.
+          timeout: 10000
+          user:
+            displayName: System Administrator
+            id: 5e084987-3b3d-4cd7-8b19-385f8f5e253b
+            name: admin
+        session: w5zY9tpNgePsqkTsQlNPVCR2rwUlCdhCLhVwXsN2r...
+      required:
+        - session
+        - registrationRequestOptions
+        - action
+    RegInitRequestBody:
+      type: object
+      properties:
+        app:
+          $ref: '#/components/schemas/Application'
+        deviceInfo:
+          $ref: '#/components/schemas/DeviceInfo'
+        passkeyOptions:
+          $ref: '#/components/schemas/PasskeyOptions'
+        trustItems:
+          type: object
+          description: TrustIDs provided with the request
+          example:
+            auth: DqjUIcwnq7edyyeMGCxWNqs1cNBrEjBXlB2mVxfja8s=
+            merchant: gpOLtpZWhxkKgwEJyYzB2ckXn9IXDID7jjiaYFYTfS4=
+            wallet: NlPsJDfILKo0nCxuu2lrv6q9SBqgKLvpIuqSI4izk9k=
+          additionalProperties:
+            type: string
+            example: >-
+              eyJ0eXAiOiJKV1QiLA0KICJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJqb2UiLA0KICJleHAiOjEzMDA4MTkzODAsDQogImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ.dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk
+        user:
+          $ref: '#/components/schemas/User'
+      example:
+        app:
+          id: 2a363a42-a397-4af0-b089-0935fc223017
+        deviceInfo:
+          clientName: Chrome
+          clientType: browser
+          clientVersion: 120.0.0.0
+          deviceId: 2a363a42-a397-4af0-b089-0935fc223017
+          hasBluetooth: true
+          lastUsedAt: '2025-01-02T16:40:44Z'
+          osArch: aarch64
+          osName: iOS
+          osVersion: 14.2.1
+          screenHeight: 1080
+          screenWidth: 1920
+          webauthnCapabilities: |-
+            {
+              "conditionalCreate": true,
+              "conditionalGet": true,
+              "hybridTransport": true,
+              "passkeyPlatformAuthenticator": true,
+              "userVerifyingPlatformAuthenticator": true,
+              "relatedOrigins": true,
+              "signalAllAcceptedCredentials": true,
+              "signalCurrentUserDetails": true,
+              "signalUnknownCredential": true
+            }
+        passkeyOptions:
+          conditionalCreate: false
+          securityKey: false
+        trustItems:
+          auth: DqjUIcwnq7edyyeMGCxWNqs1cNBrEjBXlB2mVxfja8s=
+          merchant: gpOLtpZWhxkKgwEJyYzB2ckXn9IXDID7jjiaYFYTfS4=
+          wallet: NlPsJDfILKo0nCxuu2lrv6q9SBqgKLvpIuqSI4izk9k=
+        user:
+          displayName: System Administrator
+          username: admin@example.com
+          usernameType: email
+      required:
+        - app
+        - deviceInfo
+    Session:
+      type: object
+      properties:
+        session:
+          type: string
+          description: >-
+            An opaque "session" object that shall be used with any subsequent
+            calls.
+          example: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+      description: >-
+        Authentication response will contain authzToken on success of list of
+        available options for the next step.
+      example:
+        session: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+    SubmitRequestBody:
+      type: object
+      properties:
+        event:
+          type: string
+          description: Client side event.
+          example: ERROR_DISCOVERABLE_CREDENTIALS_UNSUPPORTED
+        isError:
+          type: boolean
+          description: Whether the event is a result of an error.
+          default: false
+          example: true
+      example:
+        event: ERROR_DISCOVERABLE_CREDENTIALS_UNSUPPORTED
+        isError: true
+      required:
+        - event
+    TxComplete:
+      type: object
+      properties:
+        authCred:
+          $ref: '#/components/schemas/Passkey'
+        credentialId:
+          type: string
+          description: Internal passkey identifier
+          example: 2a363a42-a397-4af0-b089-0935fc223017
+        token:
+          type: string
+          description: Authorization token
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+      description: Transaction Confirmation Complete response
+      example:
+        authCred:
+          aaguid: fbfc3007-154e-4ecc-8c0b-6e020557d7bd
+          createdAt: 2023-06-15 13:29:41 EDT
+          credentialId: Dolores iste.
+          credentialSynced: false
+          id: 861ee00b-b40d-493a-a10b-457a0d527b48
+          lastUsedAt: '2025-01-02T16:40:44Z'
+          lastUsedFromDevice:
+            clientName: Chrome
+            clientType: browser
+            clientVersion: 120.0.0.0
+            deviceId: ab715482-4089-4818-9f79-80523d8eb3c6
+            lastUsedAt: '2025-01-02T16:40:44Z'
+            osArch: arm64
+            osName: iOS
+            osVersion: 18.1.1
+          name: My Phone
+          providerName: Apple Passwords
+        credentialId: 2a363a42-a397-4af0-b089-0935fc223017
+        token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+      required:
+        - credentialId
+        - token
+    TxCompleteRequestBody:
+      type: object
+      properties:
+        authenticatorData:
+          type: string
+          description: >-
+            This attribute contains the authenticator data returned by the
+            authenticator.
+          example: Cumque dolorum.
+        clientData:
+          type: string
+          description: "Base64 encoded byte array which is a JSON-compatible serialization of client data\n\t\t\t\t\t\t\tpassed to the authenticator by the client in order to generate this assertion.\n\t\t\t\t\t\t\tThe exact JSON serialization MUST be preserved, as the hash of the serialized\n\t\t\t\t\t\t\tclient data has been computed over it."
+          example: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+        keyHandle:
+          type: string
+          description: Identified of the passkey credential.
+          example: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+        session:
+          type: string
+          description: An opaque object containing session data.
+          example: w5zY9tpNgePsqkTsQlNPVCR2rwUlCdhCLhVwXsN2r...
+          minLength: 16
+        signature:
+          type: string
+          description: Base64 encoded the raw signature returned from the authenticator.
+          example: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+      example:
+        authenticatorData: Est molestias eum dolore.
+        clientData: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+        keyHandle: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+        session: w5zY9tpNgePsqkTsQlNPVCR2rwUlCdhCLhVwXsN2r...
+        signature: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+      required:
+        - session
+        - keyHandle
+        - clientData
+        - authenticatorData
+        - signature
+    TxInit:
+      type: object
+      properties:
+        assertionOptions:
+          $ref: '#/components/schemas/PublicKeyCredentialRequestOptions'
+        session:
+          type: string
+          description: An opaque object containing session data.
+          example: w5zY9tpNgePsqkTsQlNPVCR2rwUlCdhCLhVwXsN2r...
+          minLength: 16
+        txId:
+          type: string
+          description: Internal transaction identifier
+          example: 2a363a42-a397-4af0-b089-0935fc223017
+      description: Transaction Confirmation Init response
+      example:
+        assertionOptions:
+          allowCredentials:
+            - id: oAjxAhjnoQXLmRRAczwPg2E/S2zVS+DKlO6WNvgH9ys=
+              transports:
+                - usb
+                - internal
+              type: public-key
+            - id: dqJvLVzdodYfQfKPB8zgF+rtoxNx5WUgH7kFHp8SegY=
+              type: public-key
+          challenge: gUEHYYYEpkj+eNo9DOPb/17K36VT0rTUAPyM03JeoeM=
+          extensions:
+            appid: https://loalhost:8443
+          rpId: https://localhost:8443/
+          timeout: 5000
+          userVerification: Et ab provident.
+        session: w5zY9tpNgePsqkTsQlNPVCR2rwUlCdhCLhVwXsN2r...
+        txId: 2a363a42-a397-4af0-b089-0935fc223017
+      required:
+        - txId
+        - session
+        - assertionOptions
+    TxInitRequestBody:
+      type: object
+      properties:
+        nonce:
+          type: string
+          description: Random string
+          example: w5zY9tpNgePsqkTsQlNPVCR2rwUlCdhCLhVwXsN2r...
+        txPayload:
+          type: string
+          description: Payload of transaction
+          example: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+        txType:
+          type: string
+          description: Type of transaction
+          example: raw
+        username:
+          type: string
+          description: Username of user
+          example: testUser
+      example:
+        nonce: w5zY9tpNgePsqkTsQlNPVCR2rwUlCdhCLhVwXsN2r...
+        txPayload: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+        txType: raw
+        username: testUser
+      required:
+        - username
+        - txPayload
+        - txType
+        - nonce
+    User:
+      type: object
+      properties:
+        displayName:
+          type: string
+          description: Display Name
+          example: System Administrator
+        username:
+          type: string
+          description: Username
+          example: user01
+        usernameType:
+          type: string
+          description: Username type
+          default: other
+          example: email
+          enum:
+            - email
+            - phone
+            - other
+      example:
+        displayName: System Administrator
+        username: admin@example.com
+        usernameType: email
+      required:
+        - username
+        - usernameType
+    UserLogin:
+      type: object
+      properties:
+        username:
+          type: string
+          description: Username
+          example: user01
+        usernameType:
+          type: string
+          description: Username type
+          default: other
+          example: email
+          enum:
+            - email
+            - phone
+            - other
+      example:
+        username: admin@example.com
+        usernameType: email
+      required:
+        - username
+  securitySchemes:
+    apiKey_header_Authorization:
+      type: apiKey
+      description: Secures endpoint by requiring an API key.
+      name: Authorization
+      in: header
+    jwt_header_Authorization:
+      type: http
+      scheme: bearer
+    sessionAuth_header_Authorization:
+      type: apiKey
+      description: Secures endpoint by requiring a session object.
+      name: Authorization
+      in: header
+tags:
+  - name: client-events
+    description: Error reporting endpoint
+  - name: tx
+    description: FIDO2 transaction confirmation flow
+  - name: auth
+    description: FIDO2 authentication flow
+  - name: mfa
+    description: Multi Factor authentication flow methods
+  - name: reg
+    description: FIDO2 registration flow
+  - name: passkeys
+    description: FIDO2 pass-key management

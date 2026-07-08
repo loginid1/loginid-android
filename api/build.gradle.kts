@@ -1,7 +1,9 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     kotlin("jvm")
     id("org.openapi.generator") version "7.23.0"
-    id("com.google.devtools.ksp") version "2.3.9"
+    alias(libs.plugins.ksp)
 }
 
 val generatedSourcesDir = "${buildDir}/generated/openapi"
@@ -17,12 +19,27 @@ dependencies {
     testImplementation(libs.junit)
 }
 
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
 kotlin {
-    sourceSets {
-        main {
-            kotlin.srcDir("$generatedSourcesDir/src/main/kotlin")
-        }
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_11)
     }
+}
+
+sourceSets.main {
+    java.srcDir(files(generatedSourcesDir).builtBy(tasks.named("openApiGenerate")))
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+    dependsOn("openApiGenerate")
+}
+
+tasks.named("openApiGenerate") {
+    mustRunAfter(tasks.named("clean"))
 }
 
 openApiGenerate {
@@ -32,6 +49,9 @@ openApiGenerate {
 
     apiPackage.set("com.loginid.client.api")
     modelPackage.set("com.loginid.client.model")
+    cleanupOutput = true
+    generateApiTests = false
+    generateModelTests = false
 
     configOptions.set(
         mapOf(
