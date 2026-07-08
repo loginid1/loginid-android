@@ -11,6 +11,8 @@ cache:
 stages:
   - build
   - test
+  - publish
+  - deploy
 
 before_script:
   - export GRADLE_USER_HOME=cache/.gradle
@@ -20,6 +22,12 @@ include:
   - template: Security/Dependency-Scanning.gitlab-ci.yml
   - template: Security/Secret-Detection.gitlab-ci.yml
   - template: Security/SAST.gitlab-ci.yml
+
+.aws-prep: &aws-prep
+  - |
+    mkdir -p ~/.aws
+    echo "${OIDC_TOKEN}" > /tmp/web_identity_token
+    echo -e "[profile oidc]\nrole_arn=${ROLE_ARN}\nweb_identity_token_file=/tmp/web_identity_token" > ~/.aws/config
 
 variables:
   GITLAB_ADVANCED_SAST_ENABLED: 'true'
@@ -73,6 +81,8 @@ build:
   rules:
     - if: $CI_PIPELINE_SOURCE == "pipeline" 
       when: never
+    - if: $CI_COMMIT_TAG 
+      when: never
     - when: always
   script:
     - ./gradlew buildLibrariesRelease
@@ -83,3 +93,41 @@ build:
       - auth/build/outputs/aar/*-release.aar
       - mfa/build/outputs/aar/*-release.aar
     expire_in: 1 hour
+
+create_release:
+  stage: publish
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  script:
+    - echo "A release is being created"
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule" || $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: never
+    - if: $CI_COMMIT_TAG
+      when: always
+  release:
+    tag_name: $CI_COMMIT_TAG
+    description: $CI_COMMIT_TAG
+    ref: $CI_COMMIT_SHA
+
+deploy-aws:
+  stage: deploy
+  image:
+    name: amazon/aws-cli:latest
+    entrypoint: [""]
+  environment: production
+  rules:
+    - if: '$CI_COMMIT_TAG =~ /^(api|core|auth|mfa)-.+$/'
+      when: manual
+  id_tokens:
+    OIDC_TOKEN:
+      aud: https://gitlab.com
+  variables:
+    S3_BUCKET: $AWS_PRODUCTION_S3_BUCKET
+    ROLE_ARN: arn:aws:iam::$AWS_PRODUCTION_ACCOUNT_ID:role/$AWS_PRODUCTION_ROLE_NAME
+  before_script:
+    - *aws-prep
+  script:
+    - MODULE="${CI_COMMIT_TAG%%-*}"
+    - VERSION="${CI_COMMIT_TAG#*-}"
+    - ./gradlew ":$MODULE:assembleRelease -PmoduleVersion=$VERSION"
+    - sh ./scripts/aws-deploy-s3.sh
