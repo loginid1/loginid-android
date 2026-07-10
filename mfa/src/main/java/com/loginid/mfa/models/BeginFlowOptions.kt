@@ -6,22 +6,9 @@ import com.loginid.core.enums.UsernameType
  * Options for beginning Multi-Factor Authentication (MFA).
  *
  * @property displayName A human-palatable name for the user account, intended only for display on your passkeys and modals.
- * @property usernameType The type of username validation to be used. Defaults to [UsernameType.OTHER].
+ * @property usernameType The type of username validation to be used. Defaults to `[UsernameType.OTHER]`.
  * @property txPayload A string representing transaction details for confirmation during MFA.
  * This can be plain text or a JSON-formatted string for structured details.
- * Example (plain text):
- * ```
- * Payment of $100 to John Doe
- * ```
- * Example (JSON):
- * ```json
- * {
- *   "transactionId": "12345",
- *   "amount": "100.00",
- *   "currency": "USD",
- *   "recipient": "john.doe@example.com"
- * }
- * ```
  * @property merchantTrustId Merchant-generated identifier for the current checkout session. Used as a key to retrieve associated trust information and link the session with wallet-issued identity data.
  * @property traceId A unique identifier used to trace and correlate all events associated with a single MFA interaction. If you don’t provide this, the server may generate one automatically.
  * @property deviceId An identifier for the device used in the authentication process. This property helps determine if

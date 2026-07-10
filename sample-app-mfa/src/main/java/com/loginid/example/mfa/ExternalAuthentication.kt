@@ -12,7 +12,7 @@ import kotlin.text.Charsets.UTF_8
 // This is a management API key. It should not be stored in the app.
 // This is for demonstration purposes only.
 // In a real application, this should be handled by a backend server.
-private const val LOGINID_API_KEY = ""
+private const val LOGINID_API_KEY = "YY3Fom7jNEspf_YIhvy4JSXObsbTa5gw1VhLTlbZXrc"
 
 suspend fun requestExternalAuthToken(username: String, baseUrl: String): String {
     return withContext(Dispatchers.IO) {
