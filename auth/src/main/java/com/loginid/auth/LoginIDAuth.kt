@@ -35,6 +35,20 @@ import com.loginid.core.utils.PublicKeyManager
 import com.loginid.core.utils.TaskHandler
 import com.loginid.core.utils.TrustID
 
+/**
+ * High-level entry point for LoginID authentication on Android.
+ *
+ * This facade composes core SDK services to provide a simple API for:
+ * - Creating and authenticating with passkeys
+ * - Confirming transactions (non-repudiation)
+ * - Requesting, sending, and validating one-time passwords (OTP)
+ * - Managing passkeys (list, rename, delete)
+ * - Inspecting and clearing the current session
+ * - Verifying environment configuration
+ *
+ * All public operations are exposed as suspend functions and should be called from a coroutine.
+ * Instances are lightweight and can be stored as a singleton in your application layer.
+ */
 class LoginIDAuth(config: LoginIDConfig) {
 
     /**

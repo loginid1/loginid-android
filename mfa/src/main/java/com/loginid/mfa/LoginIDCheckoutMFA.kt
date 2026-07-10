@@ -50,8 +50,7 @@ class LoginIDCheckoutMFA {
      *
      * @param txPayload The transaction payload to be confirmed/authorized.
      * @param username The username of the user initiating MFA. Defaults to an empty string.
-     * @param options Optional parameters for beginning the flow. If `options.txPayload` is provided,
-     * it takes precedence over the `txPayload` parameter.
+     * @param options Optional parameters for beginning the flow. If `options.txPayload` is provided, it takes precedence over the `txPayload` parameter.
      *
      * @return An `MFASessionResult` describing the newly-started MFA session.
      *
