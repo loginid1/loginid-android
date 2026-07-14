@@ -20,6 +20,7 @@ RUN apt-get -qq update \
       lib32gcc1 \
       lib32ncurses6 \
       lib32z1 \
+      zip \
       unzip \
       locales \
  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
