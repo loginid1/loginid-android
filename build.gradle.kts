@@ -62,24 +62,17 @@ tasks.register("buildLibrariesRelease") {
     )
 }
 
-tasks.register("buildReleaseModule") {
-    val module = providers.gradleProperty("module")
-        .orNull
-        ?: throw GradleException("Missing -Pmodule=<api|core|auth|mfa>")
-
-    val version = providers.gradleProperty("moduleVersion").orNull
+tasks.register("buildSdkRelease") {
+    val version = providers.gradleProperty("sdkVersion").orNull
 
     if (version != null) {
-        println("Building $module version $version")
+        println("Building SDK version $version")
     }
 
     dependsOn(
-        when (module) {
-            "api" -> ":api:jar"
-            "core" -> ":core:assembleRelease"
-            "auth" -> ":auth:assembleRelease"
-            "mfa" -> ":mfa:assembleRelease"
-            else -> throw GradleException("Unknown module '$module'")
-        }
+        ":api:jar",
+        ":core:assembleRelease",
+        ":auth:assembleRelease",
+        ":mfa:assembleRelease"
     )
 }

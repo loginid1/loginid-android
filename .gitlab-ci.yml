@@ -112,27 +112,27 @@ create_release:
 build-release:
   stage: test
   rules:
-    - if: '$CI_COMMIT_TAG =~ /^(api|core|auth|mfa)-.+$/'
+    - if: '$CI_COMMIT_TAG =~ /^[0-9]+\.[0-9]+\.[0-9]+$/'
   script:
-    - MODULE="${CI_COMMIT_TAG%%-*}"
-    - VERSION="${CI_COMMIT_TAG#*-}"
-    - ./gradlew buildReleaseModule -Pmodule=$MODULE -PmoduleVersion=$VERSION
+    - VERSION=$CI_COMMIT_TAG
+    - ./gradlew buildSdkRelease -PsdkVersion=$VERSION
+    - ./scripts/build.sh auth
+    - ./scripts/build.sh mfa
   artifacts:
     paths:
-      - api/build/libs/*.jar
-      - core/build/outputs/aar/*-release.aar
-      - auth/build/outputs/aar/*-release.aar
-      - mfa/build/outputs/aar/*-release.aar
+      - build/loginid-auth-sdk.aar
+      - build/loginid-mfa-sdk.aar
     expire_in: 1 hour
 
 deploy-aws:
   stage: deploy
+  needs: ["build-release"]
   image:
     name: amazon/aws-cli:latest
     entrypoint: [""]
   environment: production
   rules:
-    - if: '$CI_COMMIT_TAG =~ /^(api|core|auth|mfa)-.+$/'
+    - if: '$CI_COMMIT_TAG =~ /^[0-9]+\.[0-9]+\.[0-9]+$/'
       when: manual
   id_tokens:
     OIDC_TOKEN:
@@ -143,4 +143,4 @@ deploy-aws:
   before_script:
     - *aws-prep
   script:
-    - sh ./scripts/aws-deploy-s3.sh
+    - sh ./scripts/aws-deploy-s3.sh auth mfa
