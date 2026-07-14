@@ -8,7 +8,7 @@ import android.content.Context
  * @param context The Android application context.
  * @param baseUrl The base URL of the LoginID service. This value is used to resolve the App ID and make API calls.
  * @param appId The application ID. If not provided, it will be extracted from the baseUrl.
- * @param useTrustId A flag to enable or disable the use of Trust ID. Defaults to true.
+ * @param useTrustId A flag to enable or disable the use of Trust ID. Defaults to false.
  */
 class LoginIDConfig(context: Context, baseUrl: String, appId: String = "", useTrustId: Boolean = false) {
     /**

@@ -5,7 +5,7 @@ import com.loginid.core.enums.UsernameType
 /**
  * Options for authenticating with a passkey.
  *
- * @property usernameType The type of username validation to be used. Defaults to [UsernameType.OTHER].
+ * @property usernameType The type of username validation to be used. Defaults to `[UsernameType.OTHER]`.
  * @property autofill When true, enables passkey keyboard autofill suggestions. Username does not need to be set.
  */
 data class AuthenticateWithPasskeyOptions(

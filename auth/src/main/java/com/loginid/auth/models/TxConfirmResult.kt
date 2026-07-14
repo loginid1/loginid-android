@@ -4,19 +4,14 @@ import com.loginid.client.model.TxComplete
 
 /**
  * The result of a successful transaction confirmation.
+ *
+ * @property token An authorization token that confirms the transaction.
+ * @property credentialId The identifier of the passkey credential used for confirmation.
+ * @property passkey Optional details about the passkey used for confirmation.
  */
 data class TxConfirmResult(
-    /**
-     * An authorization token that confirms the transaction.
-     */
     val token: String,
-    /**
-     * The identifier of the passkey credential used for confirmation.
-     */
     val credentialId: String,
-    /**
-     * Optional details about the passkey used for confirmation.
-     */
     val passkey: PasskeyDetails?
 ) {
     /**
