@@ -7,51 +7,26 @@ import com.loginid.client.model.Passkey
  *
  * Provides information about the passkey’s provider, creation date,
  * usage history, and associated device information.
+ *
+ * @property aaguid AAGUID (Authenticator Attestation GUID) of the passkey provider.
+ * @property id The ID of the passkey.
+ * @property credentialId The original raw credential ID of the given passkey when it was created via WebAuthn.
+ * @property name Human-readable name assigned to the passkey.
+ * @property providerName Name of the passkey provider (e.g., Apple, Google).
+ * @property createdAt Timestamp when the passkey was created, in RFC3339 format.
+ * @property lastUsedAt Timestamp when the passkey was last used, in RFC3339 format.
+ * @property credentialSynced Indicates whether the credential is available across multiple devices (synced).
+ * @property lastUsedFromDevice Information about the device from which the passkey was last used.
  */
 data class PasskeyDetails(
-    /**
-     * AAGUID (Authenticator Attestation GUID) of the passkey provider.
-     */
     val aaguid: String,
-
-    /**
-     * The ID of the passkey.
-     */
     val id: String,
-
-    /**
-     * The original raw credential ID of the given passkey when it was created via WebAuthn.
-     */
     val credentialId: String?,
-
-    /**
-     * Human-readable name assigned to the passkey.
-     */
     val name: String,
-
-    /**
-     * Name of the passkey provider (e.g., Apple, Google).
-     */
     val providerName: String?,
-
-    /**
-     * Timestamp when the passkey was created, in RFC3339 format.
-     */
     val createdAt: String,
-
-    /**
-     * Timestamp when the passkey was last used, in RFC3339 format.
-     */
     val lastUsedAt: String?,
-
-    /**
-     * Indicates whether the credential is available across multiple devices (synced).
-     */
     val credentialSynced: Boolean,
-
-    /**
-     * Information about the device from which the passkey was last used.
-     */
     val lastUsedFromDevice: DeviceDetails?
 ) {
     /**
