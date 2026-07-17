@@ -10,6 +10,13 @@ plugins {
     alias(libs.plugins.ksp) apply false
 }
 
+allprojects {
+    group = "com.loginid"
+    version = providers.gradleProperty("sdkVersion")
+        .orElse("0.0.0-SNAPSHOT")
+        .get()
+}
+
 subprojects {
     plugins.withId("com.android.library") {
         extensions.configure<LibraryExtension> {

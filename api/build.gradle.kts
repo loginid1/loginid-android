@@ -4,6 +4,7 @@ plugins {
     kotlin("jvm")
     id("org.openapi.generator") version "7.23.0"
     alias(libs.plugins.ksp)
+    `maven-publish`
 }
 
 val generatedSourcesDir = "${buildDir}/generated/openapi"
@@ -22,6 +23,8 @@ dependencies {
 java {
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
+
+    withSourcesJar()
 }
 
 kotlin {
@@ -63,4 +66,16 @@ openApiGenerate {
             "jvmOverloads" to "true"
         )
     )
+}
+
+publishing {
+    publications {
+        register<MavenPublication>("mavenJava") {
+            groupId = "com.loginid"
+            artifactId = "api"
+            version = project.version.toString()
+
+            from(components["java"])
+        }
+    }
 }
