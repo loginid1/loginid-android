@@ -2,7 +2,7 @@ package com.loginid.auth.extensions
 
 import com.loginid.auth.models.AuthResult
 import com.loginid.auth.models.FallbackMethodsResult
-import com.loginid.client.model.JWT
+import io.loginid.client.model.JWT
 
 /**
  * Populates an [AuthResult] instance from a [JWT] response object.

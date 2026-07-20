@@ -1,7 +1,7 @@
 package com.loginid.mfa.models
 
-import com.loginid.client.model.MfaAction
-import com.loginid.client.model.MfaNext
+import io.loginid.client.model.MfaAction
+import io.loginid.client.model.MfaNext
 import com.squareup.moshi.JsonClass
 
 /**

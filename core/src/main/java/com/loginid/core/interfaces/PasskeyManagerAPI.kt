@@ -1,6 +1,6 @@
 package com.loginid.core.interfaces
 
-import com.loginid.client.model.Passkey
+import io.loginid.client.model.Passkey
 
 /**
  * An internal API for managing passkeys.

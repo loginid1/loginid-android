@@ -1,7 +1,7 @@
 package com.loginid.core.extensions
 
-import com.loginid.client.model.CreationResult
 import com.loginid.core.models.CreatePublicKeyCredentialResponse
+import io.loginid.client.model.CreationResult
 
 /**
  * Converts a [CreatePublicKeyCredentialResponse] to a [CreationResult].

@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.loginid.auth"
+    namespace = "io.loginid.auth"
 
     publishing {
         singleVariant("release") {

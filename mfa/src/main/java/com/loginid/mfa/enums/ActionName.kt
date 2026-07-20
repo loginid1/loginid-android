@@ -1,6 +1,6 @@
 package com.loginid.mfa.enums
 
-import com.loginid.client.model.MfaActionAction
+import io.loginid.client.model.MfaActionAction
 
 /**
  * Represents the type of MFA (Multi-Factor Authentication) action to be performed.

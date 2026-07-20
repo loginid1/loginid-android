@@ -1,6 +1,6 @@
 package com.loginid.mfa.models
 
-import com.loginid.client.model.AdditionalPasskeyInfo
+import io.loginid.client.model.AdditionalPasskeyInfo
 
 /**
  * Represents additional information about a passkey.

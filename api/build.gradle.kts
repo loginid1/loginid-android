@@ -50,8 +50,9 @@ openApiGenerate {
     inputSpec.set("$rootDir/openapi-gen/mod-openapi.yaml")
     outputDir.set(generatedSourcesDir)
 
-    apiPackage.set("com.loginid.client.api")
-    modelPackage.set("com.loginid.client.model")
+    apiPackage.set("io.loginid.client.api")
+    modelPackage.set("io.loginid.client.model")
+    packageName.set("io.loginid.client")
     cleanupOutput = true
     generateApiTests = false
     generateModelTests = false

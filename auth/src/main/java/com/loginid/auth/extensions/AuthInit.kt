@@ -1,7 +1,7 @@
 package com.loginid.auth.extensions
 
 import com.loginid.auth.models.FallbackMethodsResult
-import com.loginid.client.model.AuthInit
+import io.loginid.client.model.AuthInit
 
 /**
  * Merges cross-authentication and fallback methods into a single list.

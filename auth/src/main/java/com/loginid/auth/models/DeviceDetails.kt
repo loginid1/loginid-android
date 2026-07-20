@@ -1,6 +1,6 @@
 package com.loginid.auth.models
 
-import com.loginid.client.model.DeviceInfo
+import io.loginid.client.model.DeviceInfo
 
 /**
  * Information about the device.

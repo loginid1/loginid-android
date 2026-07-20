@@ -1,7 +1,7 @@
 package com.loginid.core.extensions
 
-import com.loginid.client.model.AuthenticatorAssertionResponse
 import com.loginid.core.models.GetPublicKeyCredentialResponse
+import io.loginid.client.model.AuthenticatorAssertionResponse
 
 /**
  * Converts a [GetPublicKeyCredentialResponse] to an [AuthenticatorAssertionResponse].

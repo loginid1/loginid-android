@@ -1,15 +1,15 @@
 package com.loginid.mfa.controllers
 
-import com.loginid.client.model.Mfa
-import com.loginid.client.model.MfaActionAction
-import com.loginid.client.model.MfaBeginRequestBody
-import com.loginid.client.model.MfaNext
-import com.loginid.client.model.MfaPasskeyAuthRequestBody
-import com.loginid.client.model.MfaPasskeyRegRequestBody
-import com.loginid.client.model.MfaPayloadUpdateRequestBody
-import com.loginid.client.model.MfaThirdPartyAuthVerifyRequestBody
-import com.loginid.client.model.PublicKeyCredentialCreationOptions
-import com.loginid.client.model.PublicKeyCredentialRequestOptions
+import io.loginid.client.model.Mfa
+import io.loginid.client.model.MfaActionAction
+import io.loginid.client.model.MfaBeginRequestBody
+import io.loginid.client.model.MfaNext
+import io.loginid.client.model.MfaPasskeyAuthRequestBody
+import io.loginid.client.model.MfaPasskeyRegRequestBody
+import io.loginid.client.model.MfaPayloadUpdateRequestBody
+import io.loginid.client.model.MfaThirdPartyAuthVerifyRequestBody
+import io.loginid.client.model.PublicKeyCredentialCreationOptions
+import io.loginid.client.model.PublicKeyCredentialRequestOptions
 import com.loginid.core.errors.LoginIDError
 import com.loginid.core.extensions.toAuthenticatorAssertionResponse
 import com.loginid.core.extensions.toCreationResult
@@ -33,7 +33,7 @@ import com.loginid.mfa.stores.MFAStore
 import com.loginid.mfa.utils.MFAValidator
 import com.loginid.mfa.utils.TrustTokenFinder
 import com.squareup.moshi.Moshi
-import org.openapitools.client.infrastructure.ClientException
+import io.loginid.client.infrastructure.ClientException
 
 internal class MFA(
     private val config: LoginIDConfig,

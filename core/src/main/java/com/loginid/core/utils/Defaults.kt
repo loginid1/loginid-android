@@ -1,13 +1,13 @@
 package com.loginid.core.utils
 
 import android.content.Context
-import com.loginid.client.model.DeviceInfo
-import com.loginid.client.model.MfaUser
-import com.loginid.client.model.User
-import com.loginid.client.model.UserLogin
 import com.loginid.core.enums.UsernameType
 import com.loginid.core.models.LoginIDConfig
 import com.loginid.core.stores.DeviceStore
+import io.loginid.client.model.DeviceInfo
+import io.loginid.client.model.User
+import io.loginid.client.model.UserLogin
+import io.loginid.client.model.MfaUser
 import java.util.UUID
 
 /**

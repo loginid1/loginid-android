@@ -1,10 +1,10 @@
 package com.loginid.core.utils
 
-import com.loginid.client.model.DeviceInfo
 import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.os.Build
 import androidx.core.content.getSystemService
+import io.loginid.client.model.DeviceInfo
 
 /**
  * Utility methods for retrieving device-related metadata to be used in Multi-Factor Authentication (MFA) flows.

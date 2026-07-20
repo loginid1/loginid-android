@@ -2,8 +2,6 @@ package com.loginid.auth.controllers
 
 import com.loginid.auth.models.LoginIDConfigResult
 import com.loginid.auth.models.SessionInfo
-import com.loginid.client.model.Application
-import com.loginid.client.model.AuthInitRequestBody
 import com.loginid.core.errors.LoginIDError
 import com.loginid.core.interfaces.PasskeyAPI
 import com.loginid.core.models.LoginIDConfig
@@ -11,6 +9,8 @@ import com.loginid.core.stores.DeviceStore
 import com.loginid.core.stores.SessionManager
 import com.loginid.core.utils.Defaults
 import com.loginid.core.utils.DeviceUtils
+import io.loginid.client.model.Application
+import io.loginid.client.model.AuthInitRequestBody
 
 internal class Utils(
     private val config: LoginIDConfig,

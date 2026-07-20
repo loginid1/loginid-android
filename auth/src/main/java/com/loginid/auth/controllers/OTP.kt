@@ -6,12 +6,12 @@ import com.loginid.auth.models.OTPResult
 import com.loginid.auth.models.RequestAndSendOtpOptions
 import com.loginid.auth.models.RequestOtpOptions
 import com.loginid.auth.models.ValidateOtpOptions
-import com.loginid.client.model.AuthCodeRequestSMSRequestBody
-import com.loginid.client.model.AuthCodeVerifyRequestBody
 import com.loginid.core.enums.MessageMethod
 import com.loginid.core.interfaces.OTPAPI
 import com.loginid.core.stores.SessionManager
 import com.loginid.core.utils.Defaults
+import io.loginid.client.model.AuthCodeRequestSMSRequestBody
+import io.loginid.client.model.AuthCodeVerifyRequestBody
 
 internal class OTP(
     private val session: SessionManager,

@@ -1,7 +1,7 @@
 package com.loginid.mfa.utils
 
-import com.loginid.client.model.MfaActionAction
-import com.loginid.client.model.MfaNext
+import io.loginid.client.model.MfaActionAction
+import io.loginid.client.model.MfaNext
 import com.loginid.mfa.models.TrustSet
 
 /**

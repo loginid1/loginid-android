@@ -1,7 +1,7 @@
 package com.loginid.mfa.models
 
 import com.loginid.core.models.TokenSet
-import com.loginid.client.model.Mfa
+import io.loginid.client.model.Mfa
 
 /**
  * An extended set of tokens obtained upon login, with optional authentication details.

@@ -1,9 +1,9 @@
 package com.loginid.core.interfaces
 
-import com.loginid.client.model.AuthCode
-import com.loginid.client.model.AuthCodeRequestSMSRequestBody
-import com.loginid.client.model.AuthCodeVerifyRequestBody
-import com.loginid.client.model.JWT
+import io.loginid.client.model.AuthCode
+import io.loginid.client.model.AuthCodeRequestSMSRequestBody
+import io.loginid.client.model.AuthCodeVerifyRequestBody
+import io.loginid.client.model.JWT
 
 /**
  * An interface for handling One-Time Password (OTP) authentication flows.

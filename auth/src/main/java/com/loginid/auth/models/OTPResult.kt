@@ -1,6 +1,6 @@
 package com.loginid.auth.models
 
-import com.loginid.client.model.AuthCode
+import io.loginid.client.model.AuthCode
 
 /**
  * The result of a successful one-time password (OTP) request.

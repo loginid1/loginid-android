@@ -1,7 +1,7 @@
 package com.loginid.core.extensions
 
-import com.loginid.client.model.PublicKeyCredentialCreationOptions
 import com.squareup.moshi.Moshi
+import io.loginid.client.model.PublicKeyCredentialCreationOptions
 
 /**
  * Converts the [PublicKeyCredentialCreationOptions] object to its JSON string representation.

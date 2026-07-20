@@ -1,7 +1,7 @@
 package com.loginid.mfa.models
 
-import com.loginid.client.model.PublicKeyCredentialCreationOptions
-import com.loginid.client.model.PublicKeyCredentialRequestOptions
+import io.loginid.client.model.PublicKeyCredentialCreationOptions
+import io.loginid.client.model.PublicKeyCredentialRequestOptions
 
 /**
  * Represents the type of passkey operation to perform,

@@ -1,6 +1,6 @@
 package com.loginid.mfa.models
 
-import com.loginid.client.model.CreationResult
+import io.loginid.client.model.CreationResult
 
 /**
  * Represents the result of a passkey credential creation.

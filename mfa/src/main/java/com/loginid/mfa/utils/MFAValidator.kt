@@ -1,9 +1,9 @@
 package com.loginid.mfa.utils
 
-import com.loginid.client.model.MfaAction
-import com.loginid.client.model.MfaActionAction
-import com.loginid.client.model.PublicKeyCredentialCreationOptions
-import com.loginid.client.model.PublicKeyCredentialRequestOptions
+import io.loginid.client.model.MfaAction
+import io.loginid.client.model.MfaActionAction
+import io.loginid.client.model.PublicKeyCredentialCreationOptions
+import io.loginid.client.model.PublicKeyCredentialRequestOptions
 import com.loginid.core.errors.LoginIDError
 import com.loginid.core.extensions.decodeJWTOrPayloadSegment
 import com.loginid.mfa.models.ActionPayload

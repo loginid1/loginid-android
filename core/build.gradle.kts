@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "com.loginid.core"
+    namespace = "io.loginid.core"
 
     publishing {
         singleVariant("release") {

@@ -1,6 +1,6 @@
 package com.loginid.mfa.models
 
-import com.loginid.client.model.MfaNext
+import io.loginid.client.model.MfaNext
 import com.loginid.core.extensions.firstMatch
 import com.loginid.mfa.enums.ActionName
 

@@ -1,7 +1,7 @@
 package com.loginid.core.models
 
 import com.squareup.moshi.JsonClass
-import com.loginid.client.model.Mfa
+import io.loginid.client.model.Mfa
 
 /**
  * A collection of authentication tokens returned after a successful login.

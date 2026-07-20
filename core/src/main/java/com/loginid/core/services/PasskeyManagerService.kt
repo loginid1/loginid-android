@@ -1,10 +1,10 @@
 package com.loginid.core.services
 
-import com.loginid.client.api.PasskeysApi
-import com.loginid.client.model.Passkey
-import com.loginid.client.model.PasskeyRenameRequestBody
 import com.loginid.core.interfaces.PasskeyManagerAPI
 import com.loginid.core.models.LoginIDConfig
+import io.loginid.client.api.PasskeysApi
+import io.loginid.client.model.PasskeyRenameRequestBody
+import io.loginid.client.model.Passkey
 
 /**
  * A service that implements the [PasskeyManagerAPI] for managing passkeys.

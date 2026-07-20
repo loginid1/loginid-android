@@ -1,6 +1,6 @@
 package com.loginid.auth.models
 
-import com.loginid.client.model.Passkey
+import io.loginid.client.model.Passkey
 
 /**
  * Represents a passkey credential stored and managed within the LoginID SDK.

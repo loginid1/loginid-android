@@ -1,6 +1,6 @@
 package com.loginid.auth.models
 
-import com.loginid.client.model.TxComplete
+import io.loginid.client.model.TxComplete
 
 /**
  * The result of a successful transaction confirmation.

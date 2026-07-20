@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "com.loginid.mfa"
+    namespace = "io.loginid.mfa"
 
     publishing {
         singleVariant("release") {

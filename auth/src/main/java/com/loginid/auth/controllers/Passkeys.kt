@@ -10,14 +10,6 @@ import com.loginid.auth.models.AuthenticateWithPasskeyOptions
 import com.loginid.auth.models.ConfirmTransactionOptions
 import com.loginid.auth.models.CreatePasskeyOptions
 import com.loginid.auth.models.TxConfirmResult
-import com.loginid.client.model.Application
-import com.loginid.client.model.AuthCompleteRequestBody
-import com.loginid.client.model.AuthInit
-import com.loginid.client.model.AuthInitRequestBody
-import com.loginid.client.model.RegCompleteRequestBody
-import com.loginid.client.model.RegInitRequestBody
-import com.loginid.client.model.TxCompleteRequestBody
-import com.loginid.client.model.TxInitRequestBody
 import com.loginid.core.errors.LoginIDError
 import com.loginid.core.extensions.toAuthenticatorAssertionResponse
 import com.loginid.core.extensions.toCreationResult
@@ -30,6 +22,14 @@ import com.loginid.core.stores.SessionManager
 import com.loginid.core.utils.Defaults
 import com.loginid.core.utils.DeviceUtils
 import com.loginid.core.utils.TrustID
+import io.loginid.client.model.Application
+import io.loginid.client.model.AuthCompleteRequestBody
+import io.loginid.client.model.AuthInit
+import io.loginid.client.model.AuthInitRequestBody
+import io.loginid.client.model.RegCompleteRequestBody
+import io.loginid.client.model.RegInitRequestBody
+import io.loginid.client.model.TxCompleteRequestBody
+import io.loginid.client.model.TxInitRequestBody
 
 internal class Passkeys(
     private val config: LoginIDConfig,

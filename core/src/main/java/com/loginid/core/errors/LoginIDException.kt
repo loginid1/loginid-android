@@ -1,10 +1,10 @@
 package com.loginid.core.errors
 
 import com.squareup.moshi.Moshi
-import org.openapitools.client.infrastructure.ClientError
-import org.openapitools.client.infrastructure.ClientException
-import org.openapitools.client.infrastructure.ServerError
-import org.openapitools.client.infrastructure.ServerException
+import io.loginid.client.infrastructure.ClientError
+import io.loginid.client.infrastructure.ClientException
+import io.loginid.client.infrastructure.ServerError
+import io.loginid.client.infrastructure.ServerException
 import kotlin.reflect.KClass
 
 /**

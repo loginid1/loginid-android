@@ -1,12 +1,12 @@
 package com.loginid.core.services
 
-import com.loginid.client.api.AuthApi
-import com.loginid.client.model.AuthCode
-import com.loginid.client.model.AuthCodeRequestSMSRequestBody
-import com.loginid.client.model.AuthCodeVerifyRequestBody
-import com.loginid.client.model.JWT
 import com.loginid.core.interfaces.OTPAPI
 import com.loginid.core.models.LoginIDConfig
+import io.loginid.client.api.AuthApi
+import io.loginid.client.model.AuthCode
+import io.loginid.client.model.AuthCodeRequestSMSRequestBody
+import io.loginid.client.model.AuthCodeVerifyRequestBody
+import io.loginid.client.model.JWT
 
 /**
  * A service that implements the [OTPAPI] protocol.

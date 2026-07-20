@@ -1,15 +1,15 @@
 package com.loginid.core.services
 
-import com.loginid.client.api.MfaApi
-import com.loginid.client.model.Mfa
-import com.loginid.client.model.MfaBeginRequestBody
-import com.loginid.client.model.MfaNext
-import com.loginid.client.model.MfaPasskeyAuthRequestBody
-import com.loginid.client.model.MfaPasskeyRegRequestBody
-import com.loginid.client.model.MfaPayloadUpdateRequestBody
-import com.loginid.client.model.MfaThirdPartyAuthVerifyRequestBody
 import com.loginid.core.interfaces.MFAAPI
 import com.loginid.core.models.LoginIDConfig
+import io.loginid.client.api.MfaApi
+import io.loginid.client.model.Mfa
+import io.loginid.client.model.MfaBeginRequestBody
+import io.loginid.client.model.MfaNext
+import io.loginid.client.model.MfaPasskeyAuthRequestBody
+import io.loginid.client.model.MfaPasskeyRegRequestBody
+import io.loginid.client.model.MfaPayloadUpdateRequestBody
+import io.loginid.client.model.MfaThirdPartyAuthVerifyRequestBody
 
 /**
  * A service that implements the [MFAAPI] for MFA operations.

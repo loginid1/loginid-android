@@ -1,7 +1,7 @@
 package com.loginid.core.models
 
-import com.loginid.client.model.CreationResult
 import com.squareup.moshi.JsonClass
+import io.loginid.client.model.CreationResult
 
 /**
  * Represents the response from a public key credential creation operation.

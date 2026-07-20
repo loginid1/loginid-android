@@ -1,16 +1,16 @@
 package com.loginid.core.interfaces
 
-import com.loginid.client.model.RegInit
-import com.loginid.client.model.AuthCompleteRequestBody
-import com.loginid.client.model.AuthInit
-import com.loginid.client.model.AuthInitRequestBody
-import com.loginid.client.model.JWT
-import com.loginid.client.model.RegCompleteRequestBody
-import com.loginid.client.model.RegInitRequestBody
-import com.loginid.client.model.TxComplete
-import com.loginid.client.model.TxCompleteRequestBody
-import com.loginid.client.model.TxInit
-import com.loginid.client.model.TxInitRequestBody
+import io.loginid.client.model.AuthCompleteRequestBody
+import io.loginid.client.model.AuthInit
+import io.loginid.client.model.AuthInitRequestBody
+import io.loginid.client.model.JWT
+import io.loginid.client.model.RegCompleteRequestBody
+import io.loginid.client.model.RegInit
+import io.loginid.client.model.RegInitRequestBody
+import io.loginid.client.model.TxComplete
+import io.loginid.client.model.TxCompleteRequestBody
+import io.loginid.client.model.TxInit
+import io.loginid.client.model.TxInitRequestBody
 
 /**
  * An interface for the Passkey API, defining methods for registration, authentication,

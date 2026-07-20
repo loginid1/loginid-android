@@ -1,6 +1,6 @@
 package com.loginid.mfa.models
 
-import com.loginid.client.model.AuthenticatorAssertionResponse
+import io.loginid.client.model.AuthenticatorAssertionResponse
 
 /**
  * Represents the result of a passkey assertion.
