@@ -18,8 +18,8 @@ internal class MFAStore(
     private val storage: Storage,
     config: LoginIDConfig
 ) {
-    private val mfaInfoKey = StorageKey<String>("com.loginid.mfa.info.${config.getAppId()}")
-    private val trustSetKey = StorageKey<String>("com.loginid.mfa.trustset.${config.getAppId()}")
+    private val mfaInfoKey = StorageKey<String>("io.loginid.mfa.info.${config.getAppId()}")
+    private val trustSetKey = StorageKey<String>("io.loginid.mfa.trustset.${config.getAppId()}")
     private val moshi = Moshi.Builder().build()
     private val mfaInfoAdapter = moshi.adapter(MFAInfo::class.java)
     private val trustSetAdapter = moshi.adapter(TrustSet::class.java)

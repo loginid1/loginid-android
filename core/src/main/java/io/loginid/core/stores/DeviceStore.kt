@@ -17,7 +17,7 @@ class DeviceStore(
     private val storage: Storage,
     config: LoginIDConfig
 ) {
-    private val deviceIdKey = StorageKey<String>("com.loginid.deviceid.${config.getAppId()}")
+    private val deviceIdKey = StorageKey<String>("io.loginid.deviceid.${config.getAppId()}")
 
     /**
      * Retrieves the stored device ID.

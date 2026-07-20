@@ -18,7 +18,7 @@ The **LoginIDCheckoutMFA** Android library provides a specialized authentication
 
 ```kotlin
 import android.app.Application
-import com.loginid.mfa.LoginIDCheckoutMFA
+import io.loginid.mfa.LoginIDCheckoutMFA
 
 class MyApp : Application() {
     lateinit var loginIdCheckoutMfa: LoginIDCheckoutMFA
@@ -39,9 +39,9 @@ Call `beginFlow` when your screen loads to start an MFA session. The response te
 ```kotlin
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.loginid.core.errors.LoginIDError
-import com.loginid.mfa.LoginIDCheckoutMFA
-import com.loginid.mfa.enums.ActionName
+import io.loginid.core.errors.LoginIDError
+import io.loginid.mfa.LoginIDCheckoutMFA
+import io.loginid.mfa.enums.ActionName
 import kotlinx.coroutines.launch
 
 class MyActivity : AppCompatActivity() {
@@ -80,10 +80,10 @@ Once your backend has verified a user’s login with a bank or third party, retu
 ```kotlin
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.loginid.core.errors.LoginIDError
-import com.loginid.mfa.LoginIDCheckoutMFA
-import com.loginid.mfa.enums.ActionName
-import com.loginid.mfa.models.PerformActionOptions
+import io.loginid.core.errors.LoginIDError
+import io.loginid.mfa.LoginIDCheckoutMFA
+import io.loginid.mfa.enums.ActionName
+import io.loginid.mfa.models.PerformActionOptions
 import kotlinx.coroutines.launch
 
 class MyActivity : AppCompatActivity() {
@@ -118,9 +118,9 @@ On the login screen, if `beginFlow` indicates `.PASSKEY_AUTH`, let the user sign
 ```kotlin
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.loginid.core.errors.LoginIDError
-import com.loginid.mfa.LoginIDCheckoutMFA
-import com.loginid.mfa.enums.ActionName
+import io.loginid.core.errors.LoginIDError
+import io.loginid.mfa.LoginIDCheckoutMFA
+import io.loginid.mfa.enums.ActionName
 import kotlinx.coroutines.launch
 
 class MyActivity : AppCompatActivity() {
@@ -150,10 +150,10 @@ On the login screen, you can trigger passkey autofill as soon as the view loads 
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.loginid.core.errors.LoginIDError
-import com.loginid.mfa.LoginIDCheckoutMFA
-import com.loginid.mfa.enums.ActionName
-import com.loginid.mfa.models.PerformActionOptions
+import io.loginid.core.errors.LoginIDError
+import io.loginid.mfa.LoginIDCheckoutMFA
+import io.loginid.mfa.enums.ActionName
+import io.loginid.mfa.models.PerformActionOptions
 import kotlinx.coroutines.launch
 
 class MyActivity : AppCompatActivity() {
@@ -184,9 +184,9 @@ If `beginFlow` returned `.PASSKEY_TX`, show the checkout page and let the user c
 ```kotlin
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.loginid.core.errors.LoginIDError
-import com.loginid.mfa.LoginIDCheckoutMFA
-import com.loginid.mfa.enums.ActionName
+import io.loginid.core.errors.LoginIDError
+import io.loginid.mfa.LoginIDCheckoutMFA
+import io.loginid.mfa.enums.ActionName
 import kotlinx.coroutines.launch
 
 class MyActivity : AppCompatActivity() {

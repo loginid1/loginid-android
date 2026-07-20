@@ -25,8 +25,8 @@ It's recommended to initialize `LoginIDMFA` or `LoginIDCheckoutMFA` once in your
 **For general MFA flows:**
 ```kotlin
 import android.app.Application
-import com.loginid.mfa.LoginIDMFA
-import com.loginid.core.models.LoginIDConfig
+import io.loginid.mfa.LoginIDMFA
+import io.loginid.core.models.LoginIDConfig
 
 class MyApp : Application() {
     lateinit var loginIdMfa: LoginIDMFA
@@ -44,7 +44,7 @@ class MyApp : Application() {
 **For checkout flows:**
 ```kotlin
 import android.app.Application
-import com.loginid.mfa.LoginIDCheckoutMFA
+import io.loginid.mfa.LoginIDCheckoutMFA
 
 class MyApp : Application() {
     lateinit var loginIdCheckoutMfa: LoginIDCheckoutMFA
@@ -65,8 +65,8 @@ Start the MFA process for a user. The result will tell you which factors are ava
 ```kotlin
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.loginid.mfa.LoginIDMFA
-import com.loginid.core.errors.LoginIDError
+import io.loginid.mfa.LoginIDMFA
+import io.loginid.core.errors.LoginIDError
 import kotlinx.coroutines.launch
 
 class MyActivity : AppCompatActivity() {
@@ -99,9 +99,9 @@ After beginning a flow, you can perform one of the available actions.
 ```kotlin
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.loginid.mfa.LoginIDMFA
-import com.loginid.mfa.enums.ActionName
-import com.loginid.core.errors.LoginIDError
+import io.loginid.mfa.LoginIDMFA
+import io.loginid.mfa.enums.ActionName
+import io.loginid.core.errors.LoginIDError
 import kotlinx.coroutines.launch
 
 class MyActivity : AppCompatActivity() {
@@ -134,8 +134,8 @@ The `LoginIDCheckoutMFA` is specialized for transaction-based authentication.
 ```kotlin
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.loginid.mfa.LoginIDCheckoutMFA
-import com.loginid.core.errors.LoginIDError
+import io.loginid.mfa.LoginIDCheckoutMFA
+import io.loginid.core.errors.LoginIDError
 import kotlinx.coroutines.launch
 
 class MyActivity : AppCompatActivity() {
@@ -160,9 +160,9 @@ class MyActivity : AppCompatActivity() {
 ```kotlin
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.loginid.mfa.LoginIDCheckoutMFA
-import com.loginid.mfa.enums.ActionName
-import com.loginid.core.errors.LoginIDError
+import io.loginid.mfa.LoginIDCheckoutMFA
+import io.loginid.mfa.enums.ActionName
+import io.loginid.core.errors.LoginIDError
 import kotlinx.coroutines.launch
 
 class MyActivity : AppCompatActivity() {

@@ -28,7 +28,7 @@ dependencies {
 publishing {
     publications {
         register<MavenPublication>("release") {
-            groupId = "com.loginid"
+            groupId = "io.loginid"
             artifactId = "core"
             version = project.version.toString()
 

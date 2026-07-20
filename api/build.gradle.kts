@@ -72,7 +72,7 @@ openApiGenerate {
 publishing {
     publications {
         register<MavenPublication>("mavenJava") {
-            groupId = "com.loginid"
+            groupId = "io.loginid"
             artifactId = "api"
             version = project.version.toString()
 

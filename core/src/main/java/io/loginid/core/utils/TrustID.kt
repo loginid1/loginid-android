@@ -26,7 +26,7 @@ class TrustID(
     private val keyStoreManagerFactory: (String) -> KeyStoreManaging
 ) : TrustIDManaging {
     private val appId = config.getAppId()
-    private val service = "com.loginid.trustid"
+    private val service = "io.loginid.trustid"
     private val anonymousUsername = ""
     private val moshi = Moshi.Builder().build()
     private val recordAdapter = moshi.adapter(TrustIDRecord::class.java)

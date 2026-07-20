@@ -17,7 +17,7 @@ class SessionManager(
     private val storage: Storage,
     config: LoginIDConfig
 ) {
-    private val tokenSetKey = StorageKey<String>("com.loginid.session.set.${config.getAppId()}")
+    private val tokenSetKey = StorageKey<String>("io.loginid.session.set.${config.getAppId()}")
     private val moshi = Moshi.Builder().build()
     private val tokenSetAdapter = moshi.adapter(TokenSet::class.java)
 

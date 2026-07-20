@@ -22,7 +22,7 @@ It's recommended to initialize `LoginIDAuth` once in your `Application` class to
 
 ```kotlin
 import android.app.Application
-import com.loginid.auth.LoginIDAuth
+import io.loginid.auth.LoginIDAuth
 
 class MyApp : Application() {
     lateinit var loginIdAuth: LoginIDAuth
@@ -43,8 +43,8 @@ You can then access this instance from your Activities or Fragments.
 ```kotlin
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.loginid.auth.LoginIDAuth
-import com.loginid.core.errors.LoginIDError
+import io.loginid.auth.LoginIDAuth
+import io.loginid.core.errors.LoginIDError
 import kotlinx.coroutines.launch
 
 class MyActivity : AppCompatActivity() {
@@ -71,8 +71,8 @@ class MyActivity : AppCompatActivity() {
 ```kotlin
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.loginid.auth.LoginIDAuth
-import com.loginid.core.errors.LoginIDError
+import io.loginid.auth.LoginIDAuth
+import io.loginid.core.errors.LoginIDError
 import kotlinx.coroutines.launch
 
 class MyActivity : AppCompatActivity() {
@@ -104,8 +104,8 @@ class MyActivity : AppCompatActivity() {
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.loginid.auth.LoginIDAuth
-import com.loginid.core.errors.LoginIDError
+import io.loginid.auth.LoginIDAuth
+import io.loginid.core.errors.LoginIDError
 import kotlinx.coroutines.launch
 
 class MyActivity : AppCompatActivity() {
@@ -134,8 +134,8 @@ class MyActivity : AppCompatActivity() {
 ```kotlin
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.loginid.auth.LoginIDAuth
-import com.loginid.core.errors.LoginIDError
+import io.loginid.auth.LoginIDAuth
+import io.loginid.core.errors.LoginIDError
 import kotlinx.coroutines.launch
 
 class MyActivity : AppCompatActivity() {
@@ -163,8 +163,8 @@ class MyActivity : AppCompatActivity() {
 ```kotlin
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.loginid.auth.LoginIDAuth
-import com.loginid.core.errors.LoginIDError
+import io.loginid.auth.LoginIDAuth
+import io.loginid.core.errors.LoginIDError
 import kotlinx.coroutines.launch
 
 class MyActivity : AppCompatActivity() {

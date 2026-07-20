@@ -19,7 +19,7 @@ import kotlinx.coroutines.withContext
  */
 class SharedPreferencesStorage(
     private val context: Context,
-    private val preferenceName: String = "com.loginid.storage"
+    private val preferenceName: String = "io.loginid.storage"
 ) : Storage {
 
     private val sharedPreferences: SharedPreferences by lazy {
