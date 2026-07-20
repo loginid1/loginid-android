@@ -4,11 +4,11 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.loginid.databinding.ActivityMainBinding
-import com.loginid.auth.LoginIDAuth
-import com.loginid.auth.models.CreatePasskeyOptions
-import com.loginid.core.enums.UsernameType
-import com.loginid.core.errors.LoginIDError
-import com.loginid.core.models.LoginIDConfig
+import io.loginid.auth.LoginIDAuth
+import io.loginid.auth.models.CreatePasskeyOptions
+import io.loginid.core.enums.UsernameType
+import io.loginid.core.errors.LoginIDError
+import io.loginid.core.models.LoginIDConfig
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {

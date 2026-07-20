@@ -3,15 +3,15 @@ package com.loginid.example.mfa
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.loginid.core.models.LoginIDConfig
-import com.loginid.core.stores.SharedPreferencesStorage
-import com.loginid.core.utils.KeyStoreManager
-import com.loginid.core.utils.TrustID
+import io.loginid.core.models.LoginIDConfig
+import io.loginid.core.stores.SharedPreferencesStorage
+import io.loginid.core.utils.KeyStoreManager
+import io.loginid.core.utils.TrustID
 import com.loginid.example.mfa.databinding.ActivityMainBinding
-import com.loginid.mfa.LoginIDCheckoutMFA
-import com.loginid.mfa.enums.ActionName
-import com.loginid.mfa.models.BeginFlowOptions
-import com.loginid.mfa.models.PerformActionOptions
+import io.loginid.mfa.LoginIDCheckoutMFA
+import io.loginid.mfa.enums.ActionName
+import io.loginid.mfa.models.BeginFlowOptions
+import io.loginid.mfa.models.PerformActionOptions
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
