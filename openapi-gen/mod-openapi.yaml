@@ -975,6 +975,15 @@ paths:
                       - label: +1(661)942-5456
                         value: 3e3092dc-eb0c-4064-9276-7687fe5cef57
                 session: UxaynsCYdykyHKaA0G7IeWaBG6DGJoGFN8mbJgvRo...
+        '403':
+          description: 'forbidden: Forbidden response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
         '500':
           description: 'internal_error: Internal Server Error response.'
           content:
@@ -1064,6 +1073,15 @@ paths:
               example:
                 msg: Internal error
                 msgCode: internal_error
+        '403':
+          description: 'forbidden: Forbidden response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
         '500':
           description: 'internal_error: Internal Server Error response.'
           content:
@@ -1140,6 +1158,15 @@ paths:
                 msgCode: internal_error
         '401':
           description: 'unauthorized: Unauthorized response.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppError'
+              example:
+                msg: Internal error
+                msgCode: internal_error
+        '403':
+          description: 'forbidden: Forbidden response.'
           content:
             application/json:
               schema:

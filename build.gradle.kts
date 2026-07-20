@@ -11,7 +11,7 @@ plugins {
 }
 
 allprojects {
-    group = "com.loginid"
+    group = "io.loginid"
     version = providers.gradleProperty("sdkVersion")
         .orElse("0.0.0-SNAPSHOT")
         .get()

@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "com.loginid.mfa"
+    namespace = "io.loginid.mfa"
 
     publishing {
         singleVariant("release") {
@@ -28,7 +28,7 @@ dependencies {
 publishing {
     publications {
         register<MavenPublication>("release") {
-            groupId = "com.loginid"
+            groupId = "io.loginid"
             artifactId = "mfa"
             version = project.version.toString()
 
