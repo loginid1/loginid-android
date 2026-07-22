@@ -63,7 +63,7 @@ subprojects {
 
     plugins.withId("com.vanniktech.maven.publish") {
         extensions.configure(com.vanniktech.maven.publish.MavenPublishBaseExtension::class) {
-            publishToMavenCentral()
+            publishToMavenCentral(automaticRelease = true)
             signAllPublications()
 
             pom {
