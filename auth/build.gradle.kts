@@ -9,7 +9,7 @@ android {
 
 dependencies {
     implementation(project(":api"))
-    implementation(project(":core"))
+    api(project(":core"))
 }
 
 mavenPublishing {
