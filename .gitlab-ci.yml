@@ -94,6 +94,23 @@ build:
       - mfa/build/outputs/aar/*-release.aar
     expire_in: 1 hour
 
+build-release:
+  stage: test
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule" || $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: never
+    - if: '$CI_COMMIT_TAG =~ /^[0-9]+\.[0-9]+\.[0-9]+$/'
+      when: always
+  script:
+    - VERSION=$CI_COMMIT_TAG
+    - ./gradlew publishToMavenLocal -PsdkVersion=$VERSION
+    - mkdir -p m2-repo
+    - cp -R ~/.m2/repository/io/loginid m2-repo/
+  artifacts:
+    paths:
+      - m2-repo/
+    expire_in: 1 hour
+
 create_release:
   stage: publish
   image: registry.gitlab.com/gitlab-org/release-cli:latest
@@ -109,20 +126,17 @@ create_release:
     description: $CI_COMMIT_TAG
     ref: $CI_COMMIT_SHA
 
-build-release:
-  stage: test
+publish-maven-central:
+  stage: deploy
+  needs: ["build-release"]
+  environment: production
   rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule" || $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: never
     - if: '$CI_COMMIT_TAG =~ /^[0-9]+\.[0-9]+\.[0-9]+$/'
+      when: manual
   script:
-    - VERSION=$CI_COMMIT_TAG
-    - ./gradlew buildSdkRelease -PsdkVersion=$VERSION
-    - ./scripts/build.sh auth
-    - ./scripts/build.sh mfa
-  artifacts:
-    paths:
-      - build/loginid-auth-sdk.aar
-      - build/loginid-mfa-sdk.aar
-    expire_in: 1 hour
+    - ./gradlew publishToMavenCentral -PsdkVersion=$CI_COMMIT_TAG
 
 deploy-aws:
   stage: deploy
@@ -132,6 +146,8 @@ deploy-aws:
     entrypoint: [""]
   environment: production
   rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule" || $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: never
     - if: '$CI_COMMIT_TAG =~ /^[0-9]+\.[0-9]+\.[0-9]+$/'
       when: manual
   id_tokens:
@@ -143,4 +159,5 @@ deploy-aws:
   before_script:
     - *aws-prep
   script:
-    - sh ./scripts/aws-deploy-s3.sh auth mfa
+    - echo "upload here"
+    #- sh ./scripts/aws-deploy-s3.sh auth mfa
