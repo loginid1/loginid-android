@@ -4,7 +4,7 @@ plugins {
     kotlin("jvm")
     id("org.openapi.generator") version "7.23.0"
     alias(libs.plugins.ksp)
-    `maven-publish`
+    alias(libs.plugins.maven.publish)
 }
 
 val generatedSourcesDir = "${buildDir}/generated/openapi"
@@ -69,14 +69,11 @@ openApiGenerate {
     )
 }
 
-publishing {
-    publications {
-        register<MavenPublication>("mavenJava") {
-            groupId = "io.loginid"
-            artifactId = "api"
-            version = project.version.toString()
+mavenPublishing {
+    coordinates("io.loginid", "api", project.version.toString())
 
-            from(components["java"])
-        }
+    pom {
+        name.set("LoginID API Client")
+        description.set("Auto-generated client of LoginID Rest API from OpenAPI spec.")
     }
 }

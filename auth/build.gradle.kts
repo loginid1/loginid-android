@@ -1,18 +1,10 @@
-import org.gradle.api.publish.maven.MavenPublication
-
 plugins {
     alias(libs.plugins.android.library)
-    `maven-publish`
+    alias(libs.plugins.maven.publish)
 }
 
 android {
     namespace = "io.loginid.auth"
-
-    publishing {
-        singleVariant("release") {
-            withSourcesJar()
-        }
-    }
 }
 
 dependencies {
@@ -20,16 +12,11 @@ dependencies {
     implementation(project(":core"))
 }
 
-publishing {
-    publications {
-        register<MavenPublication>("release") {
-            groupId = "io.loginid"
-            artifactId = "auth"
-            version = project.version.toString()
+mavenPublishing {
+    coordinates("io.loginid", "auth", project.version.toString())
 
-            afterEvaluate {
-                from(components["release"])
-            }
-        }
+    pom {
+        name.set("LoginID Auth")
+        description.set("An authentication SDK specializing in passkey authentication.")
     }
 }

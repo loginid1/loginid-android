@@ -1,19 +1,11 @@
-import org.gradle.api.publish.maven.MavenPublication
-
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.ksp)
-    `maven-publish`
+    alias(libs.plugins.maven.publish)
 }
 
 android {
     namespace = "io.loginid.mfa"
-
-    publishing {
-        singleVariant("release") {
-            withSourcesJar()
-        }
-    }
 }
 
 dependencies {
@@ -25,16 +17,11 @@ dependencies {
     ksp(libs.moshi.kotlin.codegen)
 }
 
-publishing {
-    publications {
-        register<MavenPublication>("release") {
-            groupId = "io.loginid"
-            artifactId = "mfa"
-            version = project.version.toString()
+mavenPublishing {
+    coordinates("io.loginid", "mfa", project.version.toString())
 
-            afterEvaluate {
-                from(components["release"])
-            }
-        }
+    pom {
+        name.set("LoginID MFA")
+        description.set("An SDK for orchestrating multi-factor authentication (MFA) flows, supporting passkeys, OTP, and third party authentication.")
     }
 }

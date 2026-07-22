@@ -1,19 +1,11 @@
-import org.gradle.api.publish.maven.MavenPublication
-
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.ksp)
-    `maven-publish`
+    alias(libs.plugins.maven.publish)
 }
 
 android {
     namespace = "io.loginid.core"
-
-    publishing {
-        singleVariant("release") {
-            withSourcesJar()
-        }
-    }
 }
 
 dependencies {
@@ -25,16 +17,11 @@ dependencies {
     ksp(libs.moshi.kotlin.codegen)
 }
 
-publishing {
-    publications {
-        register<MavenPublication>("release") {
-            groupId = "io.loginid"
-            artifactId = "core"
-            version = project.version.toString()
+mavenPublishing {
+    coordinates("io.loginid", "core", project.version.toString())
 
-            afterEvaluate {
-                from(components["release"])
-            }
-        }
+    pom {
+        name.set("LoginID Core")
+        description.set("Shared internal code used across all LoginID Android modules")
     }
 }

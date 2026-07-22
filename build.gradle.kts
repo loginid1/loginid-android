@@ -1,6 +1,7 @@
 import com.android.build.api.dsl.LibraryExtension
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
+import org.gradle.kotlin.dsl.configure
 
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
@@ -8,6 +9,7 @@ plugins {
     alias(libs.plugins.android.library) apply false
     alias(libs.plugins.kotlin.compose) apply false
     alias(libs.plugins.ksp) apply false
+    alias(libs.plugins.maven.publish) apply false
 }
 
 allprojects {
@@ -55,6 +57,38 @@ subprojects {
         extensions.configure<KotlinAndroidProjectExtension> {
             compilerOptions {
                 jvmTarget.set(JvmTarget.JVM_11)
+            }
+        }
+    }
+
+    plugins.withId("com.vanniktech.maven.publish") {
+        extensions.configure(com.vanniktech.maven.publish.MavenPublishBaseExtension::class) {
+            publishToMavenCentral()
+            signAllPublications()
+
+            pom {
+                url.set("https://github.com/loginid1/loginid-android")
+
+                licenses {
+                    license {
+                        name.set("Apache License, Version 2.0")
+                        url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
+                    }
+                }
+
+                developers {
+                    developer {
+                        id.set("loginid")
+                        name.set("LoginID")
+                        email.set("support@loginid.io")
+                    }
+                }
+
+                scm {
+                    connection.set("scm:git:https://github.com/loginid1/loginid-android.git")
+                    developerConnection.set("scm:git:ssh://git@github.com:loginid1/loginid-android.git")
+                    url.set("https://github.com/loginid1/loginid-android")
+                }
             }
         }
     }
