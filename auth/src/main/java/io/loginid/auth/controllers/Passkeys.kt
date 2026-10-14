@@ -30,6 +30,7 @@ import io.loginid.client.model.RegCompleteRequestBody
 import io.loginid.client.model.RegInitRequestBody
 import io.loginid.client.model.TxCompleteRequestBody
 import io.loginid.client.model.TxInitRequestBody
+import io.loginid.client.model.TxPayload
 
 internal class Passkeys(
     private val config: LoginIDConfig,
@@ -102,7 +103,7 @@ internal class Passkeys(
         options: AuthenticateWithPasskeyOptions? = null
     ): AuthResult {
         val appId = config.getAppId()
-        val deviceInfo = Defaults.deviceInfo(activity, device)
+        val deviceInfo = Defaults.deviceInfo(activity, device, options?.deviceId)
         val trustItems = Defaults.trustItems(
             config = config,
             store = trustId,
@@ -112,13 +113,17 @@ internal class Passkeys(
             username = username,
             usernameType = options?.usernameType
         )
+        val tx = options?.txPayload
+            ?.takeIf { it.isNotEmpty() }
+            ?.let { TxPayload(data = it, nonce = options.txNonce ?: "") }
 
         val authInitRequestBody = AuthInitRequestBody(
             app = Application(appId),
             deviceInfo = deviceInfo,
             user = user,
             trustItems = trustItems,
-            traceId = options?.traceId
+            traceId = options?.traceId,
+            tx = tx
         )
 
         val userAgent = DeviceUtils.getUserAgent()

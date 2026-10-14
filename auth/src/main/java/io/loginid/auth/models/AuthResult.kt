@@ -14,6 +14,7 @@ typealias FallbackMethodsResult = List<String>
  * @property userId The unique identifier of the authenticated user, or null if authentication was not completed.
  * @property passkeyId The identifier of the passkey used to authenticate the user, or null if a passkey was not used or authentication was not completed.
  * @property deviceId An identifier for the device that participated in the authentication process. Can be used to infer supported methods on this device.
+ * @property txId The unique identifier of the confirmed transaction. Only present when a transaction was successfully confirmed with a passkey via the `txPayload` option of `authenticateWithPasskey`.
  */
 data class AuthResult(
     val isAuthenticated: Boolean = false,
@@ -23,5 +24,6 @@ data class AuthResult(
     val userId: String? = null,
     val passkeyId: String? = null,
     val deviceId: String? = null,
+    val txId: String? = null,
 )
 
