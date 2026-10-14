@@ -61,7 +61,8 @@ internal class Passkeys(
             app = Application(appId),
             deviceInfo = deviceInfo,
             user = user,
-            trustItems = trustItems
+            trustItems = trustItems,
+            traceId = options?.traceId
         )
 
         val userAgent = DeviceUtils.getUserAgent()
@@ -116,7 +117,8 @@ internal class Passkeys(
             app = Application(appId),
             deviceInfo = deviceInfo,
             user = user,
-            trustItems = trustItems
+            trustItems = trustItems,
+            traceId = options?.traceId
         )
 
         val userAgent = DeviceUtils.getUserAgent()

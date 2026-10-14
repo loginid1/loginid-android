@@ -6,6 +6,7 @@ import io.loginid.client.model.CreationResult
  * Represents the result of a passkey credential creation.
  *
  * @property attestationObject Base64URL-encoded attestation object bytes.
+ * @property authenticatorAttachment The authenticator attachment modality: `"platform"` or `"cross-platform"`.
  * @property authenticatorData Base64URL-encoded authenticator data bytes.
  * @property clientDataJSON Base64URL-encoded UTF-8 JSON bytes representing the client data.
  * @property credentialId Base64URL-encoded credential ID bytes.
@@ -15,6 +16,7 @@ import io.loginid.client.model.CreationResult
  */
 data class PasskeyCreationResult(
     val attestationObject: String,
+    val authenticatorAttachment: String?,
     val authenticatorData: String?,
     val clientDataJSON: String,
     val credentialId: String,
@@ -28,6 +30,7 @@ data class PasskeyCreationResult(
      */
     internal constructor(result: CreationResult) : this(
         attestationObject = result.attestationObject,
+        authenticatorAttachment = result.authenticatorAttachment?.value,
         authenticatorData = result.authenticatorData,
         clientDataJSON = result.clientDataJSON,
         credentialId = result.credentialId,
