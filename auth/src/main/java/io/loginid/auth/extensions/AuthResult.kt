@@ -18,6 +18,7 @@ internal fun AuthResult.fromJWT(response: JWT): AuthResult {
         userId = response.userId,
         passkeyId = response.passkeyId,
         deviceId = response.deviceId,
+        txId = response.txId,
     )
 }
 

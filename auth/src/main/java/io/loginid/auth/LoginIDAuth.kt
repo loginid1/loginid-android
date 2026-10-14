@@ -153,6 +153,9 @@ class LoginIDAuth(config: LoginIDConfig) {
      *
      * A short-lived authorization token is returned, allowing access to protected resources for the given user such as listing, renaming or deleting passkeys.
      *
+     * When `options.txPayload` is provided, the payload is embedded in the passkey challenge and signed by the user, confirming the transaction
+     * as part of the authentication. The resulting [AuthResult.txId] identifies the confirmed transaction.
+     *
      * @param activity The current activity.
      * @param username The username of the user to authenticate.
      * @param options Optional parameters for passkey authentication.
