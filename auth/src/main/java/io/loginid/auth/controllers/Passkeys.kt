@@ -11,6 +11,7 @@ import io.loginid.auth.models.ConfirmTransactionOptions
 import io.loginid.auth.models.CreatePasskeyOptions
 import io.loginid.auth.models.TxConfirmResult
 import io.loginid.core.errors.LoginIDError
+import io.loginid.core.extensions.applyingOverrides
 import io.loginid.core.extensions.toAuthenticatorAssertionResponse
 import io.loginid.core.extensions.toCreationResult
 import io.loginid.core.extensions.toJSON
@@ -52,10 +53,12 @@ internal class Passkeys(
             store = trustId,
             username = username
         )
+        val overrideDeviceDisplayName = options?.overrideDeviceDisplayName
         val user = Defaults.user(
             displayName = options?.displayName,
             username = username,
-            usernameType = options?.usernameType
+            usernameType = options?.usernameType,
+            overrideDeviceDisplayName = overrideDeviceDisplayName
         )
 
         val regInitRequestBody = RegInitRequestBody(
@@ -73,7 +76,7 @@ internal class Passkeys(
             request = regInitRequestBody,
             userAgent = userAgent,
             authorization = authzToken,
-        )
+        ).applyingOverrides(deviceDisplayName = overrideDeviceDisplayName)
 
         return invokePasskeyApi(initRes.session) {
             val credential = publicKeyManager.create(

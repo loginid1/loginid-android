@@ -68,15 +68,21 @@ object Defaults {
      * @param displayName The user's display name.
      * @param username The user's username.
      * @param usernameType The type of username.
+     * @param overrideDeviceDisplayName When non-empty, `displayName` is omitted from the `User`.
      * @return A `User` object.
      */
     fun user(
         displayName: String?,
         username: String?,
-        usernameType: UsernameType?
+        usernameType: UsernameType?,
+        overrideDeviceDisplayName: String? = null
     ): User {
         return User(
-            displayName = displayName(displayName, username ?: ""),
+            displayName = if (!overrideDeviceDisplayName.isNullOrEmpty()) {
+                null
+            } else {
+                displayName(displayName, username ?: "")
+            },
             username = username ?: "",
             usernameType = toUserUsernameType(usernameType)
         )
